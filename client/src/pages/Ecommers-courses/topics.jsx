@@ -11,18 +11,14 @@ import Pagination from '../../Components/pageComponents/pagination';
 const ETopics = () => {
   const [selected, setSelected] = useState([]);
   const [show, setShow] = useState(false);
-  const [showVideoModal, setShowVideoModal] = useState(false); // State for video modal
-  // State to store video URL
-
+ 
   const [defaultcourceList, setdefaultCource] = useState();
   const [state, setState] = useState([]);
   const [chapter, setChapter] = useState();
   const [currentPage, setcurrentPage] = useState(1);
   const [query, setQuery] = useState("");
-  const [link, videoLink] = useState([])
-  const [video, setVideo] = useState([]);
-  const [posts, setPosts] = useState({
-    id: "", title: "", topic: "", description: "", chapter: "", video: ""
+   const [posts, setPosts] = useState({
+    id: "",topic: "", videoLink: "", timing : ""
   });
 
   const location = useLocation();
@@ -32,7 +28,7 @@ const ETopics = () => {
 
 
   const chaptersList = async () => {
-    const { data } = await allCourseChapter("/course_chapter", 'All');
+    const { data } = await allCourseChapter("/e-courseChapter", 'All');
     if (data) {
       await data.map((el) => {
         optionArray.push({ label: el.chapter, value: el.id });
@@ -65,8 +61,8 @@ const ETopics = () => {
     setPosts("");
     setdefaultCource([]);
     setSelected([]);
-    videoLink([])
-    setShowVideoModal(false); // Close video modal
+
+  
 
   };
 
@@ -86,12 +82,8 @@ const ETopics = () => {
     if (selected.length == 0) return ("Chapers Must be sleted")
     const chapterid = await selected.map((el) => el.value)
     const formData = new FormData()
-    formData.append("title", posts.title)
-    formData.append("description", posts.description)
-    formData.append("chapter", chapterid)
-    formData.append("topic", posts.topic)
-    formData.append("video", video)
-    const data = await addVideos(path, formData)
+  
+    const data = await addVideos(path, posts, chapterid)
 
     allData()
     if (data.message == "Video Upload Successfully") {
@@ -132,11 +124,9 @@ const ETopics = () => {
                   <th>Courses</th>
                   <th>Chapters</th>
                   <th>Topic</th>
-                  <th>Video Id</th>
+                  <th>Video Link</th>
                   <th>Timing</th>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Resource</th>
+               
                   <th>Action</th>
                 </tr>
               </thead>
@@ -158,13 +148,12 @@ const ETopics = () => {
                     <td>{el.topic}</td>
                     <td>
                       {/* Clickable element to open video modal */}
-                      <span style={{ cursor: "pointer", textDecoration: "underline", color: "blue" }} >
-                        {el.server_id}
-                      </span>
+                    
+                        {el.videoLink}
+                     
                     </td>
                     <td>{el.timing}</td>
-                    <td>{el.title}</td>
-                    <td>{el.description}</td>
+                 
                     
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
@@ -191,13 +180,10 @@ const ETopics = () => {
                   <label htmlFor="" className='text-dark mt-2 fw-semibold'>Video Topic</label>
                   <input type="text" value={posts.topic} name="topic" className="form-control" id="" onChange={handelChange} />
                 </div>
+               
                 <div className="form-group">
-                  <label htmlFor="" className='text-dark mt-2 fw-semibold'>Video Title</label>
-                  <input type="text" value={posts.title} name="title" className="form-control" id="" onChange={handelChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="" className='text-dark mt-2 fw-semibold'>Video Description</label>
-                  <input type="text" value={posts.description} className="form-control" name="description" id="" onChange={handelChange} />
+                  <label htmlFor="" className='text-dark mt-2 fw-semibold'>Video Timing</label>
+                  <input type="text" value={posts.timing} className="form-control" name="timing" id="" onChange={handelChange} />
                 </div>
                 <div className="form-group">
                   <label htmlFor="" className='text-dark mt-2 fw-semibold'>Chapter</label>
@@ -214,7 +200,7 @@ const ETopics = () => {
 
                 <div className="form-group">
                   <label htmlFor="" className='text-dark mt-2 fw-semibold'>Video</label>
-                  <input type="file" className="form-control" name="" id="" onChange={(e) => setVideo(e.target.files[0])} />
+                  <input type="link" className="form-control" name="videoLink" id="" value={posts.videoLink}  onChange={handelChange}/>
                 </div>
                 <input type="submit" className="form-control" value="Save Button" />
               </form>

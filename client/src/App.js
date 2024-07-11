@@ -55,6 +55,7 @@ import EChapter from "./pages/Ecommers-courses/chapter";
 import ETopics from "./pages/Ecommers-courses/topics";
 import Users from "./pages/users/clients";
 import Payments from "./pages/users/payments";
+import TypesOfECourses from "./pages/Ecommers-courses/types";
 
 function App() {
   return (
@@ -76,7 +77,7 @@ function App() {
         <Route path="/fcoursepoint" element={<CourceJoinPoint/>}/>
         <Route path="/batches" element= {<Batches/>}/>
         <Route path="*" element={<Home/>}/>
-        <Route path="/e-courseCategory" element={<TypesOfCourses/>}/>
+        <Route path="/e-courseCategory" element={<TypesOfECourses/>}/>
         <Route path="/e-courseLevel" element={<Courcelabel/>}/>
         <Route path="/e-courseLearn" element={<Learn/>}/>
         <Route path="/e-coursePrerequisite" element={<Prerequisite/>}/>

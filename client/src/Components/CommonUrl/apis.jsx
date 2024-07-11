@@ -12,7 +12,7 @@ export const handleClose = (setShow, setEditShow) => {
 export const editCourceLearn = async (path, editshow, removeSameData) => {
   try {
 
-    const { data } = await instance.patch(`faqs/learn/${editshow.id}?module=${path}`, { point: editshow.point, about: removeSameData })
+    const { data } = await instance.patch(`ecommersCoursePoint/learn/${editshow.id}?module=${path}`, { point: editshow.point, about: removeSameData })
     return data
   } catch (err) {
     return err.message
@@ -22,7 +22,7 @@ export const editCourceLearn = async (path, editshow, removeSameData) => {
 export const createCourceLearn = async (path, editshow, courcesid) => {
   try {
 
-    const { data } = await instance.post(`faqs/learn?module=${path}`, { point: editshow.point,  about: courcesid })
+    const { data } = await instance.post(`ecommersCoursePoint/learn?module=${path}`, { point: editshow.point,  about: courcesid })
     return data
   } catch (err) {
     return err.message
@@ -33,7 +33,7 @@ export const createCourceLearn = async (path, editshow, courcesid) => {
 export const editCourseChapter = async (path, editshow, removeSameData) => {
   try {
 
-    const { data } = await instance.patch(`cources/chapter/${editshow.id}?module=${path}`, { chapter: editshow.chapter,  courses: removeSameData })
+    const { data } = await instance.patch(`ecommersCourse/chapter/${editshow.id}?module=${path}`, { chapter: editshow.chapter,  courses: removeSameData })
     return data
   } catch (err) {
     return err.message
@@ -43,7 +43,7 @@ export const editCourseChapter = async (path, editshow, removeSameData) => {
 export const createCourseChapter = async (path, editshow, courcesid) => {
   try {
 
-    const { data } = await instance.post(`cources/chapter?module=${path}`, { chapter: editshow.chapter,  courses: courcesid })
+    const { data } = await instance.post(`ecommersCourse/chapter?module=${path}`, { chapter: editshow.chapter,  courses: courcesid })
     return data
   } catch (err) {
     return err.message
@@ -52,7 +52,7 @@ export const createCourseChapter = async (path, editshow, courcesid) => {
 
 export const deleteCourseChapter = async (path, id) => {
   try {
-    const { data } = await instance.delete(`cources/chapter/${id}?module=${path}`)
+    const { data } = await instance.delete(`ecommersCourse/chapter/${id}?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -61,7 +61,7 @@ export const deleteCourseChapter = async (path, id) => {
 
 export const allCourseChapter = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`cources/chapter?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourse/chapter?module=${path}&limit=${limit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -71,7 +71,7 @@ export const allCourseChapter = async (path, limit, currentPage) => {
 
 export const deleteCourceLearn = async (path, id) => {
   try {
-    const { data } = await instance.delete(`faqs/learn/${id}?module=${path}`)
+    const { data } = await instance.delete(`ecommersCoursePoint/learn/${id}?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -80,7 +80,8 @@ export const deleteCourceLearn = async (path, id) => {
 
 export const allCourceLearn = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`faqs/learn?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCoursePoint/learn?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    console.log(data);
     return data
   } catch (err) {
     return err.message
@@ -466,9 +467,9 @@ export const allCourseType = async (path, limit, currentPage) => {
  * edit a course type by id 
  * permission requried to edit a course type
  */
-export const editECourseType = async (path, id, category) => {
+export const editECourseType = async (path, id, formData) => {
   try {
-    const { data } = await instance.patch(`coursefiled/${id}?module=${path}`, { category })
+    const { data } = await instance.patch(`ecommersCourseCategory/${id}?module=${path}`, formData)
     return data
   } catch (err) {
     return err.message
@@ -479,10 +480,10 @@ export const editECourseType = async (path, id, category) => {
  * create a course type 
  * permission required to add a course type
  */
-export const createECourseType = async (path, category) => {
+export const createECourseType = async (path, formData) => {
   try {
 
-    const { data } = await instance.post(`coursefiled?module=${path}`, { category })
+    const { data } = await instance.post(`ecommersCourseCategory?module=${path}`,formData)
     return data
   } catch (err) {
     return err.message
@@ -496,7 +497,7 @@ export const createECourseType = async (path, category) => {
 export const deleteECourseType = async (path, id) => {
   try {
 
-    const { data } = await instance.delete(`coursefiled/${id}?module=${path}`)
+    const { data } = await instance.delete(`ecommersCourseCategory/${id}?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -509,7 +510,7 @@ export const deleteECourseType = async (path, id) => {
  */
 export const allECourseType = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`coursefiled?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourseCategory?module=${path}&limit=${limit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -520,7 +521,7 @@ export const allECourseType = async (path, limit, currentPage) => {
 export const editCourcePrerequisite = async (path, editshow, removeSameData) => {
   try {
 
-    const { data } = await instance.patch(`faqs/prerequisite/${editshow.id}?module=${path}`, { requirement: editshow.requirement, about: removeSameData })
+    const { data } = await instance.patch(`ecommersCoursePoint/prerequisite/${editshow.id}?module=${path}`, { requirement: editshow.requirement, about: removeSameData })
     return data
   } catch (err) {
     return err.message
@@ -530,7 +531,7 @@ export const editCourcePrerequisite = async (path, editshow, removeSameData) => 
 export const createCourcePrerequisite = async (path, editshow, courcesid) => {
   try {
 
-    const { data } = await instance.post(`faqs/prerequisite?module=${path}`, { requirement: editshow.requirement,  about: courcesid })
+    const { data } = await instance.post(`ecommersCoursePoint/prerequisite?module=${path}`, { requirement: editshow.requirement,  about: courcesid })
     return data
   } catch (err) {
     return err.message
@@ -539,25 +540,26 @@ export const createCourcePrerequisite = async (path, editshow, courcesid) => {
 
 export const deleteCourcePrerequisite = async (path, id) => {
   try {
-    const { data } = await instance.delete(`faqs/prerequisite/${id}?module=${path}`)
+    const { data } = await instance.delete(`ecommersCoursePoint/prerequisite/${id}?module=${path}`)
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const addVideos = async (path, formData) => {
+export const addVideos = async (path, posts, chapterid) => {
+  
   try {
-    const { data } = await instance.post(`cources/topic?module=${path}`, formData)
+    const { data } = await instance.post(`ecommersCourse/topic?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const editVideos = async (path, posts, chapter) => {
+export const editVideos = async (path, posts, chapterid) => {
   try {
-    const { data } = await instance.patch(`cources/topic/${posts.id}?module=${path}`, { title : posts.title, description :posts.description,topic :  posts.topic, chapter})
+    const { data } = await instance.patch(`ecommersCourse/topic/${posts.id}?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
     return data
   } catch (err) {
     return err.message
@@ -567,7 +569,7 @@ export const editVideos = async (path, posts, chapter) => {
 
 export const allVideos = async (path, givenLimit, currentPage) => {
   try {
-    const { data } = await instance.get(`cources/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -577,7 +579,7 @@ export const allVideos = async (path, givenLimit, currentPage) => {
 
 export const deleteVideos = async (path, givenLimit, currentPage) => {
   try {
-    const { data } = await instance.get(`cources/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -586,7 +588,7 @@ export const deleteVideos = async (path, givenLimit, currentPage) => {
 
 export const allCourcePrerequisite = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`faqs/prerequisite?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCoursePoint/prerequisite?module=${path}&limit=${limit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -602,7 +604,7 @@ export const allCourcePrerequisite = async (path, limit, currentPage) => {
 export const deleteCourselabel = async (path, id) => {
   try {
 
-    const { data } = await instance.delete(`coursescategory/label/${id}?module=${path}`)
+    const { data } = await instance.delete(`ecommersCourseCategory/label/${id}?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -611,7 +613,7 @@ export const deleteCourselabel = async (path, id) => {
 
 export const allCourselabel = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`coursescategory/label?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourseCategory/label?module=${path}&limit=${limit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -621,7 +623,7 @@ export const allCourselabel = async (path, limit, currentPage) => {
 
 export const editCourselabel = async (path, id, label) => {
   try {
-    const { data } = await instance.patch(`coursescategory/label/${id}?module=${path}`, { label })
+    const { data } = await instance.patch(`ecommersCourseCategory/label/${id}?module=${path}`, { label })
     return data
   } catch (err) {
     return err.message
@@ -635,7 +637,7 @@ export const editCourselabel = async (path, id, label) => {
 export const createCourselabel = async (path, label) => {
   try {
 
-    const { data } = await instance.post(`coursescategory/label?module=${path}`, {label})
+    const { data } = await instance.post(`ecommersCourseCategory/label?module=${path}`, {label})
     return data
   } catch (err) {
     return err.message
@@ -765,6 +767,10 @@ export const allCourceSubCategory = async (path, category, limit, currentPage) =
  * edit course by id
  * permission needed to edit course
  */
+/**
+ * edit course by id
+ * permission needed to edit course
+ */
 export const editCourse = async (path, formData, id) => {
   try {
     const { data } = await instance.patch(`course?module=${path}&id=${id}`, formData)
@@ -813,6 +819,11 @@ export const allCourse = async (path, limit, currentPage, editshow) => {
     return err.message
   }
 }
+/** List of all couses for search
+ * 
+ * permission need to view couses data  
+ */
+
 /** List of all couses for search
  * 
  * permission need to view couses data  
@@ -2071,7 +2082,7 @@ export const projectdelete = async (path, id) => {
 
 export const usersMembers = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`team/users?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCoursePoint?module=${path}&limit=${limit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -2080,7 +2091,51 @@ export const usersMembers = async (path, limit, currentPage) => {
 
 export const usersPayment = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`team/payment?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.delete(`ecommersCoursePoint?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const deleteECourse = async (path, id) => {
+  try {
+
+    const { data } = await instance.delete(`ecommersCourse/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const allECourse = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCourse?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const editECourse = async (path, id, formData) => {
+  try {
+    const { data } = await instance.patch(`ecommersCourse/${id}?module=${path}`, formData)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * create a course type 
+ * permission required to add a course type
+ */
+export const createECourse = async (path, formData) => {
+  try {
+
+    const { data } = await instance.post(`ecommersCourse?module=${path}`, formData)
     return data
   } catch (err) {
     return err.message

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
-import { allCourse, allCourceLearn, createCourceLearn, deleteCourceLearn, editCourceLearn } from '../../Components/CommonUrl/apis';
+import { allECourse, allCourceLearn, createCourceLearn, deleteCourceLearn, editCourceLearn } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/pageComponents/pagination';
 import Select from 'react-select';
@@ -25,7 +25,7 @@ const Learn = () => {
   let optionArray = []
 
   const courcesList = async () => {
-    const { data } = await allCourse(path)
+    const { data } = await allECourse("/e-courses", "All")
     if (data) {
       await data.map((el) => {
         optionArray.push({ label: el.name, value: el.id })
@@ -45,7 +45,7 @@ const Learn = () => {
   const allData = async (limit) => {
     const givenLimit = limit == 0 ? state && state.data && parseInt(state.limit) : limit
     const data = await allCourceLearn(path, givenLimit, currentPage)
-    setState(data)
+    return data && setState(data)
   }
 
   useEffect(() => {
@@ -73,8 +73,8 @@ const Learn = () => {
   const handleEdit = async (el) => {
     if (el) {
 
-      if (el.cources) {
-        const data = await el.cources.split(",")
+      if (el.courses) {
+        const data = await el.courses.split(",")
         for (let index = 0; index < data.length; index++) {
           defaultCorces.push({ label: data[index], value: data[index] })
         }
@@ -136,7 +136,7 @@ const Learn = () => {
                     return obj;
                   else if (
                     obj.description.toLowerCase().includes(query.toLowerCase()) ||
-                    obj.cources.toLowerCase().includes(query.toLowerCase()) ||
+                    obj.courses.toLowerCase().includes(query.toLowerCase()) ||
                     obj.point.toLowerCase().includes(query.toLowerCase())
                   )
                     return obj;
@@ -144,7 +144,7 @@ const Learn = () => {
                 }).map((el, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{el.cources ??= "--"}</td>
+                    <td>{el.courses ??= "--"}</td>
                     <td>{el.point}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />

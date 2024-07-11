@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
-import { allCourse, allCourselabel, createCourse,allCourseType, deleteCourse,  editCourseType, teamMembers, editCourse } from '../../Components/CommonUrl/apis';
+import { allECourse, allCourselabel, createECourse,allECourseType, deleteECourse,  editECourse } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/pageComponents/pagination';
 import UploadImageComponent from '../../Components/pageComponents/uploadImage';
@@ -12,9 +12,8 @@ const Cources = () => {
   const [image, setImage] = useState([])
   const [labelList, setLabelList] = useState([])
   const [courceCategoryList, setcourceCategoryList] = useState([])
-  const [instructor, setInstructor] = useState([])
   const [editshow, setEditShow] = useState({
-    name : "",category : '', description : "", label : "", image : "", instatructor :"", total_price : "", discount : '', video_link : "",certificates : ''
+    name : "",category : '', description : "", label : "", image : "", total_price : "", discount : '', video_link : "",certificates : ''
   });
   const [state, setState] = useState([])
   const [currentPage, setcurrentPage] = useState(1)
@@ -27,27 +26,24 @@ const Cources = () => {
   };
 
   const allLabelData = async() => {
-    const {data} =  await allCourselabel( "/course_label","All")
+    const {data} =  await allCourselabel( "/e-courseLearn","All")
     allCourcesCategory()
     return data && setLabelList(data)
   }
 
   const allCourcesCategory = async() => {
-    const {data} =  await allCourseType( "/course_types","All")
-    allInstructor()
+    const {data} =  await allECourseType( "/e-courseCategory","All")
+
     return data && setcourceCategoryList(data)
   }
 
-  const allInstructor = async() => {
-    const {data} =  await teamMembers( "/team","All")
-  
-    return data && setInstructor(data)
-  }
+
 
   /** list of all couse types */
   const allData = async (limit) => {
     const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allCourse(path, givenLimit, currentPage)
+    const data = await allECourse(path, givenLimit, currentPage)
+   
     allLabelData()
    return data && setState(data)
   }
@@ -60,7 +56,7 @@ const Cources = () => {
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
     if (value) {
-      const deleteMember = await deleteCourse(path, id)
+      const deleteMember = await deleteECourse(path, id)
       if (deleteMember.success == true) {
         alert(deleteMember.message)
         allData()
@@ -90,7 +86,6 @@ const Cources = () => {
     formData.append('category', editshow.category)
     formData.append('description', editshow.description)
     formData.append('label', editshow.label)
-    formData.append('instatructor', editshow.instatructor)
     formData.append('price', editshow.total_price)
     formData.append('discount', editshow.discount)
     formData.append('video_link', editshow.video_link)
@@ -98,10 +93,10 @@ const Cources = () => {
     formData.append('image', image[0])
     if (editshow.id > 0) {
       /** edit course type */
-      value = await editCourse(path, editshow.id, formData)
+      value = await editECourse(path, editshow.id, formData)
     } else {
         /** create course type */
-      value = await createCourse(path, formData)
+      value = await createECourse(path, formData)
     }
     e.preventDefault()
     if (value.success == true) {
@@ -129,8 +124,6 @@ const Cources = () => {
                   <th>Name</th>
                   <th>Category</th>
                   <th>Description</th>
-                
-                  <th>Instatructor</th>
                
                   <th>Label</th>
                   <th>Image</th>
@@ -159,10 +152,7 @@ const Cources = () => {
                      <td>{el.name}</td>
                      <td>{el.category}</td>
                      <td>{el.description}</td>
-                   
-                     <td>{el.instatructor}</td>
-                
-                     <td>{el.label}</td>
+                    <td>{el.label}</td>
                      <td>
                       <img src={el.image} width={50} height={50} alt="" srcset="" />
                      </td>
@@ -245,17 +235,7 @@ const Cources = () => {
         </select>
       {/* <input type="text" name="label" id="" value={editshow.label} placeholder='Enter Course label' className="form-control" onChange={handelChange} required /> */}
         </div>
-        <div className="form-group">
-        <label htmlFor="date" className='text-dark mt-2 fw-semibold'> Course instatructor </label>
-        <select name="instatructor" id="" onChange={handelChange} className='form-control'>
-        <option selected disabled>{editshow.instatructor ? editshow.instatructor : "Select Instructor"}</option>
-          {instructor && instructor.map((ab) => (
-            <option value={ab.id}>{ab.name}</option>
-          ))}
-         
-        </select>
-      {/* <input type="text" name="label" id="" value={editshow.label} placeholder='Enter Course label' className="form-control" onChange={handelChange} required /> */}
-        </div >
+       
         <div className="form-group">
             <label htmlFor="icon"> Upload Image
             <UploadImageComponent image={image} setImage={setImage} existsImage={editshow.image} requiredDimensions={{ width: 75, height: 75 }}/>

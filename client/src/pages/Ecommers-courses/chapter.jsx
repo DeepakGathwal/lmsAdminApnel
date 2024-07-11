@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
-import { allCourse, allCourseChapter, createCourseChapter, deleteCourseChapter, editCourseChapter } from '../../Components/CommonUrl/apis';
+import { allECourse, allCourseChapter, createCourseChapter, deleteCourseChapter, editCourseChapter } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/pageComponents/pagination';
 import Select from 'react-select';
@@ -25,7 +25,7 @@ const EChapter = () => {
   let optionArray = []
 
   const courcesList = async () => {
-    const { data } = await allCourse("/courses", "All")
+    const { data } = await allECourse("/e-courses", "All")
     if (data) {
       await data.map((el) => {
         optionArray.push({ label: el.name, value: el.id })

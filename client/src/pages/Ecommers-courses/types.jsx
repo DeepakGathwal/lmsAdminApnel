@@ -7,7 +7,7 @@ import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/pageComponents/pagination';
 import UploadImageComponent from '../../Components/pageComponents/uploadImage';
 
-const TypesOfCourses = () => {
+const TypesOfECourses = () => {
   const [show, setShow] = useState(false);
   const [icon, setIcon] = useState([])
   const [editshow, setEditShow] = useState({
@@ -166,4 +166,4 @@ const TypesOfCourses = () => {
   )
 }
 
-export default TypesOfCourses
+export default TypesOfECourses

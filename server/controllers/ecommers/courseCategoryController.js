@@ -15,12 +15,12 @@ exports.addCourseType = catchAsyncError(async(req,res) => {
     if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  category", status: false });
     const icon = req.file
     const fileImage = icon && await getDataUri(icon)
-    const findquery =  `Select id from jtc_ecommers_course_types WHERE category = '${category}' && description = '${description}'`
+    const findquery =  `Select id from jtc_ecommers_course_types WHERE category = ${category} && description =${description}`
     const executeAlready =  await executeQuery(findquery)
     if(executeAlready.length > 0) return res.status(206).json({message : "category Already Exists"})
         const link =  await category.replaceAll(" ", "_").toLowerCase()
    
-    const query = `Insert into jtc_ecommers_course_types SET   description = '${description}', icon = '${fileImage}', link = '${link}', category  = '${category}' `
+    const query = `Insert into jtc_ecommers_course_types SET   description = ${description}, icon = '${fileImage}', link = ${link}, category  = ${category} `
 
     const executeAddPoint = await executeQuery(query)
     if(executeAddPoint.affectedRows > 0)  return res.status(200).json({message : "Course Type Added Successfully", success: true})
@@ -34,7 +34,7 @@ exports.editCourseType = catchAsyncError(async(req,res) => {
     const {id} = req.params 
     if(!id)  return res.status(206).json({message : "category Not Found for Edit", success : false})
     if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit category", status: false });
-    const findquery =  `Select id from jtc_ecommers_course_types WHERE category = '${category}' && description = '${description}'`
+    const findquery =  `Select id from jtc_ecommers_course_types WHERE category = ${category} && description = ${description}`
     const executeAlready =  await executeQuery(findquery)
 
   
@@ -44,11 +44,14 @@ exports.editCourseType = catchAsyncError(async(req,res) => {
    
     let image = ''
     if(req.file){
-        const image = req.file
-        const fileImage = icon && await getDataUri(image)
-        image = `, icon =  '${fileImage}'`
+   
+        const icon = await req.file
+       
+        let fileImage = icon && await getDataUri(icon)
+        image = ` , icon =  '${fileImage}'`
     }
-    const query = `update jtc_ecommers_course_types SET   description = '${description}', link = '${link}', category  = '${category}' ${image}`
+
+    const query = `Update jtc_ecommers_course_types SET description = ${description}, link = ${link}, category  = ${category} ${image} WHERE id = ${id}`
 
     const executeAddPoint = await executeQuery(query)
     if(executeAddPoint.affectedRows > 0) return res.status(200).json({message : "category Edit Successfully", success: true})

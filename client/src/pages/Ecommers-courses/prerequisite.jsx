@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
-import { allCourse, allCourcePrerequisite, createCourcePrerequisite, deleteCourcePrerequisite, editCourcePrerequisite } from '../../Components/CommonUrl/apis';
+import { allECourse, allCourcePrerequisite, createCourcePrerequisite, deleteCourcePrerequisite, editCourcePrerequisite } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/pageComponents/pagination';
 import Select from 'react-select';
@@ -25,7 +25,7 @@ const Prerequisite = () => {
   let optionArray = []
 
   const courcesList = async () => {
-    const { data } = await allCourse(path)
+    const { data } = await allECourse(path)
     if (data) {
       await data.map((el) => {
         optionArray.push({ label: el.name, value: el.id })
@@ -73,8 +73,8 @@ const Prerequisite = () => {
   const handleEdit = async (el) => {
     if (el) {
 
-      if (el.cources) {
-        const data = await el.cources.split(",")
+      if (el.courses) {
+        const data = await el.courses.split(",")
         for (let index = 0; index < data.length; index++) {
           defaultCorces.push({ label: data[index], value: data[index] })
         }
@@ -136,7 +136,7 @@ const Prerequisite = () => {
                     return obj;
                   else if (
                     obj.description.toLowerCase().includes(query.toLowerCase()) ||
-                    obj.cources.toLowerCase().includes(query.toLowerCase()) ||
+                    obj.courses.toLowerCase().includes(query.toLowerCase()) ||
                     obj.requirement.toLowerCase().includes(query.toLowerCase())
                   )
                     return obj;
@@ -144,7 +144,7 @@ const Prerequisite = () => {
                 }).map((el, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{el.cources ??= "--"}</td>
+                    <td>{el.courses ??= "--"}</td>
                     <td>{el.requirement}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
@@ -170,7 +170,7 @@ const Prerequisite = () => {
           <div className="batchesform fw-semibold">
             <form className='batchesform' action="" onSubmit={handelCreateAndUpdate}>
               <div className='form-group'>
-                <label htmlFor="">Cources & Pages
+                <label htmlFor="">Courses & Pages
                   {cource && <Select
                     isMulti
                     name="colors"

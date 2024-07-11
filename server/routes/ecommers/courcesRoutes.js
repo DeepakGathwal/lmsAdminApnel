@@ -3,6 +3,7 @@ const router = express.Router();
 const { addCource, allCources, deleteCource, addChapter, Chapters, removeChapter, editChapter, addTopic, topics, removeTopics, editTopic, editCource } = require('../../controllers/ecommers/courcesController');
 const upload = require('../../middelwares/imageUpload');
 const { verifyUser, verifyModulePermission } = require('../../middelwares/token');
+const { escapeRequestBody } = require('../../conn/db');
 
 
 
@@ -117,16 +118,16 @@ const { verifyUser, verifyModulePermission } = require('../../middelwares/token'
 
 
 
-router.route('/').post(verifyUser, verifyModulePermission,upload.single('image'), addCource)
+router.route('/').post(verifyUser, verifyModulePermission,upload.single('image'), escapeRequestBody,addCource)
 router.route('/').get(verifyUser, verifyModulePermission,allCources)
-router.route('/:id').patch(verifyUser, verifyModulePermission,upload.single('image'), editCource)
+router.route('/:id').patch(verifyUser, verifyModulePermission,upload.single('image'), escapeRequestBody,editCource)
 router.route('/:id').delete(verifyUser, verifyModulePermission,deleteCource)
-router.route('/chapter/').post(verifyUser, verifyModulePermission,addChapter)
+router.route('/chapter/').post(verifyUser, verifyModulePermission,escapeRequestBody,addChapter)
 router.route('/chapter/').get(verifyUser, verifyModulePermission,Chapters)
-router.route('/chapter/:id').delete(verifyUser, verifyModulePermission,removeChapter).patch(verifyUser, verifyModulePermission,editChapter)
-router.route('/topic/').post(verifyUser, verifyModulePermission,upload.single('video'), addTopic)
+router.route('/chapter/:id').delete(verifyUser, verifyModulePermission,removeChapter).patch(verifyUser, verifyModulePermission,escapeRequestBody,editChapter)
+router.route('/topic/').post(verifyUser, verifyModulePermission,upload.single('video'), escapeRequestBody,addTopic)
 router.route('/topic/').get(verifyUser, verifyModulePermission,topics)
 router.route('/topic/:id').delete(verifyUser, verifyModulePermission,removeTopics)
-router.route('/topic/:id').patch(verifyUser, verifyModulePermission,editTopic)
+router.route('/topic/:id').patch(verifyUser, verifyModulePermission,escapeRequestBody,editTopic)
 
 module.exports = router;
