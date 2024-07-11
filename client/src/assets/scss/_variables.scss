@@ -1,0 +1,26 @@
+@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+
+// colors
+
+$black          :    #000000;
+$white          :    #ffffff;
+$yellow         :    #fff212;
+$light-grey     :    #404040;
+$grey           :    #333333;
+$dark-grey      :    #2c2c2c;
+
+// font-sizes
+$head           :    3rem;
+$subhead        :    2rem;
+$normal         :    1rem;
+//mid screen
+$midhead        :    1.5rem;
+
+// theme modify
+
+$input-group-addon-bg       :       #ffffff00;
+$input-bg                   :       #ffffff00;
+$input-focus-bg             :       #00000000;
+$input-focus-color          :       #ffffff;
+$input-color                :       #ffffff;
+$input-focus-box-shadow     :       #00000000;

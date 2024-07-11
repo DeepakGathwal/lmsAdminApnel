@@ -1,0 +1,147 @@
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import Modal from 'react-bootstrap/Modal';
+import { MdDelete, MdEditSquare } from "react-icons/md";
+import { allFormStatus,  createFormStatus,  deleteFormStatus,  editFormStatus, handleClose } from '../../Components/CommonUrl/apis';
+import Header from '../../Components/pageComponents/header';
+import Pagination from '../../Components/pageComponents/pagination';
+import FormFilterdateandmonth from '../../Components/pageComponents/FormFilterdateandmonth';
+
+const FormStatus = () => {
+  const [show, setShow] = useState(false);
+  const [editshow, setEditShow] = useState({
+    enquiry_status : "", id : ''
+  });
+  const [state, setState] = useState([])
+  const [currentPage, setcurrentPage] = useState(1)
+  const [query, setQuery] = useState("");
+  const location = useLocation()
+  const path = location.pathname
+
+
+  const allData = async (limit) => {
+    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
+    const data = await allFormStatus(path, givenLimit, currentPage)
+    return data && setState(data)
+  }
+
+  useEffect(() => {
+    allData()
+  }, [currentPage])
+
+  const ConfirmBox = async (id) => {
+    const value = window.confirm("Are you Sure want to delete");
+     if (value) {
+      const deleteMember = await deleteFormStatus(path, id)
+      if (deleteMember.success == true) {
+        alert(deleteMember.message)
+        allData()
+      } else alert(deleteMember.message)
+
+    } else return false
+  }
+
+  const handelChange = (e) => {
+    setEditShow({ ...editshow, [e.target.name]: e.target.value })
+  }
+
+  
+  const handleEdit = (el) => {
+    if (el) {
+      setEditShow(el)
+      setShow(true)
+    } else return alert("Module Not Selected")
+
+  }
+
+  const handelCreateAndUpdate = async (e) => {
+    e.preventDefault()
+    let value;
+    if (editshow.id > 0) {
+      value = await editFormStatus(path, editshow.id, editshow)
+    } else {
+      value = await createFormStatus(path, editshow)
+    }
+
+    if (value.success == true) {
+      e.preventDefault()
+      setShow(!show)
+      setEditShow('')
+      allData()
+    }else alert(value.message)
+  }
+
+  return (
+    <div className="containers">
+      <div className="page">
+        <h3 className='heading mb-4'>Forms Status</h3>
+        <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery}/>
+     
+        <div className='middlebody m-3'>
+       
+          <div className="tableFixHead">
+            <table className='table table-bordered'>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Form Name</th>
+               
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {state.data ? state.data.filter((obj) => {
+                  if (query == "") 
+                    return obj;
+                   else if (
+                 
+                    obj.enquiry_status.toLowerCase().includes(query.toLowerCase()) 
+                  ) 
+                    return obj;
+                  
+                }).map((el, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                     <td>{el.enquiry_status}</td>
+                    <td style={{ cursor: "pointer" }}>
+                      <MdEditSquare onClick={(e) => handleEdit(el)} />
+                      / <MdDelete onClick={(e) => ConfirmBox(el.id)}
+                      />
+                    </td>
+
+                  </tr>
+                )) : <h1>No Data</h1> }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      
+        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+      </div>
+      <Modal show={show} onHide={() => handleClose(setShow, setEditShow)}>
+
+<Modal.Header closeButton>
+  <Modal.Title>Status</Modal.Title>
+</Modal.Header>
+<Modal.Body>
+  <div className="batchesform fw-semibold">
+    <form className='batchesform' action="" onSubmit={handelCreateAndUpdate}>
+ 
+       <div className="form-group">
+       <label htmlFor="">form Name
+        <textarea type="text" name="enquiry_status" id="" value={editshow.enquiry_status} className="form-control" onChange={handelChange} required />
+        </label>
+       </div>
+ 
+      <input type="submit" value="Add Points" className=' btn btn-primary mt-4 mb-2 btn-create' required />
+
+    </form>
+  </div>
+</Modal.Body>
+</Modal>
+    </div>
+  )
+}
+
+export default FormStatus

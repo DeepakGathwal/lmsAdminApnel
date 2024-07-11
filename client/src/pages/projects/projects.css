@@ -1,0 +1,189 @@
+.d-flex.form-group select{
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 5px 4px 6px #ccc;
+    margin-left: 5px;
+}
+
+.col_reg>input[type=text]{
+    background: white;
+    box-shadow: 5px 4px 6px #ccc;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.row_reg>input[type="file"] , .input_file>input[type="file"] {
+      color: #878787;
+    }
+    .row_reg>input[type="file"]::-webkit-file-upload-button, .input_file>input[type="file"]::-webkit-file-upload-button  {
+      background: #525FE1;
+      border: 2px solid #525FE1;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 12px;
+      outline: none;
+      padding: 10px 25px;
+      text-transform: uppercase;
+    }
+.col-5.m-2.p-2 h4 span{
+  color: rgb(53, 51, 51);
+  font-size: 16px;
+}
+
+.mx-h-25{
+  max-height: 150px;
+  overflow: auto;
+  /* box-shadow: 0 0px 1px rgba(0,0,0,0.30), 0 1px 10px rgba(0,0,0,0.22); */
+}
+
+.crsr-pnt{
+  cursor: pointer;
+}
+
+.bx-shdw{
+  box-shadow: 0 0px 1px rgba(0,0,0,0.30), 0 1px 10px rgba(0,0,0,0.22);
+  padding: 2rem;
+}
+.project-add-section .tab-head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 17px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #0000001c;
+}
+.project-add-section .form-group .col-6.p-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.project-add-section .form-group .col-6.p-2 {
+  padding-left: 0 !important;
+}
+.project-add-section .form-group .col-6.p-2 input.m-1{
+  margin-left: 0 !important;
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #4d5154;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 1px solid #eef0f3;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.project-add-section .del-button:hover {
+  box-shadow: 0 1px 20px 1px #ea5455 !important;
+}
+.project-add-section .del-button svg {
+  margin: 0 0 2px 6px;
+}
+.project-add-section .del-button {
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-right: auto;
+  color: #fff;
+  background-color: #ea5455;
+  border-color: #ea5455;
+  padding: 8px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  transition: 0.5s all;
+  cursor: pointer;
+}
+.project-add-section .form-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.project-add-section .form-control.m-1 {
+  margin-left: 0;
+}
+.project-add-section .project-list .tech-points h3 {
+  color: #5d596c;
+  font-size: 16px;
+  line-height: 1.37;
+  font-weight: 500;
+}
+.project-add-section .project-list .tech-points .tech-button {
+  font-size: 16px;
+  border: none;
+  color: #fff;
+  margin: 0 5px;
+  border-radius: 5px;
+  padding: 2px 5px;
+  background: rgb(1, 189, 95);
+}
+.project-add-section .project-list .tech-points {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.project-add-section .project-list .info {
+  overflow: hidden;
+}
+.project-add-section .project-list .info h4 {
+  color: #5d596c;
+  font-size: 16px;
+  line-height: 1.37;
+  font-weight: 500;
+  margin: 10px 0;
+}
+.project-add-section .project-list .info span {
+  color: #a5a3ae;
+}
+.project-add-section .project-list .project-thumbs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top:16px;
+}
+.project-add-section .project-list .project-thumbs .thumb-inner {
+  width: calc(25% - 18px);
+}
+.project-add-section .project-list .project-thumbs .thumb-inner video, .project-add-section .project-list .project-thumbs .thumb-inner img {
+  width: 100%;
+  height: 120px;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+.project-add-section .project-list {
+  margin: 26px 0;
+  background: #f3f9fc;
+  padding: 22px 14px;
+  border-radius: 20px;
+}
+.project-add-section {
+  width: 80%;
+  margin: 35px auto;
+  background: #fff;
+  padding: 20px 28px 30px 28px;
+  border-radius: 18px;
+}
+.project-add-section .tab-head .page-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: #2c323f;
+  margin-bottom: 5px;
+}
+.project-add-section .tab-head .breadcrumb {
+  color: #6c757d;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0;
+  padding: 0;
+  margin-left: auto;
+}
