@@ -46,7 +46,7 @@ function Batches() {
   useEffect(() => {
     if(currentPage > 1)
     allData()
-  else console.log("Not Callong");
+  else return false
   }, [currentPage])
 
   useEffect(() => {

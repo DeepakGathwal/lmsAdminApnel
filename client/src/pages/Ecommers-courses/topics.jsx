@@ -4,14 +4,13 @@ import Select from 'react-select';
 import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare} from "react-icons/md";
 
-import { addVideos, allCourseChapter, allVideos, deleteVideos } from '../../Components/CommonUrl/apis'
+import { addVideos, allCourseChapter, allVideos, deleteVideos, editVideos } from '../../Components/CommonUrl/apis'
 import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/pageComponents/pagination';
 
 const ETopics = () => {
   const [selected, setSelected] = useState([]);
   const [show, setShow] = useState(false);
- 
   const [defaultcourceList, setdefaultCource] = useState();
   const [state, setState] = useState([]);
   const [chapter, setChapter] = useState();
@@ -79,16 +78,26 @@ const ETopics = () => {
   /** edit and craete company  */
   const handelCreateAndUpdate = async (e) => {
     e.preventDefault()
-    if (selected.length == 0) return ("Chapers Must be sleted")
-    const chapterid = await selected.map((el) => el.value)
-    const formData = new FormData()
+    if (selected.length == 0  && !defaultcourceList) return alert("Chapers Must be slected")
+      
+      let data ;
+    if (posts.id > 0) {
   
-    const data = await addVideos(path, posts, chapterid)
+      const editcourcesid = selected && await selected.map((el) => el.label)
+      const removeSameData = [...new Set(editcourcesid)]
+      data = await editVideos(path, posts, removeSameData)
+    }else {
+     const chapterid = await selected.map((el) => el.value)
+   data = await addVideos(path, posts, chapterid)
 
-    allData()
-    if (data.message == "Video Upload Successfully") {
+ }
+ if (data.success == true) {
+      allData()
+      setShow(false);
+      setPosts("")
+      setSelected([])
       return data && alert(data.message)
-    }
+    }else    return data && alert(data.message)
   }
   useEffect(() => {
     allData()
@@ -98,8 +107,8 @@ const ETopics = () => {
 
   const handleEdit = async (el) => {
     if (el) {
-      if (el.chapters) {
-        const data = await el.chapters.split(",")
+      if (el.chapter) {
+        const data = await el.chapter.split(",")
         for (let index = 0; index < data.length; index++) {
           defaultCorces.push({ label: data[index], value: data[index] });
         }
@@ -121,12 +130,10 @@ const ETopics = () => {
               <thead>
                 <tr>
                   <th>Id</th>
-                  <th>Courses</th>
                   <th>Chapters</th>
                   <th>Topic</th>
                   <th>Video Link</th>
                   <th>Timing</th>
-               
                   <th>Action</th>
                 </tr>
               </thead>
@@ -136,15 +143,15 @@ const ETopics = () => {
                     return obj;
                   else if (
                     obj.description.toLowerCase().includes(query.toLowerCase()) ||
-                    obj.cources.toLowerCase().includes(query.toLowerCase()) ||
+                    obj.topic.toLowerCase().includes(query.toLowerCase()) ||
                     obj.chapter.toLowerCase().includes(query.toLowerCase())
                   )
                     return obj;
                 }).map((el, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{el.courses ??= "--"}</td>
-                    <td>{el.chapters ??= "--"}</td>
+                 
+                    <td>{el.chapter ??= "--"}</td>
                     <td>{el.topic}</td>
                     <td>
                       {/* Clickable element to open video modal */}

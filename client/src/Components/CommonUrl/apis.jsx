@@ -2145,9 +2145,10 @@ export const deleteCourcePrerequisite = async (path, id) => {
 }
 
 export const addVideos = async (path, posts, chapterid) => {
-  
+ 
   try {
-    const { data } = await instance.post(`ecommersCourse/topic?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
+    const { data } = await instance.post(`ecommersCourse/topic?module=${path}`, {chapter_id : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
+   
     return data
   } catch (err) {
     return err.message
@@ -2156,7 +2157,7 @@ export const addVideos = async (path, posts, chapterid) => {
 
 export const editVideos = async (path, posts, chapterid) => {
   try {
-    const { data } = await instance.patch(`ecommersCourse/topic/${posts.id}?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
+    const { data } = await instance.patch(`ecommersCourse/topic/${posts.id}?module=${path}`, {chapter_id : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
     return data
   } catch (err) {
     return err.message
