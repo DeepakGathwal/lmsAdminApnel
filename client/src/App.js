@@ -15,7 +15,6 @@ import Categories from "./pages/courses/types";
 import Permission from "./pages/permissions/permission";
 import Company from "./pages/company/company";
 import AboutUs from "./pages/aboutUs/aboutUs";
-import Students from "./pages/students/student";
 import Testimonials from "./pages/testimonials/testimonials";
 import CourceChapter from "./pages/courses/courceChapter";
 import Banners from "./pages/websitepages/websitepags";
@@ -59,6 +58,7 @@ import TypesOfECourses from "./pages/Ecommers-courses/types";
 import CartItem from "./pages/users/cart";
 import Wishlist from "./pages/users/wishlist";
 import Review from "./pages/users/review";
+import Section from "./pages/E-commers/section";
 
 function App() {
   return (
@@ -98,7 +98,6 @@ function App() {
         <Route path="/permissions" element={<Permission/>}/>
         <Route path="/companies" element={<Company/>}/>
         <Route path="/about" element={<AboutUs/>}/>
-        <Route path="/students" element={<Students/>}/>
         <Route path="/testimonials" element={<Testimonials/>}/>
         <Route path="/dcourses_chapter" element={<CourceChapter/>}/>
         <Route path="/website" element={<Banners/>}/>
@@ -124,7 +123,7 @@ function App() {
         <Route path="/cart" element={<CartItem/>}/> 
         <Route path="/wishlist" element={<Wishlist/>}/> 
         <Route path="/review" element={<Review/>}/> 
-      
+        <Route path="/sections" element={<Section/>}/> 
     </Routes>
   </BrowserRouter>
     </>

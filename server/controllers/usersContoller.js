@@ -42,7 +42,7 @@ const { pagination } = require("../utils/pagination");
   exports.usersReview = catchAsyncError(async(req,res) =>{
     const { permissions, user } = await req
     if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Payments", status: false });
-    const query = `Select users.name,users.email, review.rating,review,review,course.name as course, course.course_link as link,review.id,Date_Format(review.created_at, '%d-%m-%y') as date from jtc_ecommers_course_review as review Left Join	jtc_ecommers_courses as course On review.course = course.id And course.deleted_by = '0' Left Join jtc_ecommers_users as users On users.id = review.user and users.deleted_by = '0' Order by review.id desc`
+    const query = `Select users.name,users.email, review.rating,review,review,course.name as course, course.course_link as link,review.id,Date_Format(review.created_at, '%d-%m-%y') as date from jtc_ecommers_course_review as review Left Join	jtc_ecommers_courses as course On review.course = course.id And course.deleted_by = '0' Left Join jtc_ecommers_users as users On users.id = review.user and users.deleted_by = '0' WHERE review.deleted_by = '0' Order by review.id desc`
   
     const data = await executeQuery(query)
    
@@ -57,7 +57,7 @@ const { pagination } = require("../utils/pagination");
     const query = `Update jtc_ecommers_course_review SET deleted_by = ${user} , deleted_at = current_timestamp() WHERE id = ${id}`
   
     const data = await executeQuery(query)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.affectedRows > 0) return res.status(200).json({message : "Review Deleted Successfully", success : true})
     else return res.status(206).json({message : "Error! While Getting Payments ", success : false })
   })
   

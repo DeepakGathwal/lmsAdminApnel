@@ -9,84 +9,6 @@ export const handleClose = (setShow, setEditShow) => {
 };
 
 
-export const editCourceLearn = async (path, editshow, removeSameData) => {
-  try {
-
-    const { data } = await instance.patch(`ecommersCoursePoint/learn/${editshow.id}?module=${path}`, { point: editshow.point, about: removeSameData })
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const createCourceLearn = async (path, editshow, courcesid) => {
-  try {
-
-    const { data } = await instance.post(`ecommersCoursePoint/learn?module=${path}`, { point: editshow.point,  about: courcesid })
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-
-export const editCourseChapter = async (path, editshow, removeSameData) => {
-  try {
-
-    const { data } = await instance.patch(`ecommersCourse/chapter/${editshow.id}?module=${path}`, { chapter: editshow.chapter,  courses: removeSameData })
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const createCourseChapter = async (path, editshow, courcesid) => {
-  try {
-
-    const { data } = await instance.post(`ecommersCourse/chapter?module=${path}`, { chapter: editshow.chapter,  courses: courcesid })
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const deleteCourseChapter = async (path, id) => {
-  try {
-    const { data } = await instance.delete(`ecommersCourse/chapter/${id}?module=${path}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const allCourseChapter = async (path, limit, currentPage) => {
-  try {
-    const { data } = await instance.get(`ecommersCourse/chapter?module=${path}&limit=${limit}&skipPage=${currentPage}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-
-export const deleteCourceLearn = async (path, id) => {
-  try {
-    const { data } = await instance.delete(`ecommersCoursePoint/learn/${id}?module=${path}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const allCourceLearn = async (path, limit, currentPage) => {
-  try {
-    const { data } = await instance.get(`ecommersCoursePoint/learn?module=${path}&limit=${limit}&skipPage=${currentPage}`)
-     return data
-  } catch (err) {
-    return err.message
-  }
-}
-
 
 export const login = async (field) => {
   try {
@@ -462,186 +384,6 @@ export const allCourseType = async (path, limit, currentPage) => {
   }
 }
 
-/**
- * edit a course type by id 
- * permission requried to edit a course type
- */
-export const editECourseType = async (path, id, formData) => {
-  try {
-    const { data } = await instance.patch(`ecommersCourseCategory/${id}?module=${path}`, formData)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-/**
- * create a course type 
- * permission required to add a course type
- */
-export const createECourseType = async (path, formData) => {
-  try {
-
-    const { data } = await instance.post(`ecommersCourseCategory?module=${path}`,formData)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-/**
- * delete a course type by id
- * permission need o delete a course type
- */
-export const deleteECourseType = async (path, id) => {
-  try {
-
-    const { data } = await instance.delete(`ecommersCourseCategory/${id}?module=${path}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-/**
- * list of all course types
- * permision required to see all couse type
- */
-export const allECourseType = async (path, limit, currentPage) => {
-  try {
-    const { data } = await instance.get(`ecommersCourseCategory?module=${path}&limit=${limit}&skipPage=${currentPage}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-
-export const editCourcePrerequisite = async (path, editshow, removeSameData) => {
-  try {
-
-    const { data } = await instance.patch(`ecommersCoursePoint/prerequisite/${editshow.id}?module=${path}`, { requirement: editshow.requirement, about: removeSameData })
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const createCourcePrerequisite = async (path, editshow, courcesid) => {
-  try {
-
-    const { data } = await instance.post(`ecommersCoursePoint/prerequisite?module=${path}`, { requirement: editshow.requirement,  about: courcesid })
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const deleteCourcePrerequisite = async (path, id) => {
-  try {
-    const { data } = await instance.delete(`ecommersCoursePoint/prerequisite/${id}?module=${path}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const addVideos = async (path, posts, chapterid) => {
-  
-  try {
-    const { data } = await instance.post(`ecommersCourse/topic?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const editVideos = async (path, posts, chapterid) => {
-  try {
-    const { data } = await instance.patch(`ecommersCourse/topic/${posts.id}?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-
-export const allVideos = async (path, givenLimit, currentPage) => {
-  try {
-    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-
-export const deleteVideos = async (path, givenLimit, currentPage) => {
-  try {
-    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const allCourcePrerequisite = async (path, limit, currentPage) => {
-  try {
-    const { data } = await instance.get(`ecommersCoursePoint/prerequisite?module=${path}&limit=${limit}&skipPage=${currentPage}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-
-
-/**
- * delete a course type by id
- * permission need o delete a course type
- */
-export const deleteCourselabel = async (path, id) => {
-  try {
-
-    const { data } = await instance.delete(`ecommersCourseCategory/label/${id}?module=${path}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-export const allCourselabel = async (path, limit, currentPage) => {
-  try {
-    const { data } = await instance.get(`ecommersCourseCategory/label?module=${path}&limit=${limit}&skipPage=${currentPage}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-
-export const editCourselabel = async (path, id, label) => {
-  try {
-    const { data } = await instance.patch(`ecommersCourseCategory/label/${id}?module=${path}`, { label })
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
-
-/**
- * create a course type 
- * permission required to add a course type
- */
-export const createCourselabel = async (path, label) => {
-  try {
-
-    const { data } = await instance.post(`ecommersCourseCategory/label?module=${path}`, {label})
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
 
 
 
@@ -2079,6 +1821,11 @@ export const projectdelete = async (path, id) => {
 }
 
 
+
+
+///Ecomers
+
+
 export const usersMembers = async (path, limit, currentPage) => {
   try {
     const { data } = await instance.get(`users?module=${path}&limit=${limit}&skipPage=${currentPage}`)
@@ -2183,7 +1930,311 @@ export const usersReview = async (path) => {
 export const reviewDelete = async (path, id) => {
   try {
 
-    const { data } = await instance.patch(`users/review/${id}/?module=${path}`)
+    const { data } = await instance.delete(`users/review/${id}/?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const editSections = async (path, id, formData) => {
+  try {
+    const { data } = await instance.patch(`ecommersSection/${id}?module=${path}`, formData)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * create a new choose us point
+ */
+export const createSections = async (path, formData) => {
+  try {
+    const { data } = await instance.post(`ecommersSection?module=${path}`, formData)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/** 
+ * delete already exists  point
+ *  permisison requied to delete a point
+ */
+export const deleteSections = async (path, id) => {
+  try {
+    const { data } = await instance.delete(`ecommersSection/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+// all why choose us point 
+export const allSections = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersSection?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const editCourceLearn = async (path, editshow, removeSameData) => {
+  try {
+
+    const { data } = await instance.patch(`ecommersCoursePoint/learn/${editshow.id}?module=${path}`, { point: editshow.point, about: removeSameData })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const createCourceLearn = async (path, editshow, courcesid) => {
+  try {
+
+    const { data } = await instance.post(`ecommersCoursePoint/learn?module=${path}`, { point: editshow.point,  about: courcesid })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const editCourseChapter = async (path, editshow, removeSameData) => {
+  try {
+
+    const { data } = await instance.patch(`ecommersCourse/chapter/${editshow.id}?module=${path}`, { chapter: editshow.chapter,  courses: removeSameData })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const createCourseChapter = async (path, editshow, courcesid) => {
+  try {
+
+    const { data } = await instance.post(`ecommersCourse/chapter?module=${path}`, { chapter: editshow.chapter,  courses: courcesid })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const deleteCourseChapter = async (path, id) => {
+  try {
+    const { data } = await instance.delete(`ecommersCourse/chapter/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const allCourseChapter = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCourse/chapter?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const deleteCourceLearn = async (path, id) => {
+  try {
+    const { data } = await instance.delete(`ecommersCoursePoint/learn/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const allCourceLearn = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCoursePoint/learn?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+     return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * edit a course type by id 
+ * permission requried to edit a course type
+ */
+export const editECourseType = async (path, id, formData) => {
+  try {
+    const { data } = await instance.patch(`ecommersCourseCategory/${id}?module=${path}`, formData)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * create a course type 
+ * permission required to add a course type
+ */
+export const createECourseType = async (path, formData) => {
+  try {
+
+    const { data } = await instance.post(`ecommersCourseCategory?module=${path}`,formData)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * delete a course type by id
+ * permission need o delete a course type
+ */
+export const deleteECourseType = async (path, id) => {
+  try {
+
+    const { data } = await instance.delete(`ecommersCourseCategory/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * list of all course types
+ * permision required to see all couse type
+ */
+export const allECourseType = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCourseCategory?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const editCourcePrerequisite = async (path, editshow, removeSameData) => {
+  try {
+
+    const { data } = await instance.patch(`ecommersCoursePoint/prerequisite/${editshow.id}?module=${path}`, { requirement: editshow.requirement, about: removeSameData })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const createCourcePrerequisite = async (path, editshow, courcesid) => {
+  try {
+
+    const { data } = await instance.post(`ecommersCoursePoint/prerequisite?module=${path}`, { requirement: editshow.requirement,  about: courcesid })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const deleteCourcePrerequisite = async (path, id) => {
+  try {
+    const { data } = await instance.delete(`ecommersCoursePoint/prerequisite/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const addVideos = async (path, posts, chapterid) => {
+  
+  try {
+    const { data } = await instance.post(`ecommersCourse/topic?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const editVideos = async (path, posts, chapterid) => {
+  try {
+    const { data } = await instance.patch(`ecommersCourse/topic/${posts.id}?module=${path}`, {chapter : chapterid, topic : posts.topic, videoLink : posts.videoLink, timing : posts.timing})
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const allVideos = async (path, givenLimit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const deleteVideos = async (path, givenLimit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const allCourcePrerequisite = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCoursePoint/prerequisite?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+
+/**
+ * delete a course type by id
+ * permission need o delete a course type
+ */
+export const deleteCourselabel = async (path, id) => {
+  try {
+
+    const { data } = await instance.delete(`ecommersCourseCategory/label/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const allCourselabel = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersCourseCategory/label?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const editCourselabel = async (path, id, label) => {
+  try {
+    const { data } = await instance.patch(`ecommersCourseCategory/label/${id}?module=${path}`, { label })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * create a course type 
+ * permission required to add a course type
+ */
+export const createCourselabel = async (path, label) => {
+  try {
+
+    const { data } = await instance.post(`ecommersCourseCategory/label?module=${path}`, {label})
     return data
   } catch (err) {
     return err.message

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import {  usersCart, usersReview } from '../../Components/CommonUrl/apis';
+import {  reviewDelete, usersReview } from '../../Components/CommonUrl/apis';
+import { MdDelete } from "react-icons/md";
 import Pagination from '../../Components/pageComponents/pagination';
 import Header from '../../Components/pageComponents/header';
 
@@ -24,6 +25,21 @@ const Reviews = () => {
     allData()
   }, [currentPage])
 
+
+   // delete a point by id
+   const ConfirmBox = async (id) => {
+    const value = window.confirm("Are you Sure want to delete");
+     if (value) {
+      const deleteMember = await reviewDelete(path, id)
+      if (deleteMember.success == true) {
+        alert(deleteMember.message)
+       return allData()
+      } else return alert(deleteMember.message)
+
+    } else return false
+  }
+
+
   return (
    
       <div className="page">
@@ -44,6 +60,7 @@ const Reviews = () => {
                   <th>Review</th>
                   <th>Rating</th>
                   <th>Date Added</th>
+                  <th>Action</th>
                 
              
                 </tr>
@@ -71,6 +88,11 @@ const Reviews = () => {
                     <td>{el.review}</td>
                     <td>{el.rating}</td>
                     <td>{el.date}</td>
+                    <td style={{ cursor: "pointer" }}>
+                      <MdDelete onClick={(e) => ConfirmBox(el.id)}
+                      />
+                    </td>
+
                     </tr>
                 )): <h1>No Data</h1>}
               </tbody>

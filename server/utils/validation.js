@@ -18,6 +18,14 @@ exports.EcourseSchema = Joi.object({
 })
 
 
+exports.chooseSectionSchema = Joi.object({
+    component_name: Joi.string().required(),
+    section: Joi.string().required(),
+    heading: Joi.string().required(),
+    details: Joi.string().required()
+})
+
+
 exports.EcourceChapter = Joi.object({
     chapter: Joi.string().required(),
     courses: Joi.any().required(),

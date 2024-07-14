@@ -1,7 +1,9 @@
 const express= require('express');
 const router = express.Router();
-const { verifyUser, verifyModulePermission } = require('../middelwares/token');
-const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewDelete } = require('../controllers/usersContoller');
+const upload = require('../../middelwares/imageUpload');
+const { verifyUser, verifyModulePermission } = require('../../middelwares/token');
+const { escapeRequestBody } = require('../../conn/db');
+const { addSections, Sections, editSections, removeSections } = require('../../controllers/ecommers/sections');
 
 
 
@@ -9,11 +11,12 @@ const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewD
  * @openapi
  * components:
  *  schemas:
- *    About: 
+ *    FAQS: 
  *      type: object
  *      required:
  *        - point
  *        - description
+ *        - about
  *      properties:
  *        point:
  *         type : String
@@ -21,17 +24,20 @@ const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewD
  *        description:
  *         type : String
  *         default : this is belong to java
+ *        about:
+ *         type : String
+ *         default : point about
  */
 
 
 /**
  * @openapi
- * '/jtc/admin/about':
+ * '/jtc/admin/faqs':
  *  post:
  *    tags: 
- *      - About Point
+ *      - FAQS
  *    summary: 
- *      - Add about point of any website page or viodeo point about a specific course  
+ *      - Add FAQS of any website page 
  *    parameters: 
  *      - in : query
  *        name : module
@@ -46,15 +52,15 @@ const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewD
  *            $ref: "#/components/schemas/About"
  *    responses:
  *      200:  
- *       description: About Point Added Successfully
+ *       description: FAQS Added Successfully
  *      400: 
  *       description: Error From Datebase  
  *      206: 
  *       description: Permission Denied 
  *  get:
  *    tags:
- *      - About Point
- *    summary: List of about point of webPages and courses
+ *      - FAQS
+ *    summary: List of FAQS of webPages and courses
  *    parameters: 
  *      - in : query
  *        name : module
@@ -69,8 +75,8 @@ const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewD
  *       description: Permission Denied 
  *  patch:
  *    tags:
- *      - About Point
- *    summary: Update any specific about point by id
+ *      - FAQS
+ *    summary: Update any specific FAQS by id
  *    parameters: 
  *      - in : query
  *        name : module
@@ -96,8 +102,8 @@ const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewD
  *       description: Error from function call  
  *  delete:
  *    tags:
- *      - About Point
- *    summary: Delete a About Point
+ *      - FAQS
+ *    summary: Delete a FAQS
  *    parameters: 
  *      - in : params
  *        name : id
@@ -117,12 +123,43 @@ const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewD
  */
 
 
+router.route('/').post(verifyUser,verifyModulePermission,upload.array('images', 3),escapeRequestBody ,addSections)
+router.route('/').get(verifyUser, verifyModulePermission ,Sections)
+router.route('/:id').patch(verifyUser,verifyModulePermission,upload.array('images', 3),escapeRequestBody ,editSections)
+router.route('/:id').delete(verifyUser,verifyModulePermission ,removeSections)
 
-router.route('/').get(verifyUser,verifyModulePermission ,allUsers)
-router.route('/').delete(verifyUser,verifyModulePermission ,usersPayments)
-router.route('/').put(verifyUser,verifyModulePermission ,usersCarts)
-router.route('/').patch(verifyUser,verifyModulePermission ,usersWishList)
-router.route('/review/').get(verifyUser,verifyModulePermission ,usersReview)
-router.route('/review/:id/').delete(verifyUser,verifyModulePermission ,reviewDelete)
+
+
+/**
+ * @openapi
+ * '/jtc/admin/faqs/points': 
+ *  get:
+ *    tags:
+ *      - FAQS
+ *    summary: List of FAQS point for filter
+ *    parameters: 
+ *      - in : query
+ *        name : module
+ *        schema:
+ *          type : String
+ *    responses:
+ *      200:  
+ *        description: Data
+ *      400: 
+ *       description: Error From Datebase  
+ *      206: 
+ *       description: Permission Denied 
+*/
+
 
 module.exports = router;
+
+
+/**
+ * 
+ *  Border -> 
+ *  border-radis
+ *  bordr : 
+ * 
+ * 
+ */
