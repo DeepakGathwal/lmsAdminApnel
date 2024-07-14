@@ -74,7 +74,7 @@ const Users = () => {
                     <td>{el.phone}</td>
 
                     <td>{el.provider}</td>
-                    <td>{el.rgisterat}</td>
+                    <td>{el.created_at}</td>
                     <td>{el.last_login}</td>
                    
                   
