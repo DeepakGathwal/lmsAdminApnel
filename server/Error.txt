@@ -1,0 +1,2 @@
+ Error: ER_BAD_FIELD_ERROR: Unknown column 'name' in 'where clause' arrived on 1720953402028  
+ Error: ER_BAD_FIELD_ERROR: Unknown column 'name' in 'where clause' arrived on 1720953509471  

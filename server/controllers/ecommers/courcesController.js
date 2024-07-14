@@ -198,10 +198,11 @@ exports.removeChapter = catchAsyncError(async (req, res) => {
 
 
 exports.addTopic = catchAsyncError(async (req, res) => {
+  
   const { permissions, user } = await req
   if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Add Video ", status: false });
 
-  const { topic, timing, videoLink } = await req.body
+  const { topic, timing, videoLink, chapter_id } = await req.body
 
   const query = `Select id from jtc_ecommers_videos where topic = ${topic}`
 
@@ -210,9 +211,10 @@ exports.addTopic = catchAsyncError(async (req, res) => {
   if (runfind.length > 0) return res.status(206).json({ message: "Video already exists" })
 
 
-  const addQuery = `Insert into jtc_ecommers_videos SET topic = ${topic} , timing = ${timing}, videoLink = ${videoLink}`
+  const addQuery = `Insert into jtc_ecommers_videos SET topic = ${topic}, timing = ${timing}, videoLink = ${videoLink}, chapter_id = '${chapter_id}', created_by = ${user}`
 
   const runqueryPromise = await executeQuery(addQuery)
+ 
   if (runqueryPromise.affectedRows > 0)
     return res.status(200).json({ message: 'Video Upload Successfully', success: true });
   else return res.status(206).json({ message: 'Something Wrong', success: true });
@@ -226,7 +228,7 @@ exports.editTopic = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
   if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Video ", status: false });
 
-  const { topic, timing, videoLink } = await req.body
+  const { topic, timing, videoLink, chapter_id } = await req.body
 
   const query = `Select id from jtc_ecommers_videos where topic = ${topic}`
 
@@ -235,8 +237,19 @@ exports.editTopic = catchAsyncError(async (req, res) => {
   if (runfind.length > 1) return res.status(206).json({ message: "Video already exists" })
 
 
-  const addQuery = `Update jtc_ecommers_videos SET topic = ${topic} , timing = ${timing}, videoLink = ${videoLink}, updated_at = current_timestamp(), update_by = ${user} WHERE id = ${id}`
-
+    let addCources = [];
+    let addindataBase = ''
+    if (chapter_id.length > 0) {
+      const idOFCources = `Select id from jtc_ecommers_course_chapter WHERE chapter IN (${chapter_id}) && deleted_by = '0'`
+      const data = await executeQuery(idOFCources)
+      if (data.length > 0) {
+        data.map((el) => {
+          addCources.push(el.id)
+        })
+        addindataBase = `, chapter_id =  '${addCources}'`
+      }
+    }
+  const addQuery = `Update jtc_ecommers_videos SET topic = ${topic} , timing = ${timing}, videoLink = ${videoLink} ${addindataBase}, updated_at = current_timestamp(), updated_by = ${user} WHERE id = ${id}`
   const runqueryPromise = await executeQuery(addQuery)
   if (runqueryPromise.affectedRows > 0)
     return res.status(200).json({ message: 'Video Upload Successfully', success: true });
@@ -247,10 +260,26 @@ exports.editTopic = catchAsyncError(async (req, res) => {
 exports.topics = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
   if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Course Chapter", status: false });
-  const query = `Select id,topic, timing , videoLink from jtc_ecommers_videos where deleted_by = '0'`
+  const query = `Select id,topic, timing , videoLink, chapter_id from jtc_ecommers_videos where deleted_by = '0' order by id desc`
   const data = await executeQuery(query)
-  if (data.length > 0) return pagination(req, res, data)
-  else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
+  
+  if (data.length > 0) {
+
+    for (let index = 0; index < data.length; index++) {
+      const courceId = data[index].chapter_id
+      const selectCourceNameQuery = `Select chapter from jtc_ecommers_course_chapter WHERE id IN (${courceId}) && deleted_by = '0' `
+      const executeQueryApi = await executeQuery(selectCourceNameQuery);
+   
+      if (executeQueryApi.length > 0) {
+        const values = await executeQueryApi.map((el) => el.chapter)
+        data[index]["chapter"] = String(values);
+      }
+    }
+
+
+    return pagination(req, res, data)
+  } else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
+
 })
 
 exports.removeTopics = catchAsyncError(async (req, res) => {

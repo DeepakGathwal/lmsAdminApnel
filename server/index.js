@@ -82,6 +82,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
  const ECommesSection = require('./routes/ecommers/sections');
  const ECoursePointRoute = require('./routes/ecommers/coursePoint');
  const UsersRoute = require('./routes/usersRoute');
+const error = require('./middelwares/error');
 
  //  call brochure api
  app.use('/jtc/admin/users', UsersRoute);
@@ -133,10 +134,22 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
  app.use('/jtc/admin/team', teamHandel);
  app.use('/jtc/admin/role', roleHandel);
 
-app.use(ErrorHandler)
+app.use(error)
 
-app.listen(process.env.PORT,() => {
-  console.log(`Your Server Running on ${process.env.PORT}`);
-  createDocs(app )
+process.on("uncaughtException",(err) =>{
+  console.log(`Error ${err}`);
+  console.log(`Shutting down server ${process.env.PORT} due new to error`);
+      process.exit(1)
 })
-// }
+// Server listing store on a variable
+const stop = app.listen(process.env.PORT,() => {
+  console.log(`Server id working on ${process.env.PORT}`);
+})
+// Unhandled Promise Rejection
+process.on("unhandledRejection",err => {
+  console.log(`Error ${err}`);
+  console.log(`Shutting down server ${process.env.PORT} due to error`);
+  stop.close(() =>{
+      process.exit(1)
+  })
+})
