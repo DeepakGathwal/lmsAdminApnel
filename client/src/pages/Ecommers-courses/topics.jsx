@@ -142,7 +142,7 @@ const ETopics = () => {
                   if (query == "")
                     return obj;
                   else if (
-                    obj.description.toLowerCase().includes(query.toLowerCase()) ||
+                   
                     obj.topic.toLowerCase().includes(query.toLowerCase()) ||
                     obj.chapter.toLowerCase().includes(query.toLowerCase())
                   )

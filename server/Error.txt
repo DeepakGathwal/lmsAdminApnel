@@ -1,2 +1,2 @@
- Error: ER_BAD_FIELD_ERROR: Unknown column 'name' in 'where clause' arrived on 1720953402028  
- Error: ER_BAD_FIELD_ERROR: Unknown column 'name' in 'where clause' arrived on 1720953509471  
+ ReferenceError: courses is not defined arrived on 1720955795201  
+ Error: ER_NO_SUCH_TABLE: Table 'jtcindia_admin.ecommers_faqs' doesn't exist arrived on 1720955832434  

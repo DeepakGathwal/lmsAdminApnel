@@ -97,7 +97,6 @@ function Batches() {
                   <th>Time:Start</th>
                   <th>Time:End</th>
                   <th>Creator</th>
-
                   <th>Action</th>
                 </tr>
               </thead>
@@ -109,8 +108,7 @@ function Batches() {
                     obj.course.toLowerCase().includes(query.toLowerCase()) ||
                     obj.week_days.toLowerCase().includes(query.toLowerCase()) ||
                     obj.date.toLowerCase().includes(query.toLowerCase()) ||
-                    obj.time_to.toLowerCase().includes(query.toLowerCase()) ||
-                    obj.time_from.toLowerCase().includes(query.toLowerCase()) ||
+                 
                     obj.name.toLowerCase().includes(query.toLowerCase())
                   ) return obj;
                 }).map((el, index) => (

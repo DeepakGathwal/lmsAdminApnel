@@ -2241,3 +2241,43 @@ export const createCourselabel = async (path, label) => {
     return err.message
   }
 }
+
+
+
+export const editEFaqs = async (path, editshow, removeSameData) => {
+  try {
+
+    const { data } = await instance.patch(`ecommersSection/faqs/${editshow.id}?module=${path}`, { point: editshow.point, description: editshow.description, about: removeSameData })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const createEFaqs = async (path, editshow, courcesid) => {
+  try {
+
+    const { data } = await instance.post(`ecommersSection/faqs?module=${path}`, { point: editshow.point, description: editshow.description, about: courcesid })
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const deleteEFaqs = async (path, id) => {
+  try {
+    const { data } = await instance.delete(`ecommersSection/faqs/${id}?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const allEFaqs = async (path, limit, currentPage) => {
+  try {
+    const { data } = await instance.get(`ecommersSection/faqs?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}

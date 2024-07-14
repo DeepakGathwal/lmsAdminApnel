@@ -59,6 +59,7 @@ import CartItem from "./pages/users/cart";
 import Wishlist from "./pages/users/wishlist";
 import Review from "./pages/users/review";
 import Section from "./pages/E-commers/section";
+import EFaqs from "./pages/Ecommers-courses/faqs";
 
 function App() {
   return (
@@ -124,6 +125,7 @@ function App() {
         <Route path="/wishlist" element={<Wishlist/>}/> 
         <Route path="/review" element={<Review/>}/> 
         <Route path="/sections" element={<Section/>}/> 
+        <Route path="/e-faqs" element={<EFaqs/>}/> 
     </Routes>
   </BrowserRouter>
     </>

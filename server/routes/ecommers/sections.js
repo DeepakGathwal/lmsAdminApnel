@@ -3,7 +3,7 @@ const router = express.Router();
 const upload = require('../../middelwares/imageUpload');
 const { verifyUser, verifyModulePermission } = require('../../middelwares/token');
 const { escapeRequestBody } = require('../../conn/db');
-const { addSections, Sections, editSections, removeSections } = require('../../controllers/ecommers/sections');
+const { addSections, Sections, editSections, removeSections, addFaqs, faqs, editFaqs, removeFaqs } = require('../../controllers/ecommers/sections');
 
 
 
@@ -127,6 +127,10 @@ router.route('/').post(verifyUser,verifyModulePermission,upload.array('images', 
 router.route('/').get(verifyUser, verifyModulePermission ,Sections)
 router.route('/:id').patch(verifyUser,verifyModulePermission,upload.array('images', 3),escapeRequestBody ,editSections)
 router.route('/:id').delete(verifyUser,verifyModulePermission ,removeSections)
+router.route('/faqs/').post(verifyUser,verifyModulePermission,escapeRequestBody ,addFaqs)
+router.route('/faqs/').get(verifyUser, verifyModulePermission ,faqs)
+router.route('/faqs/:id').patch(verifyUser,verifyModulePermission,escapeRequestBody ,editFaqs)
+router.route('/faqs/:id').delete(verifyUser,verifyModulePermission ,removeFaqs)
 
 
 
