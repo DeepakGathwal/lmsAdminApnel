@@ -34,21 +34,17 @@ const Payments = () => {
             <table className='table table-bordered'>
               <thead>
                 <tr>
-
                   <th>Id</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Course</th>
                   <th>Amount</th>
-                  
                   <th>Order Id</th>
                   <th>Status</th>
                   <th>Payment Id</th>
                   <th>Payment Signature</th>
-                  <th>Order_Date_and_Time</th>
-                  <th>Payment_Date_and_Time</th>
-           
-             
+                  <th>Order_Date</th>
+                  <th>Payment_Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -73,11 +69,11 @@ const Payments = () => {
                     <td>{el.course}</td>
                     <td>{el.currency + " "+ el.amount}</td>
                     <td>{el.order_id}</td>
-                    <td>{el.status}</td>
+                    <td>{el.verify}</td>
                     <td>{el.payment_id}</td>
                     <td>{el.payment_signature}</td>
-                    <td>{el.rgistrate}</td>
-                    <td>{el.doneDate}</td>
+                    <td>{el.order_at}</td>
+                    <td>{el.done_time}</td>
                
                     
 

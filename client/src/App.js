@@ -56,6 +56,9 @@ import ETopics from "./pages/Ecommers-courses/topics";
 import Users from "./pages/users/clients";
 import Payments from "./pages/users/payments";
 import TypesOfECourses from "./pages/Ecommers-courses/types";
+import CartItem from "./pages/users/cart";
+import Wishlist from "./pages/users/wishlist";
+import Review from "./pages/users/review";
 
 function App() {
   return (
@@ -118,6 +121,9 @@ function App() {
         <Route path="/brochure" element={<Brochure/>}/>
         <Route path="/cprojects" element={<Projects/>}/> 
         <Route path="/eproject-topics-point" element={<ProjectTopicPoint/>}/> 
+        <Route path="/cart" element={<CartItem/>}/> 
+        <Route path="/wishlist" element={<Wishlist/>}/> 
+        <Route path="/review" element={<Review/>}/> 
       
     </Routes>
   </BrowserRouter>

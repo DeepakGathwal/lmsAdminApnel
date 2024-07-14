@@ -80,8 +80,10 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
  const ECourseRoute = require('./routes/ecommers/courcesRoutes');
  const ECourseCatgoryRoute = require('./routes/ecommers/courseCategoryRoutes');
  const ECoursePointRoute = require('./routes/ecommers/coursePoint');
+ const UsersRoute = require('./routes/usersRoute');
 
  //  call brochure api
+ app.use('/jtc/admin/users', UsersRoute);
  app.use('/jtc/admin/ecommersCoursePoint', ECoursePointRoute);
 
  //  call brochure api

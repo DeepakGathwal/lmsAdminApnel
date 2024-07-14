@@ -1,8 +1,7 @@
 const express= require('express');
 const router = express.Router();
-const { verifyUser, verifyModulePermission } = require('../../middelwares/token');
-const { addLearn, learn, editLearn, removeLearn, addPrerequisite, prerequisite, editPrerequisite, removePrerequisite } = require('../../controllers/ecommers/coursePoint');
-const { escapeRequestBody } = require('../../conn/db');
+const { verifyUser, verifyModulePermission } = require('../middelwares/token');
+const { allUsers, usersPayments, usersCarts, usersWishList, usersReview, reviewDelete } = require('../controllers/usersContoller');
 
 
 
@@ -10,12 +9,11 @@ const { escapeRequestBody } = require('../../conn/db');
  * @openapi
  * components:
  *  schemas:
- *    FAQS: 
+ *    About: 
  *      type: object
  *      required:
  *        - point
  *        - description
- *        - about
  *      properties:
  *        point:
  *         type : String
@@ -23,20 +21,17 @@ const { escapeRequestBody } = require('../../conn/db');
  *        description:
  *         type : String
  *         default : this is belong to java
- *        about:
- *         type : String
- *         default : point about
  */
 
 
 /**
  * @openapi
- * '/jtc/admin/faqs':
+ * '/jtc/admin/about':
  *  post:
  *    tags: 
- *      - FAQS
+ *      - About Point
  *    summary: 
- *      - Add FAQS of any website page 
+ *      - Add about point of any website page or viodeo point about a specific course  
  *    parameters: 
  *      - in : query
  *        name : module
@@ -51,15 +46,15 @@ const { escapeRequestBody } = require('../../conn/db');
  *            $ref: "#/components/schemas/About"
  *    responses:
  *      200:  
- *       description: FAQS Added Successfully
+ *       description: About Point Added Successfully
  *      400: 
  *       description: Error From Datebase  
  *      206: 
  *       description: Permission Denied 
  *  get:
  *    tags:
- *      - FAQS
- *    summary: List of FAQS of webPages and courses
+ *      - About Point
+ *    summary: List of about point of webPages and courses
  *    parameters: 
  *      - in : query
  *        name : module
@@ -74,8 +69,8 @@ const { escapeRequestBody } = require('../../conn/db');
  *       description: Permission Denied 
  *  patch:
  *    tags:
- *      - FAQS
- *    summary: Update any specific FAQS by id
+ *      - About Point
+ *    summary: Update any specific about point by id
  *    parameters: 
  *      - in : query
  *        name : module
@@ -101,8 +96,8 @@ const { escapeRequestBody } = require('../../conn/db');
  *       description: Error from function call  
  *  delete:
  *    tags:
- *      - FAQS
- *    summary: Delete a FAQS
+ *      - About Point
+ *    summary: Delete a About Point
  *    parameters: 
  *      - in : params
  *        name : id
@@ -122,46 +117,12 @@ const { escapeRequestBody } = require('../../conn/db');
  */
 
 
-router.route('/learn/').post(verifyUser,verifyModulePermission,escapeRequestBody ,addLearn)
-router.route('/learn/').get(verifyUser, verifyModulePermission ,learn)
-router.route('/learn/:id').patch(verifyUser,verifyModulePermission,escapeRequestBody ,editLearn)
-router.route('/learn/:id').delete(verifyUser,verifyModulePermission ,removeLearn)
-router.route('/prerequisite/').post(verifyUser,verifyModulePermission ,escapeRequestBody ,addPrerequisite)
-router.route('/prerequisite/').get(verifyUser, verifyModulePermission ,prerequisite)
-router.route('/prerequisite/:id').patch(verifyUser,verifyModulePermission ,escapeRequestBody,editPrerequisite)
-router.route('/prerequisite/:id').delete(verifyUser,verifyModulePermission ,removePrerequisite)
 
-
-/**
- * @openapi
- * '/jtc/admin/faqs/points': 
- *  get:
- *    tags:
- *      - FAQS
- *    summary: List of FAQS point for filter
- *    parameters: 
- *      - in : query
- *        name : module
- *        schema:
- *          type : String
- *    responses:
- *      200:  
- *        description: Data
- *      400: 
- *       description: Error From Datebase  
- *      206: 
- *       description: Permission Denied 
-*/
-
+router.route('/').get(verifyUser,verifyModulePermission ,allUsers)
+router.route('/').delete(verifyUser,verifyModulePermission ,usersPayments)
+router.route('/').put(verifyUser,verifyModulePermission ,usersCarts)
+router.route('/').patch(verifyUser,verifyModulePermission ,usersWishList)
+router.route('/review/').get(verifyUser,verifyModulePermission ,usersReview)
+router.route('/review/id/').delete(verifyUser,verifyModulePermission ,reviewDelete)
 
 module.exports = router;
-
-
-/**
- * 
- *  Border -> 
- *  border-radis
- *  bordr : 
- * 
- * 
- */

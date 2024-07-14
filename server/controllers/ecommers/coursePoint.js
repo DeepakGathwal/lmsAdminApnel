@@ -215,6 +215,26 @@ exports.addLearn = catchAsyncError(async (req, res) => {
     if(data.length > 0) return pagination(req, res, data)
     else return res.status(206).json({message : "Error! While Getting Payments ", success : false })
   })
+
+  exports.usersCarts = catchAsyncError(async(req,res) =>{
+    const { permissions, user } = await req
+    if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Payments", status: false });
+    const query = `Select users.name,users.email, course.name as course, course.course_link as link,cart.id,Date_Format(cart.created_at, '%d-%m-%y') from jtc_ecommers_cart as cart Left Join	jtc_ecommers_courses as course On cart.course = course.id And course.deleted_by = '0' Left Join jtc_ecommers_users as users On users.id = cart.user and users.deleted_by = '0'`
+  
+    const data = await executeQuery(query)
+    if(data.length > 0) return pagination(req, res, data)
+    else return res.status(206).json({message : "Error! While Getting Payments ", success : false })
+  })
+
+  exports.usersWishs = catchAsyncError(async(req,res) =>{
+    const { permissions, user } = await req
+    if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Payments", status: false });
+    const query = `Select users.name,users.email, course.name as course, course.course_link as link,wish.id,Date_Format(wish.created_at, '%d-%m-%y') from jtc_ecommers_wishlist as wish Left Join	jtc_ecommers_courses as course On wish.course = course.id And course.deleted_by = '0' Left Join jtc_ecommers_users as users On users.id = wish.user and users.deleted_by = '0'`
+  
+    const data = await executeQuery(query)
+    if(data.length > 0) return pagination(req, res, data)
+    else return res.status(206).json({message : "Error! While Getting Payments ", success : false })
+  })
   
   exports.allUsers = catchAsyncError(async(req,res) =>{
     const { permissions} = await req

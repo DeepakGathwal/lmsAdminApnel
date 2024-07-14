@@ -81,8 +81,7 @@ export const deleteCourceLearn = async (path, id) => {
 export const allCourceLearn = async (path, limit, currentPage) => {
   try {
     const { data } = await instance.get(`ecommersCoursePoint/learn?module=${path}&limit=${limit}&skipPage=${currentPage}`)
-    console.log(data);
-    return data
+     return data
   } catch (err) {
     return err.message
   }
@@ -2082,7 +2081,7 @@ export const projectdelete = async (path, id) => {
 
 export const usersMembers = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.get(`ecommersCoursePoint?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`users?module=${path}&limit=${limit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -2091,7 +2090,7 @@ export const usersMembers = async (path, limit, currentPage) => {
 
 export const usersPayment = async (path, limit, currentPage) => {
   try {
-    const { data } = await instance.delete(`ecommersCoursePoint?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.delete(`users?module=${path}&limit=${limit}&skipPage=${currentPage}`)
     return data
   } catch (err) {
     return err.message
@@ -2136,6 +2135,55 @@ export const createECourse = async (path, formData) => {
   try {
 
     const { data } = await instance.post(`ecommersCourse?module=${path}`, formData)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * create a course type 
+ * permission required to add a course type
+ */
+export const usersCart = async (path) => {
+  try {
+
+    const { data } = await instance.put(`users?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+/**
+ * create a course type 
+ * permission required to add a course type
+ */
+export const usersWishList = async (path) => {
+  try {
+
+    const { data } = await instance.patch(`users?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+
+export const usersReview = async (path) => {
+  try {
+
+    const { data } = await instance.get(`users/review/?module=${path}`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
+
+export const reviewDelete = async (path, id) => {
+  try {
+
+    const { data } = await instance.patch(`users/review/${id}/?module=${path}`)
     return data
   } catch (err) {
     return err.message

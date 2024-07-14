@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { usersWishList } from '../../Components/CommonUrl/apis';
+import {  usersCart } from '../../Components/CommonUrl/apis';
 import Pagination from '../../Components/pageComponents/pagination';
 import Header from '../../Components/pageComponents/header';
 
-const Wishlist = () => {
+const CartItem = () => {
   const [state, setState] = useState([])
   const [currentPage, setcurrentPage] = useState(1)
   const [query, setQuery] = useState("");
@@ -14,7 +14,8 @@ const Wishlist = () => {
 
   const allData = async (limit) => {
     const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await usersWishList(path, givenLimit, currentPage)
+    const data = await usersCart(path, givenLimit, currentPage)
+
      return data && setState(data)
   }
 
@@ -25,7 +26,7 @@ const Wishlist = () => {
   return (
    
       <div className="page">
-        <h3 className='heading mb-4'>Wishlist Details</h3>
+        <h3 className='heading mb-4'>Cart Items</h3>
         <Header  allData={allData} state={state} setQuery={setQuery}/>
       
         <div className='middlebody m-3'>
@@ -53,17 +54,19 @@ const Wishlist = () => {
                     obj.name.toLowerCase().includes(query.toLowerCase()) ||
                     obj.email.toLowerCase().includes(query.toLowerCase()) ||
                     obj.course.toLowerCase().includes(query.toLowerCase()) 
+                
                   ) 
                     return obj;
                   
                 }).map((el, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
+                   
                     <td>{el.name}</td>
                     <td>{el.email}</td>
                     <td>{el.course}</td>
                     <td>{el.date}</td>
-                 </tr>
+                    </tr>
                 )): <h1>No Data</h1>}
               </tbody>
             </table>
@@ -76,7 +79,4 @@ const Wishlist = () => {
   )
 }
 
-
-
-
-export default Wishlist
+export default CartItem
