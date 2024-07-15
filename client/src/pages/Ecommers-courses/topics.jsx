@@ -195,7 +195,7 @@ const ETopics = () => {
                     <td>
                       {el.brochurer ?
                         <>
-                          <a href={`http://${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_DOMAIN}ecommersSection/resourse/${el.brochurer}?module=${path}`} target='_blank'>
+                          <a href={`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_DOMAIN}ecommersSection/resourse/${el.brochurer}?module=${path}`} target='_blank'>
                             <MdRemoveRedEye />
                           </a>
                           /<MdDelete onClick={(e) => deleteResourse(el.brochurer)} />

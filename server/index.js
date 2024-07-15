@@ -12,7 +12,7 @@ const cors = require('cors')
 const ErrorHandler = require('./middelwares/error')
 const { createDocs } = require('./utils/swagger');
 const app = express();
-app.use(cors({exposedHeaders: 'Set-Cookie',Headers: true,credentials:true, origin:'http://localhost:3000', methods: "GET,POST,PUT,DELETE,PATCH", optionsSuccessStatus: 200}))
+app.use(cors({exposedHeaders: 'Set-Cookie',Headers: true,credentials:true, origin:`${process.env.REACT}`, methods: "GET,POST,PUT,DELETE,PATCH", optionsSuccessStatus: 200}))
 app.use(cookieParser())
 app.use(body.json({ limit: '50mb' }));
 app.use(body.urlencoded({ limit: '50mb', extended: true }));

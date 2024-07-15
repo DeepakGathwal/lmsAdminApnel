@@ -13,7 +13,7 @@ import io from 'socket.io-client';
 
 const SideBar = () => {
   const navigate = useNavigate();
-  const socket = io.connect('http://localhost:8000/');
+  const socket = io.connect(`${process.env.REACT_APP_API_NOTIFICATION}`);
   const [admin, setAdmin] = useState([]);
   const [routers, setRouters] = useState([]);
   const [length, setLength] = useState(0);

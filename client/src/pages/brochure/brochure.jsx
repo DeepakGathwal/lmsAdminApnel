@@ -111,7 +111,7 @@ const Brochure = () => {
                   <td>{el.course}</td>
 
                   <td style={{ cursor: "pointer" }}>
-                    <a href={`http://localhost:8080/jtc/admin/brochure/${el.name}?module=${path}`} target='_blank'>
+                    <a href={`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_DOMAIN}brochure/${el.name}?module=${path}`} target='_blank'>
                       <MdRemoveRedEye />
                     </a>
                     /<MdDelete onClick={(e) => ConfirmBox(el.id)}
