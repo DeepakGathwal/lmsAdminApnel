@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { MdDelete, MdEditSquare, MdRemoveRedEye, MdDownloading } from "react-icons/md";
+
 import Modal from 'react-bootstrap/Modal';
-import { MdDelete, MdEditSquare } from "react-icons/md";
-import { allECourseType, createECourseType, deleteECourseType, editECourseType } from '../../Components/CommonUrl/apis';
+import { allECourseType, createECourseType, deleteECourseType, editECourseType} from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/pageComponents/pagination';
 import UploadImageComponent from '../../Components/pageComponents/uploadImage';
@@ -30,6 +31,7 @@ const TypesOfECourses = () => {
     return data && setState(data)
   }
 
+ 
   useEffect(() => {
     allData()
   }, [currentPage])
@@ -99,6 +101,9 @@ const TypesOfECourses = () => {
                   <th>Category</th>
                   <th>Description</th>
                   <th>Icon</th>
+                 
+                  <th>Created At</th>
+
                   <th>Action</th>
                 </tr>
               </thead>
@@ -118,6 +123,8 @@ const TypesOfECourses = () => {
                     <td>{el.category}</td>
                     <td>{el.description}</td>
                     <td><img src={el.icon} alt="" srcset="" width={50} height={50} /></td>
+                 
+                    <td>{el.created_at}</td>
 
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />

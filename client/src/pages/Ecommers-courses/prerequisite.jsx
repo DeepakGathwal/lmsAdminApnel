@@ -125,7 +125,7 @@ const Prerequisite = () => {
                   <th>Id</th>
                   <th>Courses</th>
                   <th>Prerequisite</th>
-
+                  <th>Created At</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -146,6 +146,7 @@ const Prerequisite = () => {
                     <td>{index + 1}</td>
                     <td>{el.courses ??= "--"}</td>
                     <td>{el.requirement}</td>
+                    <td>{el.created_at}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
                       / <MdDelete onClick={(e) => ConfirmBox(el.id)}

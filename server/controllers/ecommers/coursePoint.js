@@ -70,7 +70,7 @@ exports.addLearn = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
       if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Learn Points", status: false });
   
-      const query =  `Select id,course_id,point from jtc_ecommers_course_learn WHERE deleted_by = '0' `
+      const query =  `Select id,course_id,point,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_learn WHERE deleted_by = '0' `
 
       const data = await executeQuery(query)
     
@@ -169,7 +169,7 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   exports.prerequisite = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
       if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Requirements", status: false });
-    const query =  `Select id,course_id,requirement from jtc_ecommers_course_requirements WHERE deleted_by = '0' `
+    const query =  `Select id,course_id,requirement,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_requirements WHERE deleted_by = '0' `
 
     const data = await executeQuery(query)
   

@@ -104,6 +104,7 @@ const Section = () => {
                   <th>heading</th>
                   <th>details</th>
                   <th>Images</th>
+                  <th>Created At</th>
 
                   <th>Action</th>
                 </tr>
@@ -129,7 +130,7 @@ const Section = () => {
                     <td>{el.images && el.images.split("==,").map((el) => (
                       <img src={el} alt="" srcset="" width={40} height={40} style={{ margin: '5px' }} />
                     ))}</td>
-
+                    <td>{el.created_at}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
                       / <MdDelete onClick={(e) => ConfirmBox(el.id)}

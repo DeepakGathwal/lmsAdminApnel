@@ -123,6 +123,7 @@ const EChapter = () => {
                   <th>Id</th>
                   <th>Course</th>
                   <th>Chapter</th>
+                  <th>Created At</th>
 
                   <th>Action</th>
                 </tr>
@@ -144,6 +145,7 @@ const EChapter = () => {
                     <td>{index + 1}</td>
                     <td>{el.courses ??= "--"}</td>
                     <td>{el.chapter}</td>
+                    <td>{el.created_at}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
                       / <MdDelete onClick={(e) => ConfirmBox(el.id)}

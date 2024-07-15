@@ -102,6 +102,7 @@ const Cources = () => {
     if (value.success == true) {
       e.preventDefault()
       setShow(!show)
+      setImage([])
       setEditShow('')
       allData()
     }else alert(value.message)
@@ -124,15 +125,13 @@ const Cources = () => {
                   <th>Name</th>
                   <th>Category</th>
                   <th>Description</th>
-               
                   <th>Label</th>
                   <th>Image</th>
                   <th>Price</th>
                   <th>Discount</th>
                   <th>Video Link</th>
-                
                   <th>Certificate</th>
-                
+                  <th>Created At</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -161,7 +160,7 @@ const Cources = () => {
                      <td>{el.video_link}</td>
                   
                      <td>{el.certificates == 1 ? "Yes" : "No"}</td>
-                    
+                     <td>{el.created_at}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
                       / <MdDelete onClick={(e) => ConfirmBox(el.id)}
@@ -192,9 +191,9 @@ const Cources = () => {
         <div className="form-group">
         <label htmlFor="date" className='text-dark mt-2 fw-semibold '> Course Category </label>
         <select name="category" id="" onChange={handelChange} className='form-control'>
-        <option selected disabled>Select Course Category</option>
+        <option selected disabled>{editshow.category ? editshow.category :  "Select Category"}</option>
           {courceCategoryList && courceCategoryList.map((el) =>(
-            <option value={el.id}>{el.category}</option>
+            <option value={el.category}>{el.category}</option>
 
           ))}
         </select>
@@ -221,7 +220,7 @@ const Cources = () => {
       <select name="label" id="" className='form-control'  onChange={handelChange} >
         <option selected disabled>{editshow.label ? editshow.label :  "Select level"}</option>
           {labelList && labelList.map((ab) => (
-            <option value={ab.id}>{ab.label}</option>
+            <option value={ab.label}>{ab.label}</option>
           ))}
         </select>
         </div>

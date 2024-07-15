@@ -90,7 +90,7 @@ const Courcelabel = () => {
                 <tr>
                   <th>Id</th>
                   <th>Course level</th>
-                
+                  <th>Created At</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -108,7 +108,7 @@ const Courcelabel = () => {
                   <tr key={index}>
                     <td>{index + 1}</td>
                      <td>{el.label}</td>
-                    
+                     <td>{el.created_at}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
                     

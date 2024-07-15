@@ -126,6 +126,7 @@ let optionArray = []
                   <th>Point About</th>
                   <th>Point</th>
                   <th>Description</th>
+                  <th>Created At</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -146,9 +147,8 @@ let optionArray = []
                     <td>{index + 1}</td>
                      <td>{el.faqs_about ??= "--"}</td>
                      <td>{el.point}</td>
-                    
                      <td>{el.description}</td>
-                    
+                     <td>{el.created_at}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
                       / <MdDelete onClick={(e) => ConfirmBox(el.id)}

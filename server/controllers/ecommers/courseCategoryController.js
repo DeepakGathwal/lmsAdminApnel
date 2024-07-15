@@ -8,8 +8,7 @@ const { pagination } = require("../../utils/pagination");
 
 
 // add a new couse type -> type must be different every time
-exports.addCourseType = catchAsyncError(async(req,res) => {
-    
+exports.addCourseType = catchAsyncError(async(req,res) => {    
     const {category, description} = await req.body
     const { permissions, user } = await req
     if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  category", status: false });
@@ -62,7 +61,7 @@ exports.editCourseType = catchAsyncError(async(req,res) => {
 exports.courseType = catchAsyncError(async(req,res) => {
     const { permissions, user } = await req
     if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Category", status: false });
-    const query = `Select * from jtc_ecommers_course_types Order by id desc`
+    const query = `Select id, category, icon, description ,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_types Order by id desc`
     const data =  await executeQuery(query)
     if(data.length > 0) return pagination(req, res, data)
     else return res.status(206).json({message : "Error! During Fetch Category", success: false})
@@ -128,7 +127,7 @@ exports.editCourseLabel = catchAsyncError(async(req,res) => {
 exports.courceLabel = catchAsyncError(async(req,res) => {
     const { permissions, user } = await req
     if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Label", status: false });
-    const query = `Select * from jtc_ecommers_course_label `
+    const query = `Select id, label,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_label `
     const data =  await executeQuery(query)
     if(data.length > 0) return pagination(req, res, data)
     else return res.status(206).json({message : "Error! During Fetch Category", success: false})

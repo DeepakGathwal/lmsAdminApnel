@@ -138,7 +138,7 @@ app.use(error)
 
 process.on("uncaughtException",(err) =>{
   console.log(`Error ${err}`);
-  console.log(`Shutting down server ${process.env.PORT} due new to error`);
+ 
       process.exit(1)
 })
 // Server listing store on a variable
@@ -153,3 +153,4 @@ process.on("unhandledRejection",err => {
       process.exit(1)
   })
 })
+// }

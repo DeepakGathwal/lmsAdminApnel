@@ -11,9 +11,7 @@ const { EcourseSchema, EcourceChapter } = require("../../utils/validation");
 exports.addCource = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
   if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Course", status: false });
-
-  const { name, category, description, label, instatructor, price, discount, video_link, certificates } = await req.body
-
+  const { name, category, description, label, price, discount, video_link, certificates } = await req.body
   const { error } = EcourseSchema.validate(req.body);
   if (error) return res.status(206).json({ status: false, message: error.details[0].message })
   const findquery = `Select id from  jtc_ecommers_courses WHERE name = ${name}`
@@ -23,8 +21,7 @@ exports.addCource = catchAsyncError(async (req, res) => {
   if (!req.file) return res.status(206).json({ message: "Atleast one image needed", success: false })
   const icon = await req.file
   const fileImage = icon && await getDataUri(icon)
-  const query = `Insert into jtc_ecommers_courses SET name = ${name},category = ${category}, label = ${label}, 
-      course_link = '${link}', description = ${description},image =  '${fileImage}', created_by = ${user}, total_price =  ${price}, discount =  ${discount}, video_link = ${video_link},certificates =  ${certificates == "1" ? 1 : 0} `
+  const query = `Insert into jtc_ecommers_courses SET name = ${name}, course_link = ${link}, description = ${description},category = (Select id  from jtc_ecommers_course_types WHERE category = ${category}), label = (Select id from jtc_ecommers_course_label WHERE label = ${label}),image =  '${fileImage}', created_by = ${user}, total_price =  ${price}, discount =  ${discount}, video_link = ${video_link},certificates =  ${certificates == "1" ? 1 : 0} `
   const executeAddPoint = await executeQuery(query)
   if (executeAddPoint.affectedRows > 0) return res.status(200).json({ message: " Cource Added Successfully", success: true })
   else return res.status(206).json({ message: "Error! During category Added ", success: false })
@@ -32,7 +29,6 @@ exports.addCource = catchAsyncError(async (req, res) => {
 })
 
 exports.editCource = catchAsyncError(async (req, res) => {
-
   const { permissions, user } = await req
   if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Course", status: false });
   const { name, category, description, label, price, discount, video_link, certificates } = await req.body
@@ -56,7 +52,7 @@ exports.editCource = catchAsyncError(async (req, res) => {
 
   }
 
-  const query = `update  jtc_ecommers_courses SET name = ${name},category = (Select id  from jtc_ecommers_course_types WHERE category = ${category}), label = (Select id from jtc_ecommers_course_label WHERE id = ${label}), course_link = '${link}', description = ${description},updated_by = ${user},updated_at =  current_timestamp(), total_price =  ${price}, discount = ${discount}, video_link = ${video_link}, certificates =  ${certificates == "1" ? 1 : 0} ${image} WHERE id = ${id} `
+  const query = `update  jtc_ecommers_courses SET name = ${name},category = (Select id  from jtc_ecommers_course_types WHERE category = ${category}), label = (Select id from jtc_ecommers_course_label WHERE label = ${label}), course_link = ${link}, description = ${description},updated_by = ${user},updated_at =  current_timestamp(), total_price =  ${price}, discount = ${discount}, video_link = ${video_link}, certificates =  ${certificates == "1" ? 1 : 0} ${image} WHERE id = ${id} `
   const executeAddPoint = await executeQuery(query)
   if (executeAddPoint.affectedRows > 0) return res.status(200).json({ message: " Cource Added Successfully", success: true })
   else return res.status(206).json({ message: "Error! During category Added ", success: false })
@@ -64,11 +60,10 @@ exports.editCource = catchAsyncError(async (req, res) => {
 })
 
 exports.allCources = catchAsyncError(async (req, res) => {
-
   const { permissions, user } = await req
   if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Course", status: false });
 
-  const query = `Select label.label,category.category,course.id, course.name, course.video_link, course.certificates, course.image, course.total_price, course.discount, course.description from jtc_ecommers_courses as course Left Join jtc_ecommers_course_types as category On category.id = course.category Left Join jtc_ecommers_course_label as label On label.id = course.label WHERE course.deleted_by = '0' Order by course.id desc`
+  const query = `Select label.label,category.category,course.id, course.name, Date_Format(course.created_at, '%d-%m-%y %h:%i:%s %p') as created_at ,course.video_link, course.certificates, course.image, course.total_price, course.discount, course.description from jtc_ecommers_courses as course Left Join jtc_ecommers_course_types as category On category.id = course.category Left Join jtc_ecommers_course_label as label On label.id = course.label WHERE course.deleted_by = '0' Order by course.id desc`
 
   const data = await executeQuery(query)
   if (data.length > 0) return pagination(req, res, data)
@@ -87,13 +82,7 @@ exports.deleteCource = catchAsyncError(async (req, res) => {
 })
 
 
-
-
-
-
-
 exports.addChapter = catchAsyncError(async (req, res) => {
-
   const { permissions, user } = await req
   if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Course Chapter", status: false });
   const { courses, chapter } = await req.body
@@ -159,7 +148,7 @@ exports.Chapters = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
   if (permissions.can_View == 0) return res.status(206).json({ message: "Permission Denied to View Course Chapter", status: false });
   // Fetch all chapters ordered by ID in descending order
-  const alreadyExists = `Select id, chapter,course_id  from jtc_ecommers_course_chapter  WHERE deleted_by = '0'`
+  const alreadyExists = `Select id, Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at,chapter,course_id  from jtc_ecommers_course_chapter  WHERE deleted_by = '0'`
 
   const data = await executeQuery(alreadyExists)
 
@@ -193,6 +182,8 @@ exports.removeChapter = catchAsyncError(async (req, res) => {
   if (data.affectedRows > 0) return res.status(200).json({ message: "Point Delete Successfully", success: true })
   else return res.status(206).json({ message: "Error! During Delete Point", success: false })
 })
+
+
 
 
 
@@ -260,7 +251,7 @@ exports.editTopic = catchAsyncError(async (req, res) => {
 exports.topics = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
   if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Course Chapter", status: false });
-  const query = `Select id,topic, timing , videoLink, chapter_id from jtc_ecommers_videos where deleted_by = '0' order by id desc`
+  const query = `Select resours.name as brochurer, videos.id,videos.topic, videos.timing , Date_Format(videos.created_at, '%d-%m-%y %h:%i:%s %p') as created_at,videos.videoLink, videos.chapter_id from jtc_ecommers_videos as videos Left join jtc_ecommers_resourses as resours On resours.video  = videos.id where videos.deleted_by = '0' order by videos.id desc`
   const data = await executeQuery(query)
   
   if (data.length > 0) {
