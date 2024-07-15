@@ -2317,7 +2317,6 @@ export const deleteEbrochure = async (path, id) => {
  */
 export const downloadEbrochure = async (path, id, name) => {
   try {
-console.log(id, name);
     const response = await instance.get(`ecommersSection/resourse/download/${name}?module=${path}`, {
       responseType: 'blob',
     })
