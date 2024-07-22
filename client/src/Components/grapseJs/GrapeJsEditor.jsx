@@ -10,11 +10,54 @@ const GrapeJsEditor = ({editorRef, page_html, page_css}) => {
  
   useEffect(() => {
     const editor = grapesjs.init({
+      pluginsOpts: {
+    'gjs-plugin': {
+      // Plugin specific configurations
+    }
+  },
+  // Other configurations
+  noticeOnUnload: 0, // Prevents auto-formatting on unload
+  // height: '100%',
+  // fromElement: true,
+  storageManager: {
+    autoload: 0, // Prevents auto-saving which may trigger unwanted replacements
+  },
+  container: '#gjs',
+  
+  
+  plugins: ['gjs-blocks-basic'],
+  pluginsOpts: {
+    'gjs-blocks-basic': {}
+  },
+  canvas: {
+    styles: [
+      'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css'
+    ],
+    scripts: [
+      'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.min.js'
+    ],
+  },
+  components: `<html>
+    <head>
+      <meta charset="UTF-8">
+      <title>GrapesJS Project</title>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Hello World!</h1>
+      </div>
+    </body>
+  </html>`,
+  // Other possible configurations
+
       container: editorRef.current,
       components: page_html,
       style:page_css,
       storageManager: false // Disable the storage manager for simplicity
     });
+    
 
     // Register custom blocks with the Block Manager
     customBlocks.forEach(block => {

@@ -19,7 +19,7 @@ exports.addTutorial = catchAsyncError(async(req,res) =>{
     if(findAlready.length > 0) return res.status(206).json({message : "Heading Already Exists", success : false})
       
     const link = await heading.replaceAll(" ", "-").toLowerCase()
-    const addTutorialQuery = `Insert into jtc_tutorials_topics SET created_at = current_timestamp(),created_by = ${user}, cource_id = ${cource_id}, category_Id = ${category_id},  heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${category_id+link}`
+    const addTutorialQuery = `Insert into jtc_tutorials_topics SET created_at = current_timestamp(),created_by = ${user}, cource_id = ${cource_id}, category_Id = ${category_id},  heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${category_id+"-"+link}`
     const executeAddTutorialQuery = await executeQuery(addTutorialQuery);
     if(executeAddTutorialQuery.affectedRows > 0) return res.status(200).json({message : "Tutorial Added Successfully", success : true});
     return res.status(206).json({message : "Error! During Tutorial Added ", success : false})
@@ -39,7 +39,7 @@ exports.editTutorial = catchAsyncError(async(req,res) =>{
     const findAlready = await executeQuery(already)
     if(findAlready.length > 1) return res.status(206).json({message : "Heading Already Exists", success : false})
     const  link = await heading.replaceAll(" ", "-").toLowerCase()
-    const addTutorialQuery = `Update jtc_tutorials_topics SET cource_id = (Select id from jtc_tutorial_cources WHERE name = ${cource} && deleted_by = '0') , category_Id =  ${categoryId},updated_at = current_timestamp() ,updated_by = ${user}, heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${categoryId+link} WHERE id = ${id} && deleted_by = '0'`
+    const addTutorialQuery = `Update jtc_tutorials_topics SET cource_id = (Select id from jtc_tutorial_cources WHERE name = ${cource} && deleted_by = '0') , category_Id =  ${categoryId},updated_at = current_timestamp() ,updated_by = ${user}, heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${categoryId+"-"+link} WHERE id = ${id} && deleted_by = '0'`
     const executeAddTutorialQuery = await executeQuery(addTutorialQuery);
     if(executeAddTutorialQuery.affectedRows > 0) return res.status(200).json({message : "Tutorial Updated Successfully", success : true});
     return res.status(206).json({message : "Error! During Tutorial Edit", success : false})
