@@ -30,7 +30,7 @@ exports.editPoints = catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     const {id} = req.params 
     if(!id)  return res.status(200).json({message : "Point Not Found for Edit", success : false})
-    const {point, description} = req.body
+    const {point, description} = await req.body
     const { error } = aboutUs.validate(req.body);
     if (error)
       return res

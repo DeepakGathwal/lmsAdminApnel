@@ -26,7 +26,7 @@ exports.createTestominal = catchAsyncError(async(req,res) =>{
 exports.getTestominalLsit = catchAsyncError(async(req,res) =>{
     const {permissions, user} = req 
     if(permissions[0].can_view == 0) return res.status(206).json({message : "Permission Denied to View Testominals", status : false});
-    const {id} = req.query
+    const {id} = await req.query
     let searchById = ''
         if(id)  searchById = `&& test.id = ${id}`
     const viewAll = `SELECT test.id,test.name,test.description,test.read_link,test.image, team.name as creator from jtc_testimonials as test LEFT JOIN jtc_team as team On team.id = test.created_by and team.deleted_by = '0' WHERE test.deleted_by = '0' ${searchById} ORDER By test.id DESC`

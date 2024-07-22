@@ -4,7 +4,7 @@ const { pagination } = require("../utils/pagination");
 const { roleSchema, categorySchema } = require("../utils/validation");
 
 exports.createRole = catchAsyncError(async(req,res) =>{
-    const {role} = req.body
+    const {role} = await req.body
     const { error } = roleSchema.validate(req.body);
     if (error)
       return res
@@ -37,7 +37,7 @@ exports.createRole = catchAsyncError(async(req,res) =>{
 exports.allRoles = catchAsyncError(async(req,res) =>{
     const {permissions} = req 
     if(permissions[0].can_view == 0) return res.status(206).json({message : "Permission Denied View Role List", success : false});
-    const {id} = req.query 
+    const {id} = await req.query 
     
     let searchById = ''
     if(id) searchById = `&& id = ${id}`
@@ -49,18 +49,18 @@ exports.allRoles = catchAsyncError(async(req,res) =>{
 })
 
 exports.editRole = catchAsyncError(async(req,res) =>{
-    const {id} = req.query
+    const {id} = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
-    const {permissions, user} = req 
+    const {permissions, user} = await req 
     const { error } = roleSchema.validate(req.body);
     if (error)
       return res
         .status(206)
         .json({ status: false, message: error.details[0].message });
   
-    if(permissions[0].can_edit == 0) return res.status(206).json({message : "Permission Denied to Create New Role", status : false});
-    const {role} = req.body
+        if(permissions[0].can_edit == 0) return res.status(206).json({message : "Permission Denied to Create New Role", status : false});
+        const {role} =await req.body
     const alredyQuery = `Select id from jtc_roles where role = ${role} && deleted_by = '0'`
     const alredyRole = await executeQuery(alredyQuery)
     if(alredyRole.length > 0) return res.status(206).json({message : "Role Name Already Exists", success : false})
@@ -71,7 +71,7 @@ exports.editRole = catchAsyncError(async(req,res) =>{
 })
 
 exports.deleteRole = catchAsyncError(async(req,res) =>{
-    const {id} = req.query
+    const {id} = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
    const {permissions, user} = req 

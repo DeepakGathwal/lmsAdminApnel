@@ -118,7 +118,7 @@ exports.deletetech = catchAsyncError(async(req,res) =>{
 exports.alltech = catchAsyncError(async(req,res) =>{
     const {permissions} = req 
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to get all project language list",success: false });
-    const {language} = req.query
+    const {language} = await req.query
     let filterByCource = '';
    
     if(language > 0){

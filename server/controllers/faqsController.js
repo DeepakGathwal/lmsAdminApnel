@@ -6,7 +6,7 @@ const { faqsSchema } = require("../utils/validation");
 exports.addFaqs = catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  Point", status: false });
-    const {point, description, about} = req.body
+    const {point, description, about} =await req.body
     const { error } = faqsSchema.validate(req.body);
     if (error)
       return res
@@ -28,7 +28,7 @@ exports.editFaqs = catchAsyncError(async(req,res) => {
     const {id} = req.params 
     if(!id)  return res.status(200).json({message : "Point Not Found for Edit", success : false})
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Point", status: false });
-    const {point, description, about} = req.body
+    const {point, description, about} = await req.body
      const { error } = faqsSchema.validate(req.body);
     if (error)
       return res

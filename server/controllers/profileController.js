@@ -10,7 +10,7 @@ const {getDataUri} = require('../utils/imageHandeler')
 
 
 exports.login = catchAsyncError(async(req,res) =>{
-    const {email, password} =  req.body
+    const {email, password} = await req.body
     const { error } = loginSchema.validate(req.body);
     if (error)
       return res
@@ -108,7 +108,7 @@ exports.updateImage = catchAsyncError(async(req,res) =>{
 })
 
 exports.updateProfile = catchAsyncError(async(req,res) =>{
-    const {email, phone, name, linkedin, instagram, facebook, address } =  req.body
+    const {email, phone, name, linkedin, instagram, facebook, address } = await req.body
     const { user} = req 
     const { error } = profileSchema.validate(req.body);
     if (error)
@@ -123,7 +123,7 @@ exports.updateProfile = catchAsyncError(async(req,res) =>{
 })
 
 exports.updatePassword = catchAsyncError(async(req,res) =>{
-    const {confirmPassword, password } =  req.body   
+    const {confirmPassword, password } = await req.body   
     const { error } = passwordSchema.validate(req.body);
     if (error)
       return res
@@ -141,7 +141,7 @@ exports.updatePassword = catchAsyncError(async(req,res) =>{
 
 
 exports.forgetPassword = catchAsyncError(async(req,res) =>{
-    const {email} = req.body 
+    const {email} = await req.body 
     const { error } = forgetPassword.validate(req.body);
     if (error)
       return res
@@ -175,7 +175,7 @@ exports.forgetPassword = catchAsyncError(async(req,res) =>{
 
 exports.verifyOtp = catchAsyncError(async(req,res) =>{
     const {user} = req 
-    const {otp} = req.body
+    const {otp} = await req.body
     const { error } = otpSchem.validate(req.body);
     if (error)
       return res

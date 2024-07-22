@@ -7,7 +7,7 @@ const {getDataUri} = require('../utils/imageHandeler')
 exports.addLinks = catchAsyncError(async(req,res) => {
     const {name, nav_link, html, css } = req.body 
       const { permissions, user } = req
-      const { header } = req.query
+      const { header } = await req.query
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Nav Link", status: false });
     let imag = '';
     let backgroundimg = ''
@@ -28,7 +28,7 @@ exports.editLinks = catchAsyncError(async(req,res) => {
 
     if(!id)  return res.status(200).json({message : "Point Not Found for Edit", success : false})
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Point", status: false });
-    const { header } = req.query
+    const { header } = await req.query
     const alreadyExists =  `Select id, backgroundimage, image from jtc_website_links WHERE name = ${name} && nav_link = ${nav_link}`
     const executeAlready =  await executeQuery(alreadyExists)
     if(executeAlready.length > 1) return res.status(206).json({message : "Point Already Exists"})
@@ -45,7 +45,7 @@ exports.editLinks = catchAsyncError(async(req,res) => {
 
 exports.links = catchAsyncError(async(req,res) => {
     const { permissions, user } = req
-    const {id} = req.query 
+    const {id} = await req.query 
     let getById = ''
     if(id > 0){
         getById = `&& id = ${id}`

@@ -17,27 +17,29 @@ exports.addTutorial = catchAsyncError(async(req,res) =>{
     const already = `Select id from jtc_tutorials_topics WHERE cource_id = ${cource_id} && category_Id = ${category_id} && heading = ${heading} && deleted_by = '0'`
     const findAlready = await executeQuery(already)
     if(findAlready.length > 0) return res.status(206).json({message : "Heading Already Exists", success : false})
+      
     const link = await heading.replaceAll(" ", "-").toLowerCase()
-    const addTutorialQuery = `Insert into jtc_tutorials_topics SET created_at = current_timestamp(),created_by = ${user}, cource_id = ${cource_id}, category_Id = ${category_id},  heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${link}`
+    const addTutorialQuery = `Insert into jtc_tutorials_topics SET created_at = current_timestamp(),created_by = ${user}, cource_id = ${cource_id}, category_Id = ${category_id},  heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${category_id+link}`
     const executeAddTutorialQuery = await executeQuery(addTutorialQuery);
     if(executeAddTutorialQuery.affectedRows > 0) return res.status(200).json({message : "Tutorial Added Successfully", success : true});
     return res.status(206).json({message : "Error! During Tutorial Added ", success : false})
 })
 
 exports.editTutorial = catchAsyncError(async(req,res) =>{
- 
     const {permissions, user} = req 
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Create New Tutorial",success: false });
     const {html,css,category, cource, heading, meta_tags, meta_keywords, meta_description, meta_title} = req.body 
     const {id} = req.params
-  if(!id) return res.status(206).json({message : "Data Not Found", success : false})
-  const already = `Select id from jtc_tutorials_topics WHERE heading = ${heading} && cource_id = (Select id from jtc_tutorial_cources WHERE name = ${cource} LIMIT 1) && category_Id = (Select id from jtc_tutorial_chapter WHERE category_name = ${category} LIMIT 1) && deleted_by = '0'`
+    if(!id) return res.status(206).json({message : "Data Not Found", success : false})
 
-  const findAlready = await executeQuery(already)
-
-  if(findAlready.length > 1) return res.status(206).json({message : "Heading Already Exists", success : false})
-  const  link = await heading.replaceAll(" ", "-").toLowerCase()
-    const addTutorialQuery = `Update jtc_tutorials_topics SET cource_id = (Select id from jtc_tutorial_cources WHERE name = ${cource} && deleted_by = '0') , category_Id = (Select id from jtc_tutorial_chapter WHERE category_name = ${category} && deleted_by = '0'),updated_at = current_timestamp() ,updated_by = ${user}, heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${link} WHERE id = ${id} && deleted_by = '0'`
+    const categoryQuery = `Select id from jtc_tutorial_chapter WHERE category_name = ${category} && deleted_by = '0' LIMIT 1`
+    const categoryRunQuery = await executeQuery(categoryQuery)
+    const categoryId = categoryRunQuery && categoryRunQuery[0].id
+    const already = `Select id from jtc_tutorials_topics WHERE heading = ${heading} && cource_id = (Select id from jtc_tutorial_cources WHERE name = ${cource} LIMIT 1) && category_Id =  ${categoryId} && deleted_by = '0'`
+    const findAlready = await executeQuery(already)
+    if(findAlready.length > 1) return res.status(206).json({message : "Heading Already Exists", success : false})
+    const  link = await heading.replaceAll(" ", "-").toLowerCase()
+    const addTutorialQuery = `Update jtc_tutorials_topics SET cource_id = (Select id from jtc_tutorial_cources WHERE name = ${cource} && deleted_by = '0') , category_Id =  ${categoryId},updated_at = current_timestamp() ,updated_by = ${user}, heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = ${categoryId+link} WHERE id = ${id} && deleted_by = '0'`
     const executeAddTutorialQuery = await executeQuery(addTutorialQuery);
     if(executeAddTutorialQuery.affectedRows > 0) return res.status(200).json({message : "Tutorial Updated Successfully", success : true});
     return res.status(206).json({message : "Error! During Tutorial Edit", success : false})
@@ -46,7 +48,6 @@ exports.editTutorial = catchAsyncError(async(req,res) =>{
 exports.getHeadings = catchAsyncError(async(req,res) =>{
     const {permissions} = req 
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Create New Tutorial",success: false });
-   
     const already = `Select courses.name as course,courseType.category as courceType,chapter.category_name as chapter, tutorial.id,tutorial.heading  from jtc_tutorials_topics as tutorial Inner JOIN jtc_tutorial_chapter as chapter On chapter.id = tutorial.category_id and chapter.deleted_by = '0' Inner JOIN jtc_tutorial_cources as courses On courses.id = tutorial.cource_id && courses.deleted_by = '0' Inner JOIN jtc_tutorial_type as courseType On courseType.id = courses.category WHERE tutorial.deleted_by = '0' ORDER By tutorial.id DESC`
     const data = await executeQuery(already)
     if(data.length > 0) return pagination(req, res, data)
@@ -59,7 +60,6 @@ exports.getTutorial = catchAsyncError(async (req,res) =>{
   const {id} = req.params 
   if(!id) return res.status(206).json({message : "Data Not Found", success : false})
   if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Create New Tutorial",success: false });
-  
   const already = `Select cources.name as cources,typeCources.category as courceType, categories.category_name as category,team.name as creator,tutorial.heading ,tutorial.tutorial_html,tutorial.tutorial_css , tutorial.meta_tags, tutorial.meta_keywords, tutorial.meta_description, tutorial.meta_title from jtc_tutorials_topics as tutorial 
    LEFT JOIN jtc_team as team On team.id = tutorial.created_by
   Inner JOIN jtc_tutorial_chapter as categories  On categories.id = tutorial.category_id and categories.deleted_by = '0'
@@ -88,10 +88,10 @@ exports.deleteTutorial = catchAsyncError(async(req,res) =>{
 exports.addCategory =  catchAsyncError(async(req,res) => {
   const { permissions, user } = req
   if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Category",status: false });
-  const {cource} =  req.query
+  const {cource} = await req.query
 
   if(!cource) return res.status(206).json({message : "Cource Not Found",success : false})
-  const {category}  =  req.body 
+  const {category}  = await req.body 
   const { error } = categorySchema.validate(req.body);
   if (error)
     return res
@@ -110,7 +110,7 @@ else return res.status(206).json({message : "Error! During Category Added", succ
 exports.editCategory =  catchAsyncError(async(req,res) => {
   const { permissions, user } = req
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Category",status: false });
-    const {cource} = req.query
+    const {cource} = await req.query
   
     const { id} =  req.params
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
@@ -169,7 +169,7 @@ exports.getCategory =  catchAsyncError(async(req,res) => {
  
   const { permissions, user } = req
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Cources Chapter",status: false });
-    const {cource} =  req.query
+    const {cource} =  await req.query
   
     let filterByCource = '';
     if(cource > 0){

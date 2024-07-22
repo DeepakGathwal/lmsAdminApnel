@@ -50,7 +50,7 @@ exports.token = catchAsyncError(async(userid,res) =>{
 
   exports.verifyModulePermission = catchAsyncError(async (req, res, next) => {
   
-    const {module} = req.query
+    const {module} = await req.query
     if (!module) return res.status(206).json({ message: "Module  Missing", success: false })
 
     const {user} = req 

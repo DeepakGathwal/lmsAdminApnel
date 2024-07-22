@@ -28,7 +28,7 @@ exports.createTeamMember = catchAsyncError(async(req,res) =>{
 
 exports.getTeamMemberLsit = catchAsyncError(async(req,res) =>{
     const {permissions, user} = req 
-    const {id} = req.query
+    const {id} = await req.query
 
     let searchByRole = ''
       if(id)  searchByRole = `&& team.id = ${id}`
@@ -41,7 +41,7 @@ exports.getTeamMemberLsit = catchAsyncError(async(req,res) =>{
 })
 
 exports.updateTeamMember = catchAsyncError(async(req,res) =>{
-    const {id} = req.query
+    const {id} = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
     const {email, phone, role, name, linkedin, instagram, facebook } =  req.body
@@ -60,7 +60,7 @@ exports.updateTeamMember = catchAsyncError(async(req,res) =>{
 })
 
 exports.updatePassword = catchAsyncError(async(req,res) =>{
-    const {id} = req.query
+    const {id} = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
     const {password} =  req.body
@@ -74,7 +74,7 @@ exports.updatePassword = catchAsyncError(async(req,res) =>{
 })
 
 exports.deleteTeamMember = catchAsyncError(async(req,res) =>{
-    const {id} = req.query
+    const {id} = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
     const {permissions, user} = req 

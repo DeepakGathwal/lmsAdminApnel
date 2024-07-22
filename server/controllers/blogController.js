@@ -9,7 +9,7 @@ const { blogSchema } = require("../utils/validation");
 exports.addBlog = catchAsyncError(async (req, res) => {
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Blog", status: false });
-    const { name, heading, video_link, meta_tags, meta_keywords, meta_description, meta_title, category, blog_html, blog_css } = req.body
+    const { name, heading, video_link, meta_tags, meta_keywords, meta_description, meta_title, category, blog_html, blog_css } =await req.body
     const { error } = blogSchema.validate(req.body);
     if (error)
         return res
@@ -36,7 +36,7 @@ exports.addBlog = catchAsyncError(async (req, res) => {
 
 // edit a already exists  blog 
 exports.editBlog = catchAsyncError(async (req, res) => {
-    const { name, heading, video_link, meta_tags, meta_title, meta_keywords, meta_description, category, blog_html, blog_css } = req.body
+    const { name, heading, video_link, meta_tags, meta_title, meta_keywords, meta_description, category, blog_html, blog_css } = await req.body
 
     const { permissions, user } = req
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit New Blog", status: false });
@@ -72,7 +72,7 @@ exports.editBlog = catchAsyncError(async (req, res) => {
 //  all blogs function
 exports.allBlogList = catchAsyncError(async (req, res) => {
     const { permissions } = req
-    const { startDate, endDate, category } = req.query
+    const { startDate, endDate, category } = await req.query
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Blogs", status: false });
     let filterByDate = ``
     if (startDate && endDate) filterByDate = ` && Date_Format(created_at, '%d-%m-%y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
@@ -88,7 +88,7 @@ exports.allBlogList = catchAsyncError(async (req, res) => {
 // get single blog data by id
 exports.singleBlog = catchAsyncError(async (req, res) => {
     const { permissions } = req
-    const { id } = req.query
+    const { id } = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Blogs", status: false });
     const addNewBlog = `SELECT blog.id,blog.name, blog.meta_title,blog.blog_html,blog.blog_css,blog.heading , category.name as category, blog.video_link,blog.meta_tags, blog.meta_keywords, blog.meta_description,blog.banner, blog.icon from jtc_blogs as blog Inner Join jtc_blog_category as category On blog.blog_category = category.id WHERE blog.deleted_by = '0' && blog.id = ${id}  ORDER By blog.id DESC`
@@ -116,7 +116,7 @@ exports.removeBlog = catchAsyncError(async (req, res) => {
 exports.addBlogCategory = catchAsyncError(async (req, res) => {
     const { permissions } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Blog Category", status: false });
-    const { category } = req.body
+    const { category } = await req.body
     const alreadyExists = `Select id from jtc_blog_category WHERE name = ${category}`
     const executeAlreadyExists = await executeQuery(alreadyExists)
     if (executeAlreadyExists.length > 0) return res.status(200).json({ message: "Category Already Exists", success: false })
@@ -128,7 +128,7 @@ exports.addBlogCategory = catchAsyncError(async (req, res) => {
 
 // edit a blog category
 exports.editBlogCategory = catchAsyncError(async (req, res) => {
-    const { category } = req.body
+    const { category } = await req.body
     const { permissions, user } = req
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit New Blog Category", status: false });
     const { id } = req.params

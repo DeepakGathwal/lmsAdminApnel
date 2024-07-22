@@ -4,7 +4,7 @@ const { pagination } = require("../utils/pagination");
 
 // Add a batch api function
 exports.addBatches = catchAsyncError(async (req, res) => {
-  const { date, time_from, course_id, time_to, week_days } = req.body
+  const { date, time_from, course_id, time_to, week_days } = await req.body
   const { permissions, user } = req
   if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  Point", status: false });
   const alreadyExists = `Select id from jtc_batches WHERE course_id = ${course_id} && date = ${date} && time_from  = ${time_from} && time_to = ${time_to}  && week_days = ${week_days}`
@@ -20,10 +20,10 @@ exports.addBatches = catchAsyncError(async (req, res) => {
 // edit a batch api function
 exports.editBatches = catchAsyncError(async (req, res) => {
   const { permissions, user } = req
-  const { id } = req.query 
+  const { id } = await req.query 
   if (!id) return res.status(206).json({ message: "Id Missing", success: false })
   if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Create  Point", status: false });
-  const { date, time_from, course_id, time_to, week_days } = req.body 
+  const { date, time_from, course_id, time_to, week_days } = await req.body 
 
   const alreadyExists = `Select id from jtc_batches WHERE course_id = (Select id from jtc_courses WHERE name = ${course_id}) &&  date = ${date} && time_from  = ${time_from} && time_to = ${time_to}  && week_days = ${week_days}`
   const executeAlready = await executeQuery(alreadyExists)
@@ -40,7 +40,7 @@ exports.editBatches = catchAsyncError(async (req, res) => {
 exports.batches = catchAsyncError(async (req, res) => {
   const { permissions, user } = req
   if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Points", status: false });
-  const { id,startDate , endDate, month, course } = await req.query
+  const { id,startDate , endDate, month, course } = await await req.query
  
   let findById = ''
   if (id) {

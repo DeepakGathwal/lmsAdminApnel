@@ -68,7 +68,7 @@ const { pagination } = require("../utils/pagination");
       if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Team", status: false });
   
   
-    const {id} = await req.query
+    const {id} = await await req.query
 
     let seletById = ``
     if(id) seletById = ` && id = '${id}'`

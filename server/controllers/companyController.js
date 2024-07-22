@@ -9,7 +9,7 @@ const { companySchema } = require("../utils/validation");
 exports.addCompany = catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Company", status: false });
-    const {name, link} = req.body
+    const {name, link} = await req.body
     const { error } = companySchema.validate(req.body);
     if (error)
       return res
@@ -37,7 +37,7 @@ exports.editCompany = catchAsyncError(async(req,res) => {
     if(!id)  return res.status(200).json({message : "Comapny not found", success : false})
 
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Company", status: false });
-    const {name, link} = req.body 
+    const {name, link} = await req.body 
     const { error } = companySchema.validate(req.body);
     if (error)
       return res
@@ -70,7 +70,7 @@ exports.deleteCompany = catchAsyncError(async(req,res) => {
 
 exports.companyList = catchAsyncError(async(req,res) => {
     const { permissions, user } = req 
-    const {id} = req.query 
+    const {id} = await req.query 
  
     let sortById = ''
     if(id){

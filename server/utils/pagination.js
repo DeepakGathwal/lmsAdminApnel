@@ -6,7 +6,7 @@ const catchAsyncError = require("../middelwares/catchAsyncError");
 /** pagination to all select api */
 exports.pagination = catchAsyncError(async (req, res, data) => {
 
-  const { limit, skipPage } = req.query;
+  const { limit, skipPage } = await req.query;
   if(limit == 'All') return res.status(200).json({
     data,
     total: data.length,
@@ -34,7 +34,7 @@ exports.createExcelFile = catchAsyncError(async (req,res) => {
   const {permissions} = req 
   if(permissions[0].can_view == 0) return res.status(206).json({message : "Permission Denied to Download Data", success : false});
 
-  const {module} = req.query 
+  const {module} = await req.query 
   const {excelData} = req.body 
  
   const workbook = new excelJS.Workbook(); 

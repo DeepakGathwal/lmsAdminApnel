@@ -8,9 +8,9 @@ const { choosePointSchema } = require("../utils/validation");
  * point must be diffrent every time
 */
 exports.addPoints = catchAsyncError(async(req,res) => {
-    const { permissions, user } = req
+    const { permissions, user } = await req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Point", status: false });
-    const {point} = req.body
+    const {point} = await req.body
     const { error } =  choosePointSchema.validate(req.body);
     if (error)
       return res
@@ -31,7 +31,7 @@ exports.editPoints = catchAsyncError(async(req,res) => {
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Point", status: false });
     const {id} = req.params 
     if(!id)  return res.status(200).json({message : "Point Not Found for Edit", success : false})
-    const {point} = req.body
+    const {point} = await req.body
     const { error } = choosePointSchema.validate(req.body);
     if (error)
       return res

@@ -5,7 +5,7 @@ const { moduleSchema } = require("../utils/validation");
 const { getDataUri } = require("../utils/imageHandeler");
 
 exports.createModule = catchAsyncError(async (req, res) => {
-    const { modules, name } = req.body 
+    const { modules, name } = await req.body 
     const { error } = moduleSchema.validate(req.body);
     if (error)
       return res
@@ -53,10 +53,10 @@ exports.allModules = catchAsyncError(async (req, res) => {
 })
 
 exports.editModule = catchAsyncError(async (req, res) => {
-    const { id } = req.query
+    const { id } = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
-    const { modules, name } = req.body
+    const { modules, name } = await req.body
     const { error } = moduleSchema.validate(req.body);
     if (error)
       return res
@@ -75,7 +75,7 @@ exports.editModule = catchAsyncError(async (req, res) => {
 })
 
 exports.deleteModule = catchAsyncError(async (req, res) => {
-    const { id } = req.query
+    const { id } = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
     const { permissions, user } = req

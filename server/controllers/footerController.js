@@ -8,7 +8,7 @@ exports.footer = catchAsyncError(async(req,res) => {
    if(permissions[0].can_edit == 0) return res.status(206).json({message : "Permission Denied to Update Team Member", status : false});
 
    const { name  , about , contact, phone , email,facebook ,instagram , twitter ,
-        linkedin, youtube , telegram } = req.body
+        linkedin, youtube , telegram } = await req.body
         
    const updateQuery = await executeQuery(`Update jtc_footer SET linkedin = ${linkedin}, name = ${name}  , about = ${about} , contact = ${contact}, phone = ${phone} ,email = ${email},facebook = ${facebook} ,instagram = ${instagram} , twitter = ${twitter} ,  youtube  = ${youtube}, telegram = ${telegram} WHERE id = 1 `)
    if(updateQuery.affectedRows > 0) return res.status(200).json({message : "Footer Updated  Successfully", success : true})

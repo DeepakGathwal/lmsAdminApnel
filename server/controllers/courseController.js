@@ -8,7 +8,7 @@ const {getDataUri} = require('../utils/imageHandeler')
 exports.addCourse = catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Course", status: false });
-    const {name, type, videoLink, description, meta_tags, meta_keywords, meta_description} = req.body 
+    const {name, type, videoLink, description, meta_tags, meta_keywords, meta_description} = await req.body 
     const { error } = courseSchema.validate(req.body);
     if (error)
       return res
@@ -36,11 +36,11 @@ if(req.files){
 
 exports.editCourse = catchAsyncError(async(req,res) => {
     const { permissions, user } = req
-    const {id} = req.query
+    const {id} = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Course", status: false });
-    const {name, type,description, videoLink,meta_tags, meta_keywords, meta_description} = req.body 
+    const {name, type,description, videoLink,meta_tags, meta_keywords, meta_description} = await req.body 
     const { error } = courseSchema.validate(req.body);
     if (error)
       return res
@@ -95,7 +95,7 @@ exports.deleteCourse = catchAsyncError(async(req,res) => {
 
 exports.courseList = catchAsyncError(async(req,res) => {
     const { permissions, user } = req 
-    const {id,startDate,endDate, month} = req.query 
+    const {id,startDate,endDate, month} = await req.query 
       let sortById = ''
     if(id > 0){
         sortById = `&& course.id = ${id}`

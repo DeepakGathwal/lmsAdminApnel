@@ -4,7 +4,7 @@ const { pagination } = require("../utils/pagination");
 
 exports.allPermissions = catchAsyncError(async(req,res) =>{
     const { permissions } = req 
-    const {module,role } = req.query 
+    const {module,role } = await req.query 
     let sortByRole = ''
     if(role){
         sortByRole = `&& permission.role_id = (SELECT id from jtc_roles WHERE role = '${role}')`
@@ -19,7 +19,7 @@ exports.allPermissions = catchAsyncError(async(req,res) =>{
 exports.updatePermission = catchAsyncError(async(req,res) => {
     const { permissions } = req
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Permission List", success: false });
-    const {permission} = req.body
+    const {permission} =await req.body
  
     if(permission.length > 0){
       await permission.map(async(el) => {

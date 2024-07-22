@@ -6,7 +6,7 @@ const { categorySchema, subCategorySchema } = require("../../utils/validation");
 exports.addChapter =  catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Category",status: false });
-    const {cource} =  req.query
+    const {cource} =  await req.query
   if (!cource) return res.status(206).json({ message: "Cource Missing", success: false })
 
     const {category}  =  req.body 
@@ -75,7 +75,7 @@ else return res.status(206).json({message : "Error! During Category Delete", suc
 exports.getChapter =  catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Cources Chapter",status: false });
-    const {cource} = await  req.query 
+    const {cource} = await  await req.query 
     let filterByCource = '';
    
     if(cource > 0){
@@ -108,7 +108,7 @@ exports.getChapter =  catchAsyncError(async(req,res) => {
 exports.getTopics =  catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Cource Topics",status: false });
-    const {id} =  req.query
+    const {id} =  await req.query
    
     let filterByCategory = '';
     if(id > 0){
@@ -138,7 +138,7 @@ exports.getTopics =  catchAsyncError(async(req,res) => {
 exports.addTopics =  catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Sub Category",status: false });
-    const {category}  =  req.query 
+    const {category}  =  await req.query 
   
     if(!category) return res.status(206).json({message : "Category Not Found", success : false})
     const {subCategory}  =  req.body 
@@ -162,7 +162,7 @@ exports.editTopics =  catchAsyncError(async(req,res) => {
     const {id} =  req.params
     if(!id)  return res.status(200).json({message : "Id Not Found", success : false})
 
-    const {category} =  req.query
+    const {category} =  await req.query
     const {subCategory}  =  req.body 
     const { error } = subCategorySchema.validate(req.body);
     if (error)
@@ -273,7 +273,7 @@ else return res.status(206).json({message : "Error! During Category Delete", suc
 exports.getCategory =  catchAsyncError(async(req,res) => {
   const { permissions, user } = req
   if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Cources Chapter",status: false });
-  const {cource} = await  req.query 
+  const {cource} = await  await req.query 
  
   let filterByCource = '';
   if(cource > 0){

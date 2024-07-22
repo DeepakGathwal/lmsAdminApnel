@@ -37,7 +37,7 @@ exports.addTutorialCource = catchAsyncError(async (req, res) => {
 
 exports.editTutorialCource = catchAsyncError(async (req, res) => {
     const { permissions, user } = req
-    const { id } = req.query
+    const { id } = await req.query
     if (!id) return res.status(206).json({ message: "Id Missing", success: false })
 
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Course", status: false });
@@ -91,8 +91,8 @@ exports.deleteTutorialCource = catchAsyncError(async (req, res) => {
 
 exports.tutorialCourceList = catchAsyncError(async (req, res) => {
     const { permissions, user } = req
-    const { id } = req.query
-    const {startDate, endDate, month}= req.query
+    const { id } = await req.query
+    const {startDate, endDate, month}= await req.query
     let filterByDate = ``
     let filterByMonth = ``;
     if(month) filterByMonth = ` && Date_Format(course.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
