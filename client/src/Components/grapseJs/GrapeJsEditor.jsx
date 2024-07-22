@@ -39,21 +39,21 @@ const GrapeJsEditor = ({editorRef, page_html, page_css}) => {
       'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.min.js'
     ],
   },
-  components: `<html>
+  
+  // Other possible configurations
+
+      container: editorRef.current,
+      components: `<html>
     <head>
       <meta charset="UTF-8">
       <title>GrapesJS Project</title>
     </head>
     <body>
       <div class="container">
-        <h1>Hello World!</h1>
+       ${page_html}
       </div>
     </body>
   </html>`,
-  // Other possible configurations
-
-      container: editorRef.current,
-      components: page_html,
       style:page_css,
       storageManager: false // Disable the storage manager for simplicity
     });
