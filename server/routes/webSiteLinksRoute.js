@@ -160,9 +160,9 @@ const { escapeRequestBody } = require('../conn/db');
 
 
 
-router.route('/').post(verifyUser, verifyModulePermission,upload.fields([{ name: 'banner', maxCount: 1 }, { name: 'image', maxCount: 1 }]),escapeRequestBody,addLinks) // pending
+router.route('/').post(verifyUser, verifyModulePermission,escapeRequestBody,addLinks) // pending
 router.route('/').get(verifyUser, verifyModulePermission, links)  // check
-router.route('/:id').patch(verifyUser, verifyModulePermission,upload.fields([{ name: 'banner', maxCount: 1 }, { name: 'image', maxCount: 1 },]),escapeRequestBody,editLinks) // check
+router.route('/:id').patch(verifyUser, verifyModulePermission,escapeRequestBody,editLinks) // check
 router.route('/:id').delete(verifyUser, verifyModulePermission,removeLinks) // check
 
 

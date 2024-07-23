@@ -1125,18 +1125,18 @@ export const allTermsConditions = async (path, limit, currentPage) => {
   }
 }
 
-export const editWebSitePage = async (path, id, formData) => {
+export const editWebSitePage = async (path, id, formData, html, css) => {
   try {
-    const { data } = await instance.patch(`navLinks/${id}?module=${path}`, formData)
+    const { data } = await instance.patch(`navLinks/${id}?module=${path}`, {name:formData.name, nav_link:formData.nav_link,html:html,css:css, explore:formData.explore})
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const createWebSitePage = async (path, formData, check) => {
+export const createWebSitePage = async (path, formData, html,css) => {
   try {
-    const { data } = await instance.post(`navLinks?module=${path}&header=${check}`, formData)
+    const { data } = await instance.post(`navLinks?module=${path}`, {name:formData.name, nav_link:formData.link,html:html,css:css, explore:formData.explore})
     return data
   } catch (err) {
     return err.message

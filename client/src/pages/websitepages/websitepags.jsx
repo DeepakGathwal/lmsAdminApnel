@@ -84,7 +84,7 @@ function WebsitePage() {
                          <td>{el.name}</td>
                          <td>{el.nav_link}</td>
                      
-                          <td>{el.explore == 0 ? "Only Footer" : "Navbar / Footer"}</td>
+                         <td>{el.explore ? "All Place"  : "Only Footer"}</td>
 
                           <td>
 

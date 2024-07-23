@@ -46,34 +46,50 @@ exports.genrateProfileModule = catchAsyncError(async(req,res) =>{
     const getModules =  `Select modules,name, icon from jtc_modules WHERE id IN (SELECT module_id from jtc_permissions WHERE active = '1' && can_view = '1' && role_id = (SELECT role from jtc_team WHERE id = ${user}) && deleted_by = '0') order by modules asc`
     const value = await executeQuery(getModules)
   let subCategory = new Set();
-  value.forEach(el => {
-  const [firstWord, ...rest] = el.name.split(" ");
-  if (rest.length > 0) subCategory.add(firstWord);
-});
+  value.map((el) => {
+    const count = el.name.split(" ")
+    if(count.length > 1)
+    subCategory.add(count[0])
+})
 
-let createSubModule = [...subCategory].map(el => ({
-  modules: `/${el}`,
-  name: el,
-  icon: null,
-  sub: []
-}));
+let createSubModule = [];
 
-createSubModule.forEach(ab => {
-  value.forEach(el => {
-    const [firstWord, ...rest] = el.name.split(" ");
-    if (rest.length > 0 && firstWord === ab.name) {
-      ab.sub.push(el);
+subCategory.forEach(async(el) => {
+  await  createSubModule.push({
+      modules: `/${el}`, name: el, icon: null, sub :[]
+    })
+
+  })
+  
+  let createModule = [];
+
+  createSubModule.map((ab) => {
+  value.forEach((el, index) => {
+       if(el.name.includes(ab.name)) return ab.sub.push(el)
+     
+    })
+  })
+
+  value.forEach((el) => {
+    // Check if 'el.name' includes any substring in 'subCategory'
+    if ([...subCategory].some(sub => el.name.includes(sub)) == false) {
+    return  createModule.push(el);
     }
+  })
+  // const finalData =
+  const finalData =  [...createModule, ...createSubModule]
+  const data = finalData.sort((a, b) => {
+    const nameA = a.modules.toUpperCase(); // convert names to uppercase for case-insensitive comparison
+    const nameB = b.modules.toUpperCase();
+  
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
   });
-});
-
-let createModule = value.filter(el => ![...subCategory].some(sub => el.name.includes(sub)));
-
-const data = [...createModule, ...createSubModule].sort((a, b) => {
-  const nameA = a.modules.toUpperCase();
-  const nameB = b.modules.toUpperCase();
-  return nameA.localeCompare(nameB);
-});
     if(data.length > 0) return res.status(200).json({ success : true,data })
     return res.status(206).json({message : "Error! Getting Profile module", success : false})
 })

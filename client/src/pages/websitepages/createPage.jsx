@@ -1,25 +1,24 @@
 import React, { useRef,useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 import { createWebSitePage } from '../../Components/CommonUrl/apis';
 import grapesjs from 'grapesjs';
 import GrapesJSExample from '../../Components/grapseJs/GrapeJsEditor';
-import UploadImageComponent from '../../Components/pageComponents/uploadImage';
 
 
 function CreatePage() {
     const navigate = useNavigate()
     const editorRef = useRef(null);
-    const [check,setCheck] = useState(false)
-    const [icon,setIcon] = useState([])
-    const [banner,setBanner] = useState([])
-  
-
+   
     const [field, setField] = useState({
-     name : "", link : "", colour : "",  bac : "",fontSize : "", fontWeight : "", fontFamily : ""
+     name : "", link : "", explore : false
     })
 
     const handelChange = (e) => {
-        setField({ ...field, [e.target.name]: e.target.value })
+        const { name, value, type, checked } = e.target;
+        setField(prevField => ({
+            ...prevField,
+            [name]: type === 'checkbox' ? checked : value
+        }));
     }
 
     
@@ -30,15 +29,9 @@ function CreatePage() {
       const cssContent = editor.getCss();
         
         e.preventDefault()
-            const formDate = new FormData()
-            formDate.append("name", field.name)
-            
-            formDate.append("nav_link", field.link)
-            formDate.append("html", htmlData)
-            formDate.append("css", cssContent)
-            formDate.append("color", field.colour)
-
-        const done = await createWebSitePage('/website', formDate,check)
+           
+        
+        const done = await createWebSitePage('/website', field, htmlData, cssContent)
         if(done.success == true) {
             setField("")
             navigate('/website')
@@ -65,8 +58,10 @@ function CreatePage() {
 
                     </div>
                     <div className="form-group">
-                        <label for="coursename">Show on Header</label>
-                        <input type="checkbox"  onChange={() => setCheck(!check)} />
+                        <label for="coursename">Show on Header
+                  
+                        <input type="checkbox" name="explore" value={field.explore} checked={field.explore} onChange={handelChange} />
+                        </label>
 
                     </div>
                     

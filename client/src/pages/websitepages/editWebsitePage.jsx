@@ -1,9 +1,8 @@
 import React, { useRef,useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import grapesjs from 'grapesjs';
 import { editWebSitePage, deleteWebSitePage,allWebSitePage } from '../../Components/CommonUrl/apis';
 import GrapesJSExample from '../../Components/grapseJs/GrapeJsEditor';
-import UploadImageComponent from '../../Components/pageComponents/uploadImage';
 
 
 function EditWebsitePage() {
@@ -11,9 +10,6 @@ function EditWebsitePage() {
   
     const navigate = useNavigate()
     const editorRef = useRef(null);
-    const [icon,setIcon] = useState([])
-    const [banner,setBanner] = useState([])
-  
     const allData = async () => {
        
         const {data} = await allWebSitePage("/website", 0, 0, id)
@@ -23,11 +19,15 @@ function EditWebsitePage() {
 
 
     const [field, setField] = useState({
-     name : "", nav_link : "", color : "",  background_color : "",fontsize : "", fontwight : "", fontfamily : "", page_html : "", page_css : "", backgroundimage : "",image : ""
+     name : "", nav_link : "",  page_html : "", page_css : "", backgroundimage : "",image : "", explore : false
     })
 
     const handelChange = (e) => {
-        setField({ ...field, [e.target.name]: e.target.value })
+        const { name, value, type, checked } = e.target;
+        setField(prevField => ({
+            ...prevField,
+            [name]: type === 'checkbox' ? checked : value
+        }));
     }
 
     useEffect(() => {
@@ -42,13 +42,8 @@ function EditWebsitePage() {
         
         e.preventDefault()
         // name, nav_link, html, css, color, background_color, fontsize, fontwight, fontfamily
-            const formDate = new FormData()
-            formDate.append("name", field.name)
-            formDate.append("nav_link", field.nav_link)
-            formDate.append("html", htmlData)
-            formDate.append("css", cssContent)
-
-        const done = await editWebSitePage('/website', id,formDate)
+          
+        const done = await editWebSitePage('/website', id, field,htmlData, cssContent)
         if(done.success == true) {
             setField("")
             navigate('/website')
@@ -74,7 +69,13 @@ function EditWebsitePage() {
                         <input type="text" name="nav_link" id="" className='form-control' value={field.nav_link} onChange={handelChange} required />
 
                     </div>
-                    
+                    <div className="form-group">
+                        <label for="coursename">Show on Header
+                  
+                        <input type="checkbox" name="explore" value={field.explore} checked={field.explore} onChange={handelChange} />
+                        </label>
+
+                    </div>
                     <div className="form-group">
                         <label htmlFor=""> Page
                           <GrapesJSExample editorRef= {editorRef} page_html = {field.page_html} page_css = {field.page_css}/>
