@@ -23,7 +23,7 @@ exports.addTutorial = catchAsyncError(async(req,res) =>{
       const getCate = await executeQuery(categorytName)
       const category = getCate && getCate[0].category_name
 
-      const  link = await `${category}-${heading}`.replaceAll(" ", "-").toLowerCase()
+      const  link = await `${category}-${heading}`.replaceAll("'", "").replaceAll(" ", "-").toLowerCase()
     const addTutorialQuery = `Insert into jtc_tutorials_topics SET created_at = current_timestamp(),created_by = ${user}, cource_id = ${cource_id}, category_Id = ${category_id},  heading = ${heading},  meta_tags = ${meta_tags}, meta_keywords = ${meta_keywords}, meta_description = ${meta_description}, meta_title = ${meta_title}, tutorial_html = ${html}, tutorial_css = ${css}, link = '${link}'`
     const executeAddTutorialQuery = await executeQuery(addTutorialQuery);
     if(executeAddTutorialQuery.affectedRows > 0) return res.status(200).json({message : "Tutorial Added Successfully", success : true});
