@@ -39,7 +39,7 @@ function EditTutorial() {
     }
 
     const courceCategory = async (couceCate) => {
-        const { data } = await allTutorialCategory('/ctutorial_chapter', couceCate)
+        const { data } = await allTutorialCategory('/ctutorial_chapter', couceCate, 'All')
        
         if(data){
         field.cources = couceCate;

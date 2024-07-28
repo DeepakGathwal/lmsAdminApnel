@@ -27,7 +27,7 @@ function Tutorialmodal() {
     }
 
     const courceCategory = async (couceCate) => {
-        const { data } = await allTutorialCategory('/ctutorial_chapter', couceCate)
+        const { data } = await allTutorialCategory('/ctutorial_chapter', couceCate, 'All')
         if (data) {
             field.cource = couceCate;
             setCourcesCategory(data)
