@@ -1,7 +1,7 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { pagination } = require("../../utils/pagination");
-const { courseSchema, tutorialSchema } = require("../../utils/validation");
+const {  tutorialSchema } = require("../../utils/validation");
 const {getDataUri} = require('../../utils/imageHandeler')
 
 
@@ -51,7 +51,7 @@ exports.editTutorialCource = catchAsyncError(async (req, res) => {
             let iconImag = ''
             if(req.file){
                 const file = req.file
-                const fileImage = icon && await getDataUri(file)
+                const fileImage = file && await getDataUri(file)
                 iconImag = `, icon = '${fileImage}'`
             }
 
