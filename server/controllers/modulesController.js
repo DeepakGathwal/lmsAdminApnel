@@ -18,7 +18,7 @@ exports.createModule = catchAsyncError(async (req, res) => {
     let addIcon = '';
     if(req.file){
         const image = req.file
-        const fileImage = await getDataUri(image)
+        const fileImage = image && await getDataUri(image)
         
         addIcon = `, icon = '${fileImage}'`
     }
@@ -101,7 +101,7 @@ exports.changeIcon = catchAsyncError(async (req,res) => {
     let addIcon = '';
     if(req.file){
         const image = req.file
-        const fileImage = await getDataUri(image)
+        const fileImage = image && await getDataUri(image)
         addIcon = `icon = '${fileImage}'`
     }else return res.status(206).json({ message: "Image Not Found", status: false });
     const addModulequery = `Update jtc_modules SET ${addIcon}, updated_by = ${user}, updated_at = current_timestamp() where id = '${id}' && deleted_by = '0'`

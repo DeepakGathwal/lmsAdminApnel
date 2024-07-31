@@ -12,7 +12,7 @@ exports.addPoint =  catchAsyncError(async(req,res) => {
   if (!course) return res.status(206).json({ message: "Course Missing", success: false })
     if(!req.file) return res.status(206).json({message : "Icon Needed", success : false})
     const icon = req.file
-   const fileImage = await getDataUri(icon)
+   const fileImage = icon && await getDataUri(icon)
             
     const alreadyPoint =  `SELECT id from jtc_course_join_point WHERE description = ${description}`
     const executeAreadyCategory = await executeQuery(alreadyPoint);
@@ -55,7 +55,7 @@ exports.editPoint =  catchAsyncError(async(req,res) => {
     let setImage = ''
     if(req.file) {
     const icon = req.file
-   const fileImage = await getDataUri(icon)
+   const fileImage = icon && await getDataUri(icon)
    setImage = `icon = '${fileImage}',`
    }
     const editCategoryQuery =  `Update jtc_course_join_point SET ${setImage} description = ${description} ${addindataBase}   WHERE id = ${id}`;

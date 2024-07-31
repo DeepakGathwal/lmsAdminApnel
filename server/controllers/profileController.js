@@ -98,7 +98,7 @@ exports.updateImage = catchAsyncError(async(req,res) =>{
     const {user} = req 
     if(!req.file) return res.status(206).json({message : "File Nedded", success : false})
     const imagefile = req.file
-    const fileImage = await getDataUri(imagefile)
+    const fileImage = imagefile && await getDataUri(imagefile)
     const image = `${fileImage}`
    
     const updateImagequery = `Update jtc_team SET image = '${image}' WHERE id = ${user} && deleted_by = '0'`

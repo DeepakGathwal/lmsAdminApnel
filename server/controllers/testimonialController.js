@@ -14,7 +14,7 @@ exports.createTestominal = catchAsyncError(async(req,res) =>{
     let image = ''
     if(req.file){
         const file = req.file
-        const fileUri = await getDataUri(file)
+        const fileUri = file && await getDataUri(file)
         image =  `, image = '${fileUri}'`
     }
     const addTestominal = `Insert into jtc_testimonials SET name = ${name}, description = ${description}, read_link = ${link} ${image}, created_by = '${user}'`
@@ -48,7 +48,7 @@ exports.updateTestominal = catchAsyncError(async(req,res) =>{
     let image = ''
     if(req.file){
         const file = req.file
-        const fileUri = await getDataUri(file)
+        const fileUri = file && await getDataUri(file)
         image =  `, image = '${fileUri}'`
     }
     const addTestominal = `Update  jtc_testimonials SET name = ${name}, description = ${description}, read_link = ${link}  ${image} WHERE id = ${id}`

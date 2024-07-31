@@ -21,7 +21,7 @@ exports.addCompany = catchAsyncError(async(req,res) => {
     if(!req.file) return res.status(206).json({message : "Icon Not Found", success : false})
       
         const image = req.file
-        const fileImage = await getDataUri(image)
+        const fileImage = image && await getDataUri(image)
       
        const iconWIthBanner = `, icon = '${fileImage}'`
     
@@ -46,7 +46,7 @@ exports.editCompany = catchAsyncError(async(req,res) => {
     let iconWIthBanner = '';
     if(req.file) {
     const filename = req.file 
-    const fileImage = await getDataUri(filename)
+    const fileImage =filename && await getDataUri(filename)
      iconWIthBanner = `, icon = '${fileImage}'`
 }
     const editCompanyQuery = `Update jtc_companies SET name = ${name},link = ${link} ${iconWIthBanner} WHERE id = ${id} && deleted_by = '0'`

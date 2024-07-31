@@ -23,8 +23,8 @@ if(req.files){
     
     const {icon, banner} = req.files
   
-    const fileImage = await getDataUri(icon[0])
-    const fileBanner = await getDataUri(banner[0])
+    const fileImage = icon && await getDataUri(icon[0])
+    const fileBanner =banner && await getDataUri(banner[0])
     iconWIthBanner = `, icon = '${fileImage}', banner = '${fileBanner}'`
 }
     const  link = await name.replaceAll(" ", "-").toLowerCase()
@@ -55,7 +55,7 @@ exports.editCourse = catchAsyncError(async(req,res) => {
                 iconImag = `, icon = '${fileImage}'`}
                 if(banner){
                     
-               const fileBanner = await getDataUri(banner[0])
+               const fileBanner = banner && await getDataUri(banner[0])
             BannerImg = `, banner = '${fileBanner}'`}
         }
         let addindataBase = ''
