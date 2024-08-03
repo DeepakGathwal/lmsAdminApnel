@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 const { getDataUri } = require('../utils/imageHandeler');
 const { blogSchema } = require("../utils/validation");
 
@@ -75,12 +75,13 @@ exports.allBlogList = catchAsyncError(async (req, res) => {
     const { startDate, endDate, category } = await req.query
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Blogs", status: false });
     let filterByDate = ``
-    if (startDate && endDate) filterByDate = ` && Date_Format(created_at, '%d-%m-%y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
+    if (startDate && endDate) filterByDate = `&& created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
     let categoryFilter = ''
     if (category) categoryFilter = ` && blog_category = (Select id from jtc_blog_category WHERE name = '${category}' Limit 1)`
     const addNewBlog = `SELECT id, name  from jtc_blogs WHERE deleted_by = '0' ${filterByDate} ${categoryFilter} ORDER By id DESC`
     const data = await executeQuery(addNewBlog)
-    if (data.length > 0) return pagination(req, res, data)
+    if (data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully"})
     else return res.status(206).json({ message: "Error! Fetching Blog List", success: false });
 })
 
@@ -93,7 +94,8 @@ exports.singleBlog = catchAsyncError(async (req, res) => {
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Blogs", status: false });
     const addNewBlog = `SELECT blog.id,blog.name, blog.meta_title,blog.blog_html,blog.blog_css,blog.heading , category.name as category, blog.video_link,blog.meta_tags, blog.meta_keywords, blog.meta_description,blog.banner, blog.icon from jtc_blogs as blog Inner Join jtc_blog_category as category On blog.blog_category = category.id WHERE blog.deleted_by = '0' && blog.id = ${id}  ORDER By blog.id DESC`
     const data = await executeQuery(addNewBlog)
-    if (data.length > 0) return pagination(req, res, data)
+    if (data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({ message: "Error! Fetching Blog List", success: false });
 })
 
@@ -148,7 +150,8 @@ exports.allBlogCategory = catchAsyncError(async (req, res) => {
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Blogs Category", status: false });
     const allCategory = `SELECT * from jtc_blog_category ORDER By id DESC`
     const data = await executeQuery(allCategory)
-    if (data.length > 0) return pagination(req, res, data)
+    if (data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({ message: "Error! Fetching Blog Category List", success: false });
 })
 

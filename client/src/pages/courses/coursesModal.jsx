@@ -53,7 +53,7 @@ function CoursesModal({ show, setShow, path, allData }) {
   let optionArray = []
   // all Course Type
   const allCategory = async () => {
-    const { data } = await allCourseType("/acourses_type", 'All');
+    const { data } = await allCourseType("/acourses_type");
     if (data) {
       data.map((el) => {
         optionArray.push({ label: el.category, value: el.id })

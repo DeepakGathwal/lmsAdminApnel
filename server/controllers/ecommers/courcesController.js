@@ -1,7 +1,7 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { getDataUri } = require("../../utils/imageHandeler");
-const { pagination } = require("../../utils/pagination");
+
 const { EcourseSchema, EcourceChapter } = require("../../utils/validation");
 
 
@@ -66,7 +66,8 @@ exports.allCources = catchAsyncError(async (req, res) => {
   const query = `Select label.label,category.category,course.id, course.name, Date_Format(course.created_at, '%d-%m-%y %h:%i:%s %p') as created_at ,course.video_link, course.certificates, course.image, course.total_price, course.discount, course.description from jtc_ecommers_courses as course Left Join jtc_ecommers_course_types as category On category.id = course.category Left Join jtc_ecommers_course_label as label On label.id = course.label WHERE course.deleted_by = '0' Order by course.id desc`
 
   const data = await executeQuery(query)
-  if (data.length > 0) return pagination(req, res, data)
+  if (data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
   else return res.status(206).json({ message: "Error ! While Fetching Data", status: false })
 })
 
@@ -166,7 +167,8 @@ exports.Chapters = catchAsyncError(async (req, res) => {
     }
 
 
-    return pagination(req, res, data)
+    return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
   } else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
 
 })
@@ -268,7 +270,8 @@ exports.topics = catchAsyncError(async (req, res) => {
     }
 
 
-    return pagination(req, res, data)
+    return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
   } else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
 
 })

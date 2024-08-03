@@ -7,12 +7,12 @@ const FormFilter = ({ setFormType, formType, setFilterCourse}) => {
 
 
   const allFormTypeFunc = async () => { 
-    const {data} = await allFormType('/form_enquiry','All')
+    const {data} = await allFormType('/form_enquiry')
     return setType(data)
   }
 
   const allCourses = async() => {
-    const {data} = await allCourseForSearch("/bcourses", 'All')
+    const {data} = await allCourseForSearch("/bcourses")
    return setCourses(data)
   } 
 

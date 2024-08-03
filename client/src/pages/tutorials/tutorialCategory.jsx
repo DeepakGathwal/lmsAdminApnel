@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import {allTutorialCategory, createTutorialCategory, deleteTutorialCategory, editTutorialCategory, allTutorialCourceForSearch} from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 const TutorialCategory = () => {
   const [selected, setSelected] = useState(null);
@@ -16,7 +16,9 @@ const TutorialCategory = () => {
   const [courceList, setCource] = useState()
   const [defaultcourceList, setdefaultCource] = useState()
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
@@ -30,26 +32,27 @@ const TutorialCategory = () => {
 let optionArray = []
 
   const courcesList = async() =>{
-    const {data} = await allTutorialCourceForSearch('/btutorialCource', 'All')
+    const {data} = await allTutorialCourceForSearch('/btutorialCource')
     if(data){
       data.map((el) => {
       optionArray.push({label : el.name, value : el.id })
       })
       setCource(optionArray)
     }
-    allData(0, '')
+    allData('')
   }
 
-  const allData = async (limit, cource) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allTutorialCategory(path, cource,givenLimit, currentPage)
+  const allData = async (cource) => {
+       
+    const {data} = await allTutorialCategory(path, cource)
+    data && setTotal(data.length)
     return data && setState(data)
   }
 
   useEffect(() => {
     courcesList()
  
-  }, [currentPage])
+  }, [])
 
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
@@ -104,10 +107,15 @@ let optionArray = []
       setEditShow('')
       setdefaultCource([])
      return allData()
-    }else return
-      alert(value.message)
+    }else return alert(value.message)
      
   }
+
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   return (
     <div className="containers">
@@ -115,7 +123,7 @@ let optionArray = []
         <h3 className='heading mb-4'>Tutorial Chapter</h3>
         <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery}/>
         <div className='form-group m-3'>
-          <select name="" id="" className='form-control'  onChange={(e) =>allData(0,e.target.value) } >
+          <select name="" id="" className='form-control'  onChange={(e) =>allData(e.target.value) } >
           <option selected>Select Course Name</option>
 {courceList && courceList.map((el) => (
   <option value={el.value}>{el.label}</option>
@@ -137,7 +145,7 @@ let optionArray = []
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -165,7 +173,13 @@ let optionArray = []
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={handleClose}>
 

@@ -39,13 +39,6 @@ import CourceJoinPoint from "./pages/courses/courceJoinPoint";
 import CourceCategories from "./pages/courses/courceCategory";
 import Brochure from "./pages/brochure/brochure";
 import TutorialType from "./pages/tutorials/tutorialType";
-import ProjectLanguage from "./pages/projects/projectLanguage";
-import ProjectTechnologies from "./pages/projects/projectTechnologies";
-import ProjectTopics from "./pages/projects/projectTopics";
-import ProjectFiles from "./pages/projects/projectFiles";
-import Projects from "./pages/projects/projects";
-import ProjectTopicPoint from "./pages/projects/projectTopicPoint";
-import TypesOfCourses from "./pages/courses/types";
 import Courcelabel from "./pages/Ecommers-courses/label";
 import Learn from "./pages/Ecommers-courses/learn";
 import Prerequisite from "./pages/Ecommers-courses/prerequisite";
@@ -60,6 +53,7 @@ import Wishlist from "./pages/users/wishlist";
 import Review from "./pages/users/review";
 import Section from "./pages/E-commers/section";
 import EFaqs from "./pages/Ecommers-courses/faqs";
+import WebsiteAboutPoint from "./pages/websitepages/aboutWebSite";
 
 function App() {
   return (
@@ -70,10 +64,6 @@ function App() {
     </HandelSlideBar>
       <Routes>
        <Route path="/" element={ <Home/>}/>
-        <Route path="/aproject-languages"  element={ <ProjectLanguage/>}/>
-        <Route path="/bproject-technologies" element={ <ProjectTechnologies/>}/>
-        <Route path="/fproject-files" element={ <ProjectFiles/>}/>
-        <Route path="/dproject-topics" element={ <ProjectTopics/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/form_enquiry" element={<Forms/>}/>
         <Route path="/form_status" element={<FormStatus/>}/>
@@ -98,7 +88,8 @@ function App() {
         <Route path="/acourses_type" element={<Categories/>}/>
         <Route path="/permissions" element={<Permission/>}/>
         <Route path="/companies" element={<Company/>}/>
-        <Route path="/about" element={<AboutUs/>}/>
+        <Route path="/course_video" element={<AboutUs/>}/>
+        <Route path="/about" element={<WebsiteAboutPoint/>}/>
         <Route path="/testimonials" element={<Testimonials/>}/>
         <Route path="/dcourses_chapter" element={<CourceChapter/>}/>
         <Route path="/website" element={<Banners/>}/>
@@ -119,8 +110,6 @@ function App() {
         <Route path="/t_n_c" element={<TermsConditions/>}/> 
         <Route path="/btutorialCource" element={<TutorialCource/>}/> 
         <Route path="/brochure" element={<Brochure/>}/>
-        <Route path="/cprojects" element={<Projects/>}/> 
-        <Route path="/eproject-topics-point" element={<ProjectTopicPoint/>}/> 
         <Route path="/cart" element={<CartItem/>}/> 
         <Route path="/wishlist" element={<Wishlist/>}/> 
         <Route path="/review" element={<Review/>}/> 

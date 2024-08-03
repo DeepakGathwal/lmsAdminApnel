@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 const { aboutUs } = require("../utils/validation");
 
 // add a new brochure -> course name must be different avery time
@@ -76,7 +76,8 @@ exports.allPdf = catchAsyncError(async (req, res) => {
 
   const result = `Select brochure.name, brochure.id,  course.name as course  from jtc_brochures as brochure Inner Join  jtc_courses as course On course.id = brochure.course_id and course.deleted_by = '0'`
   const data = await executeQuery(result)
-  if (data.length > 0) return pagination(req, res, data)
+  if (data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
   else return res.status(206).json({ message: "Error! Fetching All Brochures", success: false });
 
 })

@@ -59,7 +59,7 @@ const AddBlog = ({ show, setShow, path, allData }) => {
 
 // list of catgories
   const category = async () => {
-    const { data } = await allBlogCategory('/blog_category', 'All')
+    const { data } = await allBlogCategory('/blog_category')
     setCategory(data)
   }
   useEffect(() => {

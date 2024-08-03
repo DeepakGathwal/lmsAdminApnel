@@ -1,7 +1,7 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { getDataUri } = require("../../utils/imageHandeler");
-const { pagination } = require("../../utils/pagination");
+
 const { categorySchema, subCategorySchema } = require("../../utils/validation");
 
 exports.addPoint =  catchAsyncError(async(req,res) => {
@@ -96,7 +96,8 @@ exports.getPoint =  catchAsyncError(async(req,res) => {
            data[index]["cources"] = String(values);
             }
         }
-        return pagination(req, res, data)
+        return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     }
     else return res.status(206).json({message : "Error! During Category Fetching", success : false})
 })

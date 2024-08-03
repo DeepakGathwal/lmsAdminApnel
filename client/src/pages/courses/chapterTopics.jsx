@@ -5,7 +5,7 @@ import Select from 'react-select';
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import {allCourceSubCategory, createCourceSubCategory, deleteCourceSubCategory, editCourceSubCategory, allCourceChapter } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 const CourceSubCategories = () => {
   const [selected, setSelected] = useState(null);
@@ -16,7 +16,9 @@ const CourceSubCategories = () => {
   const [courceList, setCource] = useState([])
   const [defaultcourceList, setdefaultCource] = useState()
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
@@ -29,7 +31,7 @@ const CourceSubCategories = () => {
   let optionArray = []
 
   const courcesList = async() =>{
-    const {data} = await allCourceChapter('/dcourses_chapter', 'All')
+    const {data} = await allCourceChapter('/dcourses_chapter')
   
     if(data){
       data.map((el) => {
@@ -41,15 +43,15 @@ const CourceSubCategories = () => {
   }
 
   const allData = async (limit, category) => {   
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allCourceSubCategory(path, category,givenLimit, currentPage)
-
+       
+    const {data} = await allCourceSubCategory(path, category)
+    data && setTotal(data.length)
     return data && setState(data)
   }
 
   useEffect(() => {
     courcesList()
-  }, [currentPage])
+  }, [])
 
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
@@ -62,6 +64,10 @@ const CourceSubCategories = () => {
 
     } else return false
   }
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
 
   const handelChange = (e) => {
     setEditShow({ ...editshow, [e.target.name]: e.target.value })
@@ -113,7 +119,7 @@ const CourceSubCategories = () => {
         <h3 className='heading mb-4'>Cources Topics</h3>
         <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery}/>
         <div className='form-group m-3'>
-          <select name="" id="" className='form-control' onChange={(e) =>allData(0,e.target.value) } >
+          <select name="" id="" className='form-control' onChange={(e) =>allData(e.target.value) } >
         <option selected>Select Course Chapter</option>
           {courceList && courceList.map((el) => (
             <option value={el.value}>{el.label}</option>
@@ -135,7 +141,7 @@ const CourceSubCategories = () => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "")
                     return obj;
                  else if (
@@ -163,7 +169,13 @@ const CourceSubCategories = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={handleClose}>
 

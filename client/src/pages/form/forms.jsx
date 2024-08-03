@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal';
 import {  MdEditSquare } from "react-icons/md";
 import { addFeedBack, allFormStatus,  chnageFormStatus,createExcel,enquiryFormBaseOnCourse,enquiryFormData,enquiryFormFilter,handleClose, pagesIndex } from '../../Components/CommonUrl/apis';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import FormFilterdateandmonth from '../../Components/pageComponents/FormFilterdateandmonth';
 import FormFilter from '../../Components/pageComponents/FormFilter';
 
@@ -23,18 +23,19 @@ const Forms = () => {
   const [course, setFilterCourse] = useState([])
   const [feedback, setFeedback] = useState([])
   const [status, setStatus] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
 
    
-  const allData = async (limit) => {
-    
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await enquiryFormData(path, givenLimit, currentPage, formType)
+  const allData = async () => {
+    const {data} = await enquiryFormData(path, formType)
     getAllStatus()
-     return data && setState(data)
+    data && setTotal(data.length)
+    return data ? setState(data) : setState([])
    
   }
 
@@ -46,38 +47,39 @@ const Forms = () => {
     
   const fiterApi = async () => {
    
-    const data = await enquiryFormFilter(path, formType,date)
+    const {data} = await enquiryFormFilter(path, formType,date)
     getAllStatus()
- 
-  
-    return data && setState(data)
-   
+    data && setTotal(data.length)
+    return data ? setState(data) : setState([])
   }
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
     
   const courseFilter = async () => {
    
-    const data = await enquiryFormBaseOnCourse(path, formType,course)
-  
-    
+    const {data} = await enquiryFormBaseOnCourse(path, formType,course)
     getAllStatus()
-    return data && setState(data)
+    data && setTotal(data.length)
+    return data ? setState(data) : setState([])
    
   }
 
   const getAllStatus = async() => {
-    const {data} = await allFormStatus('/form_status', 'All')
+    const {data} = await allFormStatus('/form_status')
     return data && setStatus(data)
   }
 
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
 
   useEffect(() => {
     allData()
-    setcurrentPage(1)
   }, [formType])
 
  
@@ -189,7 +191,7 @@ const createExcelFile = async() => {
                 </tr>
               </thead>
               <tbody>
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -208,7 +210,7 @@ const createExcelFile = async() => {
                      <td>{el.phone_number}</td>
                      <td>{el.email}</td>
                      <td>{el.course}</td>
-                     <td>{el.enquiryDate + '\n' + el.enquiryTime }</td>
+                     <td>{el.enquiryDate}</td>
                      <td>{el.formtype}</td>
                      <td>{el.company ??= "--"}</td>
                      <td>{el.desigination ??= "--"}</td>
@@ -238,7 +240,13 @@ const createExcelFile = async() => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={() => handleClose(setShow, setEditShow)}>
 

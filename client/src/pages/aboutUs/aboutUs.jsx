@@ -4,40 +4,42 @@
     import { MdDelete, MdEditSquare } from "react-icons/md";
     import { allAboutPoints,  allCourseForSearch,  createAboutPoints,  deleteAboutPoints,  editAboutPoints, handleClose } from '../../Components/CommonUrl/apis';
     import Header from '../../Components/pageComponents/header';
-    import Pagination from '../../Components/pageComponents/pagination';
+    import Pagination from '../../Components/Pagination/Pajination';
+   
     
     const AboutUs = () => {
       const [show, setShow] = useState(false);
-    
       const [editshow, setEditShow] = useState({
-        name : "", link : "",id : ''
+        description : "", id : '', point : ''
       });
-    
+      const [total, setTotal] = useState(0)
+      const [page, setPage] = useState(1);
+      const [postPerpage, setPostPerPage] = useState(10);
       const [courses, setCourses] = useState([])
       const [state, setState] = useState([])
-      const [currentPage, setcurrentPage] = useState(1)
       const [query, setQuery] = useState("");
       const location = useLocation()
       const path = location.pathname
 
     // List of all about us points
-      const allData = async (limit) => {
-        const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-        const data = await allAboutPoints(path, givenLimit, currentPage)
+      const allData = async () => {
+     
+        const {data} = await allAboutPoints(path)
        allCourseList();
+       data && setTotal(data.length)
         return data && setState(data)
       }
 
 // List of all Courses
   const allCourseList = async() => {
-    const {data} = await allCourseForSearch('/bcourses', 'All'
+    const {data} = await allCourseForSearch('/bcourses'
     )
     return  data && setCourses(data)  
   }
     
       useEffect(() => {
         allData()
-      }, [currentPage])
+      }, [])
     
       // delete single about us point
       const ConfirmBox = async (id) => {
@@ -66,6 +68,9 @@
     
       }
     
+      const indexOfLastPage = page * postPerpage;
+      const indexOfFirstPage = indexOfLastPage - postPerpage;
+      const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
     
 // add a new point or edit a already exits point 
       const handelCreateAndUpdate = async (e) => {
@@ -92,7 +97,7 @@
         <div className="containers">
           <div className="page">
             <h3 className='heading mb-4'>Course Video Point</h3>
-            <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery}/>
+            <Header setShow={setShow}  state={state} setQuery={setQuery}/>
          
             <div className='middlebody m-3'>
            <div className="tableFixHead">
@@ -107,7 +112,7 @@
                   </thead>
                   <tbody>
     
-                    {state.data ? state.data.filter((obj) => {
+                    {currentPosts ? currentPosts.filter((obj) => {
                       if (query == "")  return obj;
                        else if ( 
                         obj.point.toLowerCase().includes(query.toLowerCase()) 
@@ -132,7 +137,13 @@
               </div>
             </div>
           
-            <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+            <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
           </div>
           <Modal show={show} onHide={() => handleClose(setShow, setEditShow)}>
     

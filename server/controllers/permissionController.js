@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 
 exports.allPermissions = catchAsyncError(async(req,res) =>{
     const { permissions } = req 

@@ -4,7 +4,6 @@ const { verifyUser, verifyModulePermission } = require('../middelwares/token');
 const { login, genrateProfileModule, updateImage, updateProfile, updatePassword, forgetPassword, verifyOtp, logOut, getProfile } = require('../controllers/profileController');
 const upload = require('../middelwares/imageUpload');
 const { footer, footerData } = require('../controllers/footerController');
-const { createExcelFile } = require('../utils/pagination');
 const { escapeRequestBody } = require('../conn/db');
 
 

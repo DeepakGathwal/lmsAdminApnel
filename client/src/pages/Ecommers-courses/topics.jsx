@@ -6,7 +6,7 @@ import { MdDelete, MdEditSquare, MdRemoveRedEye, MdDownloading} from "react-icon
 
 import { addVideos, allCourseChapter, allVideos, deleteVideos, editVideos, createEbrochure, deleteEbrochure, downloadEbrochure  } from '../../Components/CommonUrl/apis'
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 const ETopics = () => {
   const [selected, setSelected] = useState([]);
@@ -14,7 +14,9 @@ const ETopics = () => {
   const [defaultcourceList, setdefaultCource] = useState();
   const [state, setState] = useState([]);
   const [chapter, setChapter] = useState();
-  const [currentPage, setcurrentPage] = useState(1);
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);;
   const [query, setQuery] = useState("");
    const [posts, setPosts] = useState({
     id: "",topic: "", videoLink: "", timing : ""
@@ -27,7 +29,7 @@ const ETopics = () => {
 
 
   const chaptersList = async () => {
-    const { data } = await allCourseChapter("/e-courseChapter", 'All');
+    const { data } = await allCourseChapter("/e-courseChapter");
     if (data) {
       await data.map((el) => {
         optionArray.push({ label: el.chapter, value: el.id });
@@ -90,14 +92,11 @@ const ETopics = () => {
     setPosts("");
     setdefaultCource([]);
     setSelected([]);
-
-  
-
   };
 
-  const allData = async (limit) => {
-    const givenLimit = limit == 0 ? state && state.data && parseInt(state.limit) : limit;
-    const data = await allVideos(path, givenLimit, currentPage);
+  const allData = async () => {
+    const {data} = await allVideos(path);
+    data && setTotal(data.length)
     chaptersList();
     return data && setState(data);
   };
@@ -131,7 +130,12 @@ const ETopics = () => {
   }
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   let defaultCorces = [];
 
@@ -170,7 +174,7 @@ const ETopics = () => {
                 </tr>
               </thead>
               <tbody>
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "")
                     return obj;
                   else if (
@@ -217,7 +221,13 @@ const ETopics = () => {
           </div>
         </div>
 
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state} />
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
 
         {/* Bootstrap Modal for adding/editing videos */}
         <Modal show={show} onHide={() => handleClose(setShow, setPosts)}>

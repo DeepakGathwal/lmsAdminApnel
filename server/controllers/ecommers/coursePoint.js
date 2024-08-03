@@ -1,6 +1,6 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
-const { pagination } = require("../../utils/pagination");
+
 const { courserequirement, courceLearn } = require("../../utils/validation");
 
 
@@ -88,7 +88,8 @@ exports.addLearn = catchAsyncError(async (req, res) => {
         }
    
    
-        return pagination(req, res, data)
+        return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     }
       else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
   
@@ -187,7 +188,8 @@ exports.addLearn = catchAsyncError(async (req, res) => {
       }
  
  
-      return pagination(req, res, data)
+      return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
   }
     else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
   })

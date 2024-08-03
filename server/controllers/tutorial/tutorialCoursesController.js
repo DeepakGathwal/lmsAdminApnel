@@ -1,6 +1,6 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
-const { pagination } = require("../../utils/pagination");
+
 const {  tutorialSchema } = require("../../utils/validation");
 const {getDataUri} = require('../../utils/imageHandeler')
 
@@ -96,7 +96,7 @@ exports.tutorialCourceList = catchAsyncError(async (req, res) => {
     let filterByDate = ``
     let filterByMonth = ``;
     if(month) filterByMonth = ` && Date_Format(course.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
-    if(startDate && endDate ) filterByDate = ` && Date_Format(course.created_at, '%d-%m-%y') Between Date_Format('${startDate}', '%d-%m-%y') AND Date_Format('${endDate}', '%d-%m-%y')`
+    if(startDate && endDate ) filterByDate = ` && course.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
 
     let sortById = ''
     if (id > 0) {
@@ -104,7 +104,7 @@ exports.tutorialCourceList = catchAsyncError(async (req, res) => {
     };
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Course", status: false });
 
-    const allCourceQuery = `SELECT course.category,Date_Format(course.created_at, '%d-%m-%y') as date,team.name as creator,course.name,course.icon,course.meta_keywords,course.meta_tags,course.meta_description, course.id from jtc_tutorial_cources as course  Inner Join jtc_tutorial_type as type On type.id = course.category LEFT JOIN jtc_team as team On team.id = course.created_by WHERE course.deleted_by = '0' ${sortById} ${filterByDate} ${filterByMonth} ORDER By course.id DESC`
+    const allCourceQuery = `SELECT course.category,Date_Format(course.created_at,'%d-%m-%y %h:%i:%s %p') as date,team.name as creator,course.name,course.icon,course.meta_keywords,course.meta_tags,course.meta_description, course.id from jtc_tutorial_cources as course  Inner Join jtc_tutorial_type as type On type.id = course.category LEFT JOIN jtc_team as team On team.id = course.created_by WHERE course.deleted_by = '0' ${sortById} ${filterByDate} ${filterByMonth} ORDER By course.id DESC`
     const data = await executeQuery(allCourceQuery);
 
    
@@ -119,9 +119,11 @@ exports.tutorialCourceList = catchAsyncError(async (req, res) => {
             }
         }
  
-        return pagination(req, res, data)
+        return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     }
 
-    if (data.length > 0) return pagination(req, res, data)
+    if (data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({ message: "Error! View Cources", success: false })
 })

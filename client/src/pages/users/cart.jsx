@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import {  usersCart } from '../../Components/CommonUrl/apis';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import Header from '../../Components/pageComponents/header';
 
 const CartItem = () => {
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
   
 
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await usersCart(path, givenLimit, currentPage)
-
+  const allData = async () => {
+       
+    const {data} = await usersCart(path)
+    data && setTotal(data.length)
      return data && setState(data)
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   return (
    
@@ -47,7 +54,7 @@ const CartItem = () => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -73,7 +80,13 @@ const CartItem = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
     
   )

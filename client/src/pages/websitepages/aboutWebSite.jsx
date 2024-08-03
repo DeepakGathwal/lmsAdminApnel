@@ -2,69 +2,82 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
-import { allProjectTopic,  createProjectTopic,  deleteProjectTopic,  editProjectTopic, handleClose } from '../../Components/CommonUrl/apis';
+import { allAboutPoints,   createAboutPoints,  deleteAboutPoints,  editAboutPoints, handleClose } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
-const ProjectTopics = () => {
+const WebsiteAboutPoint = () => {
   const [show, setShow] = useState(false);
+
   const [editshow, setEditShow] = useState({
-    topic : "",id : ''
+    description : "", id : '', point :"Website"
   });
+
+ 
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
 
-// list of all points
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allProjectTopic(path, givenLimit, currentPage)
-    return  data && setState(data)
+// List of all about us points
+  const allData = async () => {
+    const {data} = await allAboutPoints(path)
+    data && setTotal(data.length)
+    return data && setState(data)
   }
+
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
-  // delete a point by id
+  // delete single about us point
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
      if (value) {
-      const deleteMember = await deleteProjectTopic(path, id)
+      const deleteMember = await deleteAboutPoints(path, id)
       if (deleteMember.success == true) {
         alert(deleteMember.message)
-       return allData()
+      return  allData()
       } else return alert(deleteMember.message)
 
     } else return false
   }
 
-  // handel inputs
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
+// handel input data function
   const handelChange = (e) => {
     setEditShow({ ...editshow, [e.target.name]: e.target.value })
   }
 
-  // open edit model
+  // open model to edit a about us point
   const handleEdit = (el) => {
-    if (!el)  return alert("Module Not Selected")
+    if (el) {
       setEditShow(el)
-     return setShow(true)
+      setShow(true)
+    } else return alert("Module Not Selected")
+
   }
-  
-// careate and edit point
+
+
+// add a new point or edit a already exits point 
   const handelCreateAndUpdate = async (e) => {
     e.preventDefault()
+   
     let value;
     if (editshow.id > 0) {
-      // edit a point by 
-      value = await editProjectTopic(path, editshow.id, editshow.topic)
+      // edit single data
+      value = await editAboutPoints(path, editshow.id, editshow)
     } else {
-      // create a new point
-      value = await createProjectTopic(path, editshow.topic)
+      // create a single data
+      value = await createAboutPoints(path, editshow)
     }
-
     if (value.success == true) {
       e.preventDefault()
       setShow(!show)
@@ -73,39 +86,38 @@ const ProjectTopics = () => {
     }else return alert(value.message)
   }
 
+
   return (
     <div className="containers">
       <div className="page">
-        <h3 className='heading mb-4'>Why Choose Us Points</h3>
+        <h3 className='heading mb-4'>Course Video Point</h3>
         <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery}/>
      
         <div className='middlebody m-3'>
-         
-          <div className="tableFixHead">
+       <div className="tableFixHead">
             <table className='table table-bordered'>
               <thead>
                 <tr>
                   <th>Id</th>
-                  <th>Langauge</th>
-         
+                  <th>Point</th>
+                  <th>Description</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
-                  if (query == "") 
-                    return obj;
-                   else if (
-                
-                    obj.topic.toLowerCase().includes(query.toLowerCase()) 
-                  ) 
-                    return obj;
-                  
+                {currentPosts ? currentPosts.filter((obj) => {
+                  if (query == "")  return obj;
+                   else if ( 
+                    obj.point.toLowerCase().includes(query.toLowerCase()) 
+                  )  return obj;
                 }).map((el, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
-                     <td>{el.topic}</td>
+                     <td>{el.point}</td>
+                    
+                     <td>{el.description}</td>
+                    
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
                       / <MdDelete onClick={(e) => ConfirmBox(el.id)}
@@ -119,21 +131,31 @@ const ProjectTopics = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={() => handleClose(setShow, setEditShow)}>
 
 <Modal.Header closeButton>
-  <Modal.Title>Points</Modal.Title>
+  <Modal.Title>Course Video Points</Modal.Title>
 </Modal.Header>
 <Modal.Body>
   <div className="batchesform fw-semibold">
     <form className='batchesform' action="" onSubmit={handelCreateAndUpdate}>
+  
        <div className="form-group">
-          <label htmlFor="">Enter topic
-          <input type="text" name="topic" id="" value={editshow.topic} className="form-control" onChange={handelChange} required />
-            </label>
        </div>
+       <div className="form-group">
+       <label htmlFor="">Description
+        <textarea type="text" name="description" id="" value={editshow.description} className="form-control" onChange={handelChange} required />
+        </label>
+       </div>
+ 
       <input type="submit" value="Add Points" className=' btn btn-primary mt-4 mb-2 btn-create' required />
 
     </form>
@@ -144,5 +166,5 @@ const ProjectTopics = () => {
   )
 }
 
+export default WebsiteAboutPoint
 
-export default ProjectTopics

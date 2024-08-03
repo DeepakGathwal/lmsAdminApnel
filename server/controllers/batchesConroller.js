@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 
 // Add a batch api function
 exports.addBatches = catchAsyncError(async (req, res) => {
@@ -40,8 +40,7 @@ exports.editBatches = catchAsyncError(async (req, res) => {
 exports.batches = catchAsyncError(async (req, res) => {
   const { permissions, user } = req
   if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Points", status: false });
-  const { id,startDate , endDate, month, course } = await await req.query
- 
+  const { id,startDate , endDate, month, course } = await await req.query  
   let findById = ''
   if (id) {
     findById = `&& batch.id = ${id}`
@@ -49,13 +48,12 @@ exports.batches = catchAsyncError(async (req, res) => {
   let filterByMonth = ''
   let filterByCourse = ''
   if(course > 0) filterByCourse = `&& batch.course_id = ${course}`
-  if(month > 0) filterByMonth = ` && Date_Format(batch.date, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
+  if(month) filterByMonth = ` && Date_Format(batch.date, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
   let filterByDate = ``
-  if(startDate  && endDate  ) filterByDate = ` && Date_Format(batch.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-  const alreadyExists = `Select team.name,batch.id as id, Date_Format(batch.date, '%Y-%m-%d') as date, batch.time_from,course.name  as course, batch.time_to,batch.week_days from jtc_batches as batch LEFT JOIN jtc_team as team On team.id = batch.created_by and team.deleted_by = '0' Inner Join jtc_courses as course On course.id = batch.course_id and course.deleted_by = '0'  WHERE batch.deleted_by = '0'  ${findById} ${filterByDate} ${filterByMonth} ${filterByCourse} ORDER By batch.id DESC`
-
+  if(startDate  && endDate  ) filterByDate = ` && batch.date Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+  const alreadyExists = `Select team.name,batch.id as id, Date_Format(batch.date, '%d-%m-%y %h:%i:%s %p') as date, batch.time_from,course.name  as course, batch.time_to,batch.week_days from jtc_batches as batch LEFT JOIN jtc_team as team On team.id = batch.created_by and team.deleted_by = '0' Inner Join jtc_courses as course On course.id = batch.course_id and course.deleted_by = '0'  WHERE batch.deleted_by = '0'  ${findById} ${filterByDate} ${filterByMonth} ${filterByCourse} ORDER By batch.id DESC`
   const data = await executeQuery(alreadyExists)
-  if (data.length > 0) return pagination(req, res, data)
+  if (data.length > 0) return res.status(200).json({data, success: true, message: "data fetch successfully",})
   else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
 })
 

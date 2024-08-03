@@ -4,7 +4,7 @@ import BatchesModal from './batchesModal'
 import { deleteBatches, getBatches } from '../../Components/CommonUrl/apis'
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import Header from '../../Components/pageComponents/header'
-import Pagination from '../../Components/pageComponents/pagination'
+import Pagination from '../../Components/Pagination/Pajination';
 import BatchesEdit from './batchEditModel';
 import FormFilterdateandmonth from '../../Components/pageComponents/FormFilterdateandmonth';
 import FormFilterCourse from '../../Components/pageComponents/FormFilterCourse';
@@ -17,42 +17,36 @@ function Batches() {
   const [dateshow, setDateShow] = useState({
     startDate: "", endDate: "", month: ""
   });
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
-  const [currentPage, setcurrentPage] = useState(1)
+
   const location = useLocation()
   const path = location.pathname
 
   // all batches list
-  const allData = async (limit, course) => {
-   
-    const givenLimit = limit == 0 ? state && state.data && parseInt(state.limit) : limit
-    const data = await getBatches(path, givenLimit, currentPage, dateshow, course)
-    return data && setState(data)
+  const allData = async (course) => {
+    const {data} = await getBatches(path, dateshow, course)
+    data && setTotal(data.length)
+    return data ? setState(data) : setState([])
   }
-  const filterData = async (limit, course) => {
-   
-    const givenLimit = limit == 0 ? state && state.data && parseInt(state.limit) : limit
-    const data = await getBatches(path, givenLimit, 1, dateshow, course)
-  setcurrentPage(1)
-    return data && setState(data)
-  }
+
 
   // handel inputs
   const handelChange = (e) => {
     setDateShow({ ...dateshow, [e.target.name]: e.target.value })
   }
 
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
 
   useEffect(() => {
-    if(currentPage > 1)
-    allData()
-  else return false
-  }, [currentPage])
-
-  useEffect(() => {
-   
     allData()
   }, [])
+
+
 
   // Delete a single batch
   const ConfirmBox = async (id) => {
@@ -78,12 +72,12 @@ function Batches() {
 
       <div className="page">
         <h3 className='heading mb-4'>Batches Details</h3>
-        <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery} />
+        <Header setShow={setShow}  state={state} setQuery={setQuery} />
         {show && <BatchesModal show={show} setShow={setShow} path={path} allData={allData} />}
  
         <div className='middlebody m-3'>
           <form className="form_filter mb-3">
-            <FormFilterCourse filterData={filterData} />
+            <FormFilterCourse allData={allData} />
             <FormFilterdateandmonth handelChange={handelChange} allData={allData} />
           </form>
           <div className="tableFixHead">
@@ -102,7 +96,7 @@ function Batches() {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") return obj;
                   else if (
                     obj.course.toLowerCase().includes(query.toLowerCase()) ||
@@ -130,7 +124,13 @@ function Batches() {
               </tbody>
             </table>
           </div>
-            <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state} />
+          <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
         </div>
       </div>
       {editId && <BatchesEdit editshow={editshow} seteditShow={seteditShow} path={path} editId={editId} allData={allData} />}

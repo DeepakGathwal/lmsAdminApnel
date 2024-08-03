@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import { allCompanies,  createCompanies,  deleteCompanies,  editCompanies } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import UploadImageComponent from '../../Components/pageComponents/uploadImage';
 
 const Comapny = () => {
@@ -14,7 +14,9 @@ const Comapny = () => {
   });
   const [img, setImg] = useState([])
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
@@ -25,15 +27,16 @@ const Comapny = () => {
   };
 
 // all commpanys data
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allCompanies(path, givenLimit, currentPage)
+  const allData = async () => {
+  
+    const {data} = await allCompanies(path)
+    data && setTotal(data.length)
     return  data && setState(data)
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   /** delete a company by id */
   const ConfirmBox = async (id) => {
@@ -47,6 +50,12 @@ const Comapny = () => {
 
     } else return false
   }
+
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   /** handel inputs */
   const handelChange = (e) => {
@@ -109,7 +118,7 @@ const Comapny = () => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                   else if (
@@ -145,7 +154,13 @@ const Comapny = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={handleClose}>
 

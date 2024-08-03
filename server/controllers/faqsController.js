@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 const { faqsSchema } = require("../utils/validation");
 
 exports.addFaqs = catchAsyncError(async(req,res) => {
@@ -53,8 +53,18 @@ exports.faqs = catchAsyncError(async(req,res) => {
     const { permissions, user } = req
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Points", status: false });
     const alreadyExists =  `Select * from jtc_faqs ORDER By id DESC`
+//     const alreadyExists =  `WITH total AS (
+//   SELECT COUNT(*) AS total_count
+//   FROM jtc_faqs
+// )
+// SELECT *, (SELECT total_count FROM total) AS total_count
+// FROM jtc_faqs
+// ORDER BY id
+// LIMIT ${limit} OFFSET ${skipPage};`
+
     const data =  await executeQuery(alreadyExists)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch Points", success: false})
 })
 

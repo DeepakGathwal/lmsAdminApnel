@@ -20,9 +20,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
-
-// const buidPath = path.join(__dirname,"../client/build")
-// app.use(express.static(buidPath))
 // app.use(cors({  exposedHeaders: 'Set-Cookie',Headers: true,credentials:true, origin:"*",  methods: "GET,POST,PUT,DELETE", optionsSuccessStatus: 200,allowedHeaders: [
 //     'Access-Control-Allow-Origin',
 //     'Content-Type',
@@ -41,9 +38,6 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
  const teamHandel = require('./routes/teamRoute');
- const projectLanguage = require('./routes/project/projectAboutRoute');
- const projectPoint = require('./routes/project/projectPointRoute');
- const project = require('./routes/project/projectRouter');
  const roleHandel = require('./routes/rolesRoutes');
  const moduleHandel = require('./routes/modulesRoute');
  const permissionHandel = require('./routes/permissionRoute');
@@ -64,7 +58,6 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
  // call about us route
  const aboutPointHandel = require('./routes/aboutPointsRoute');
- const studentHandel = require('./routes/studentRoute');
  const testominalHandel = require('./routes/testominalsRoute');
  const faqsHandel = require('./routes/faqsRoute');
  const tncHandel = require('./routes/tncRoute');
@@ -94,9 +87,7 @@ const error = require('./middelwares/error');
 
  //  call brochure api
  app.use('/jtc/admin/ecommersCourse', ECourseRoute);
- app.use('/jtc/admin/projectAbout', projectLanguage);
- app.use('/jtc/admin/project', project);
- app.use('/jtc/admin/projectPoint', projectPoint);
+
  app.use('/jtc/admin/brochure', brochurerHandel);
  app.use('/jtc/admin/coursePoint', coursesPointHandel);
 
@@ -107,7 +98,6 @@ const error = require('./middelwares/error');
  app.use('/jtc/admin/tnc', tncHandel);
  app.use('/jtc/admin/faqs', faqsHandel);
  app.use('/jtc/admin/testominal', testominalHandel);
- app.use('/jtc/admin/student', studentHandel);
 
  // call about us api
  app.use('/jtc/admin/about', aboutPointHandel);

@@ -4,7 +4,7 @@ import { MdDelete, MdEditSquare } from "react-icons/md";
 import Header from '../../Components/pageComponents/header'
 import CoursesModal from './coursesModal';
 import { allCourse, deleteCourse } from '../../Components/CommonUrl/apis';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import CoursesEdit from './editCourse';
 import FormFilterdateandmonth from '../../Components/pageComponents/FormFilterdateandmonth';
 
@@ -15,7 +15,9 @@ function Courses() {
     const [dateshow, setDateShow] = useState({
     startDate : "", endDate : "", month : ""
     });
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
     const [editId, setEditId] = useState(0)
     const [query, setQuery] = useState("");
     const location = useLocation()
@@ -23,10 +25,11 @@ function Courses() {
 
 // all course list
 
-   const allData = async(limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allCourse(path, givenLimit, currentPage, dateshow)
-   return data && setState(data)
+   const allData = async() => {
+       
+    const {data} = await allCourse(path, dateshow)
+    data && setTotal(data.length)
+    return data ? setState(data) : setState([])
    }
    
 // handel inputs
@@ -56,7 +59,12 @@ function Courses() {
   }
   useEffect(() => {
     allData()
-},[currentPage])
+},[])
+
+const indexOfLastPage = page * postPerpage;
+const indexOfFirstPage = indexOfLastPage - postPerpage;
+const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   return (
     <div className="containers">
@@ -95,7 +103,7 @@ function Courses() {
                    </thead>
                     <tbody style={{height:" 10px !important", overflow: "scroll"}}>
         
-                    {state.data ? state.data.filter((obj) => {
+                    {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -139,7 +147,13 @@ function Courses() {
                 </table>
                 </div>
             </div>
-           <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+           <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
        </div>
         </div>
   )

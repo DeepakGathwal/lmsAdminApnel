@@ -174,9 +174,9 @@ export const addTeam = async (field, path) => {
   }
 }
 
-export const teamMembers = async (path, limit, currentPage) => {
+export const teamMembers = async (path) => {
   try {
-    const { data } = await instance.get(`team?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`team?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -204,18 +204,18 @@ export const editTeamMemberApi = async (path, id, field) => {
 /**
  *  get list of all batches
  */
-export const getBatches = async (path, givenLimit, currentPage, dateshow, course) => {
+export const getBatches = async (path, dateshow, course) => {
   try {
-    const { data } = await instance.get(`batches?module=${path}&limit=${givenLimit}&skipPage=${currentPage}&startDate=${dateshow.startDate}&endDate=${dateshow.endDate}&month=${dateshow.month}&course=${course}`)
+    const { data } = await instance.get(`batches?module=${path}&startDate=${dateshow.startDate}&endDate=${dateshow.endDate}&month=${dateshow.month}&course=${course}`)
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const listOfBatches = async (path, givenLimit) => {
+export const listOfBatches = async (path) => {
   try {
-    const { data } = await instance.get(`batches?module=${path}&limit=${givenLimit}`)
+    const { data } = await instance.get(`batches?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -246,9 +246,9 @@ export const deleteTeamMember = async (path, id) => {
 }
 
 
-export const allModules = async (path, limit, currentPage) => {
+export const allModules = async (path) => {
   try {
-    const { data } = await instance.get(`module?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`module?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -321,9 +321,9 @@ export const deleteRoles = async (path, id) => {
   }
 }
 
-export const allRoles = async (path, limit, currentPage) => {
+export const allRoles = async (path) => {
   try {
-    const { data } = await instance.get(`role?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`role?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -375,9 +375,9 @@ export const deleteCourseType = async (path, id) => {
  * list of all course types
  * permision required to see all couse type
  */
-export const allCourseType = async (path, limit, currentPage) => {
+export const allCourseType = async (path) => {
   try {
-    const { data } = await instance.get(`coursefiled?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`coursefiled?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -419,9 +419,9 @@ export const deleteTutorialType = async (path, id) => {
   }
 }
 
-export const allTutorialType = async (path, limit, currentPage) => {
+export const allTutorialType = async (path) => {
   try {
-    const { data } = await instance.get(`tutorialfiled?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`tutorialfiled?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -456,10 +456,10 @@ export const deleteCourceChapter = async (path, id) => {
   }
 }
 
-export const allCourceChapter = async (path, limit, cource, currentPage) => {
+export const allCourceChapter = async (path, cource) => {
 
   try {
-    const { data } = await instance.get(`category?module=${path}&limit=${limit}&skipPage=${currentPage}&cource=${cource}`)
+    const { data } = await instance.get(`category?module=${path}&cource=${cource}`)
     return data
   } catch (err) {
     return err.message
@@ -495,9 +495,9 @@ export const deleteCourceSubCategory = async (path, id) => {
   }
 }
 
-export const allCourceSubCategory = async (path, category, limit, currentPage) => {
+export const allCourceSubCategory = async (path, category) => {
   try {
-    const { data } = await instance.get(`category/topics?module=${path}&limit=${limit}&skipPage=${currentPage}&id=${category}`)
+    const { data } = await instance.get(`category/topics?module=${path}&id=${category}`)
     return data
   } catch (err) {
     return err.message
@@ -552,9 +552,9 @@ export const deleteCourse = async (path, id) => {
  * list of all course 
  * permission requried to get all couses
  */
-export const allCourse = async (path, limit, currentPage, editshow) => {
+export const allCourse = async (path, editshow) => {
   try {
-    const { data } = await instance.get(`course?module=${path}&limit=${limit}&skipPage=${currentPage}&startDate=${editshow.startDate}&endDate=${editshow.endDate}&month=${editshow.month}&course=${editshow.cource}`)
+    const { data } = await instance.get(`course?module=${path}&startDate=${editshow.startDate}&endDate=${editshow.endDate}&month=${editshow.month}&course=${editshow.cource}`)
     return data
   } catch (err) {
     return err.message
@@ -569,9 +569,9 @@ export const allCourse = async (path, limit, currentPage, editshow) => {
  * 
  * permission need to view couses data  
  */
-export const allCourseForSearch = async (path, limit) => {
+export const allCourseForSearch = async (path) => {
   try {
-    const { data } = await instance.get(`course?module=${path}&limit=${limit}`)
+    const { data } = await instance.get(`course?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -667,9 +667,9 @@ export const deleteCompanies = async (path, id) => {
 /** list of all companies
  * permission required to get companies
  */
-export const allCompanies = async (path, limit, currentPage) => {
+export const allCompanies = async (path) => {
   try {
-    const { data } = await instance.get(`company?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`company?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -706,9 +706,9 @@ export const deleteTestamonials = async (path, id) => {
   }
 }
 
-export const allTestamonials = async (path, limit, currentPage) => {
+export const allTestamonials = async (path) => {
   try {
-    const { data } = await instance.get(`testominal?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`testominal?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -759,9 +759,9 @@ export const deleteAboutPoints = async (path, id) => {
 /** List of all About Point APi 
  *  permission need to view all about us point
 */
-export const allAboutPoints = async (path, limit, currentPage) => {
+export const allAboutPoints = async (path) => {
   try {
-    const { data } = await instance.get(`about?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`about?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -809,18 +809,18 @@ export const deletePoints = async (path, id) => {
 
 // all why choose us point 
 //  permission required
-export const allPoints = async (path, limit, currentPage) => {
+export const allPoints = async (path) => {
   try {
-    const { data } = await instance.get(`point?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`point?module=${path}`)
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const allStudentList = async (path, limit, currentPage) => {
+export const allStudentList = async (path) => {
   try {
-    const { data } = await instance.get(`student?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`student?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -870,9 +870,9 @@ export const deleteBlogCategory = async (path, id) => {
 /** All Blogs Categories
  * permission needed to view all blog category
  */
-export const allBlogCategory = async (path, limit, currentPage) => {
+export const allBlogCategory = async (path) => {
   try {
-    const { data } = await instance.get(`blog/category?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`blog/category?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -933,9 +933,9 @@ export const singleBlog = async (path, id) => {
  * List of all blogs 
  * permission required to see blog list
  */
-export const allBlogNames = async (path, limit, currentPage) => {
+export const allBlogNames = async (path) => {
   try {
-    const { data } = await instance.get(`blog/list?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`blog/list?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -973,9 +973,9 @@ export const addTutorialApi = async (path, htmlData, cssContent, field) => {
   }
 }
 
-export const getHeadingsOfTutorial = async (path, limit, currentPage) => {
+export const getHeadingsOfTutorial = async (path) => {
   try {
-    const { data } = await instance.get(`tutorial?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`tutorial?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1041,9 +1041,9 @@ export const deleteTutorialCategory = async (path, id) => {
   }
 }
 
-export const allTutorialCategory = async (path, cource, limit, currentPage) => {
+export const allTutorialCategory = async (path, cource) => {
   try {
-    const { data } = await instance.get(`tutorial/category?module=${path}&limit=${limit}&skipPage=${currentPage}&cource=${cource}`)
+    const { data } = await instance.get(`tutorial/category?module=${path}&cource=${cource}`)
     return data
   } catch (err) {
     return err.message
@@ -1080,9 +1080,9 @@ export const deleteFaqs = async (path, id) => {
   }
 }
 
-export const allFaqs = async (path, limit, currentPage) => {
+export const allFaqs = async (path) => {
   try {
-    const { data } = await instance.get(`faqs?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`faqs?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1116,9 +1116,9 @@ export const deleteTermsConditions = async (path, id) => {
   }
 }
 
-export const allTermsConditions = async (path, limit, currentPage) => {
+export const allTermsConditions = async (path) => {
   try {
-    const { data } = await instance.get(`tnc?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`tnc?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1152,9 +1152,9 @@ export const deleteWebSitePage = async (path, id) => {
   }
 }
 
-export const allWebSitePage = async (path, limit, currentPage, id) => {
+export const allWebSitePage = async (path, id) => {
   try {
-    const { data } = await instance.get(`navLinks?module=${path}&limit=${limit}&skipPage=${currentPage}&id=${id}`)
+    const { data } = await instance.get(`navLinks?module=${path}&id=${id}`)
     return data
   } catch (err) {
     return err.message
@@ -1193,18 +1193,18 @@ export const deleteTutorialCource = async (path, id) => {
   }
 }
 
-export const allTutorialCource = async (path, limit, currentPage, editshow) => {
+export const allTutorialCource = async (path, editshow) => {
   try {
-    const { data } = await instance.get(`tutorialCource?module=${path}&limit=${limit}&skipPage=${currentPage}&startDate=${editshow.startDate}&endDate=${editshow.endDate}&month=${editshow.month}`)
+    const { data } = await instance.get(`tutorialCource?module=${path}&startDate=${editshow.startDate}&endDate=${editshow.endDate}&month=${editshow.month}`)
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const allTutorialCourceForSearch = async (path, limit, currentPage, editshow) => {
+export const allTutorialCourceForSearch = async (path, editshow) => {
   try {
-    const { data } = await instance.get(`tutorialCource?module=${path}&limit=${limit}`)
+    const { data } = await instance.get(`tutorialCource?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1293,9 +1293,9 @@ export const deleteFormType = async (path, id) => {
   }
 }
 
-export const allFormType = async (path, limit, currentPage) => {
+export const allFormType = async (path) => {
   try {
-    const { data } = await instance.get(`forms?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`forms?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1332,19 +1332,19 @@ export const deleteFormStatus = async (path, id) => {
   }
 }
 
-export const allFormStatus = async (path, limit, currentPage) => {
+export const allFormStatus = async (path) => {
   try {
-    const { data } = await instance.get(`forms/status?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`forms/status?module=${path}`)
     return data
   } catch (err) {
     return err.message
   }
 }
-// path, givenLimit, currentPage, editshow
-export const enquiryFormData = async (path, limit, currentPage, route) => {
+// path, editshow
+export const enquiryFormData = async (path, route) => {
   try {
 
-    const { data } = await instance.get(`forms/${route}?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`forms/${route}?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1368,9 +1368,9 @@ export const enquiryFormBaseOnCourse = async (path, link, course) => {
   }
 }
 
-export const joinFormData = async (path, limit, currentPage, editshow) => {
+export const joinFormData = async (path, editshow) => {
   try {
-    const { data } = await instance.get(`forms/join?module=${path}&limit=${limit}&skipPage=${currentPage}&startDate=${editshow.startDate}&endDate=${editshow.endDate}`)
+    const { data } = await instance.get(`forms/join?module=${path}&startDate=${editshow.startDate}&endDate=${editshow.endDate}`)
     return data
   } catch (err) {
     return err.message
@@ -1407,9 +1407,9 @@ export const faqsPages = async (path) => {
 
 
 
-export const allCourceJoinPoint = async (path, limit, currentPage) => {
+export const allCourceJoinPoint = async (path) => {
   try {
-    const { data } = await instance.get(`coursePoint?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`coursePoint?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1477,20 +1477,20 @@ export const deleteCourceCategory = async (path, id) => {
   }
 }
 
-export const allCourceCategory = async (path, limit, cource, currentPage) => {
+export const allCourceCategory = async (path,  cource) => {
   try {
 
-    const { data } = await instance.get(`category/category?module=${path}&limit=${limit}&skipPage=${currentPage}&cource=${cource}`)
+    const { data } = await instance.get(`category/category?module=${path}&cource=${cource}`)
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const changeVacancyStatus = async (path, cource, limit, currentPage) => {
+export const changeVacancyStatus = async (path, cource) => {
   try {
 
-    const { data } = await instance.get(`category/category?module=${path}&limit=${limit}&skipPage=${currentPage}&cource=${cource}`)
+    const { data } = await instance.get(`category/category?module=${path}&cource=${cource}`)
     return data
   } catch (err) {
     return err.message
@@ -1583,9 +1583,9 @@ export const readNotifications = async (path) => {
 }
 
 
-export const allProjectLangauage = async (path, givenLimit, currentPage) => {
+export const allProjectLangauage = async (path) => {
   try {
-    const { data } = await instance.get(`projectAbout?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`projectAbout?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1623,9 +1623,9 @@ export const deleteProjectLangauage = async (path, id) => {
 }
 
 
-export const allProjecttech = async (path, language, givenLimit, currentPage) => {
+export const allProjecttech = async (path, language) => {
   try {
-    const { data } = await instance.get(`projectAbout/tech?module=${path}&langauge=${language}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`projectAbout/tech?module=${path}&langauge=${language}`)
     return data
   } catch (err) {
     return err.message
@@ -1663,9 +1663,9 @@ export const deleteProjecttech = async (path, id) => {
 }
 
 
-export const allProjectTopic = async (path, givenLimit, currentPage) => {
+export const allProjectTopic = async (path) => {
   try {
-    const { data } = await instance.get(`projectPoint?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`projectPoint?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1703,9 +1703,9 @@ export const deleteProjectTopic = async (path, id) => {
 }
 
 
-export const allProjectTopicPoint = async (path, project,givenLimit, currentPage) => {
+export const allProjectTopicPoint = async (path, project) => {
   try {
-    const { data } = await instance.get(`projectPoint/point?module=${path}&limit=${givenLimit}&skipPage=${currentPage}&project=${project}`)
+    const { data } = await instance.get(`projectPoint/point?module=${path}&project=${project}`)
     return data
   } catch (err) {
     return err.message
@@ -1783,9 +1783,9 @@ export const addProjectFile = async (path,formValue) => {
 }
 
 
-export const allProjectFile = async (path,givenLimit, currentPage) => {
+export const allProjectFile = async (path) => {
   try {
-    const { data } = await instance.get(`project/files/?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`project/files/?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1826,18 +1826,18 @@ export const projectdelete = async (path, id) => {
 ///Ecomers
 
 
-export const usersMembers = async (path, limit, currentPage) => {
+export const usersMembers = async (path) => {
   try {
-    const { data } = await instance.get(`users?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`users?module=${path}`)
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const usersPayment = async (path, limit, currentPage) => {
+export const usersPayment = async (path) => {
   try {
-    const { data } = await instance.delete(`users?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.delete(`users?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1855,9 +1855,9 @@ export const deleteECourse = async (path, id) => {
   }
 }
 
-export const allECourse = async (path, limit, currentPage) => {
+export const allECourse = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCourse?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourse?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -1973,9 +1973,9 @@ export const deleteSections = async (path, id) => {
 }
 
 // all why choose us point 
-export const allSections = async (path, limit, currentPage) => {
+export const allSections = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersSection?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersSection?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -2032,9 +2032,9 @@ export const deleteCourseChapter = async (path, id) => {
   }
 }
 
-export const allCourseChapter = async (path, limit, currentPage) => {
+export const allCourseChapter = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCourse/chapter?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourse/chapter?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -2051,9 +2051,9 @@ export const deleteCourceLearn = async (path, id) => {
   }
 }
 
-export const allCourceLearn = async (path, limit, currentPage) => {
+export const allCourceLearn = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCoursePoint/learn?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCoursePoint/learn?module=${path}`)
      return data
   } catch (err) {
     return err.message
@@ -2105,9 +2105,9 @@ export const deleteECourseType = async (path, id) => {
  * list of all course types
  * permision required to see all couse type
  */
-export const allECourseType = async (path, limit, currentPage) => {
+export const allECourseType = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCourseCategory?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourseCategory?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -2165,9 +2165,9 @@ export const editVideos = async (path, posts, chapterid) => {
 }
 
 
-export const allVideos = async (path, givenLimit, currentPage) => {
+export const allVideos = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourse/topic?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -2175,18 +2175,18 @@ export const allVideos = async (path, givenLimit, currentPage) => {
 }
 
 
-export const deleteVideos = async (path, givenLimit, currentPage) => {
+export const deleteVideos = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCourse/topic?module=${path}&limit=${givenLimit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourse/topic?module=${path}`)
     return data
   } catch (err) {
     return err.message
   }
 }
 
-export const allCourcePrerequisite = async (path, limit, currentPage) => {
+export const allCourcePrerequisite = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCoursePoint/prerequisite?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCoursePoint/prerequisite?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -2209,9 +2209,9 @@ export const deleteCourselabel = async (path, id) => {
   }
 }
 
-export const allCourselabel = async (path, limit, currentPage) => {
+export const allCourselabel = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersCourseCategory/label?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersCourseCategory/label?module=${path}`)
     return data
   } catch (err) {
     return err.message
@@ -2273,9 +2273,9 @@ export const deleteEFaqs = async (path, id) => {
   }
 }
 
-export const allEFaqs = async (path, limit, currentPage) => {
+export const allEFaqs = async (path) => {
   try {
-    const { data } = await instance.get(`ecommersSection/faqs?module=${path}&limit=${limit}&skipPage=${currentPage}`)
+    const { data } = await instance.get(`ecommersSection/faqs?module=${path}`)
     return data
   } catch (err) {
     return err.message

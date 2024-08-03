@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 const { roleSchema, categorySchema } = require("../utils/validation");
 
 exports.createRole = catchAsyncError(async(req,res) =>{
@@ -44,7 +44,8 @@ exports.allRoles = catchAsyncError(async(req,res) =>{
     const alredyQuery = `Select id, role, vacancy from jtc_roles WHERE deleted_by = '0' ${searchById} ORDER By id DESC`
     const data = await executeQuery(alredyQuery) 
    
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! While Getting List Of Roles", success : false})
 })
 

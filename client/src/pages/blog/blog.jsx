@@ -4,31 +4,31 @@ import { allBlogNames, deleteBlog } from '../../Components/CommonUrl/apis'
 import Header from '../../Components/pageComponents/header'
 import { MdDeleteForever } from "react-icons/md";
 import EditBlog from './editBlog';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import AddBlog from './createBlog';
 
 function Blog() {
   const [show, setShow] = useState(false);
   const [editshow, seteditShow] = useState(false);
   const [state, setState] = useState([])
-
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [editId, setEditId] = useState(0)
   const [query, setQuery] = useState("");
-  const [currentPage, setcurrentPage] = useState(1)
   const location = useLocation()
   const path = location.pathname
 
   // list of all blogs name
-  const allData = async (limit) => {
-    const givenLimit = limit == 0 ? state && state.data && parseInt(state.limit) : limit
-    const data = await allBlogNames(path, givenLimit, currentPage)
+  const allData = async () => {
+    const {data} = await allBlogNames(path)
+   data && setTotal(data.length)
     return data && setState(data)
-
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   // delete a blog by id
   const ConfirmBox = async (id) => {
@@ -51,17 +51,21 @@ function Blog() {
   };
 
 
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
   return (
     <div className="containers">
 
       <div className="page">
         <h3 className='heading mb-4'>Blog Details</h3>
-        <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery} />
+        <Header setShow={setShow}  state={state} setQuery={setQuery} />
 
         <AddBlog show={show} setShow={setShow} path={path} allData={allData} />
 
         <ul className='list-group'>
-          {state.data ? state.data.filter((obj) => {
+          {currentPosts ? currentPosts.filter((obj) => {
             if (query == "") return obj;
             else if (
               obj.name.toLowerCase().includes(query.toLowerCase())
@@ -77,7 +81,13 @@ function Blog() {
 
 
         {editId > 0 && <EditBlog editshow={editshow} seteditShow={seteditShow} path={path} editId={editId} allData={allData} />}
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state} />
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
     </div>
   )

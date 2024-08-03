@@ -5,7 +5,7 @@ import { TbReportSearch } from "react-icons/tb";
 import Modal from 'react-bootstrap/Modal';
 import { allModules, createModules, deleteModules, editModules, editModulesImage } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 const Module = () => {
   const [show, setShow] = useState(false);
@@ -16,7 +16,9 @@ const Module = () => {
 
   const [state, setState] = useState([])
   const [ID, setId] = useState(0)
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
@@ -26,20 +28,25 @@ const Module = () => {
   };
 
 
-  const allData = async (limit) => {
-    const givenLimit = limit == 0 ? state && state.data && parseInt(state.limit) : limit
+  const allData = async () => {
+    
  
-    const data = await allModules(path, givenLimit, currentPage)
+    const {data} = await allModules(path)
+    data && setTotal(data.length)
     return data && setState(data)
   }
   const handelChange = (e) => {
     setEditShow({ ...editshow, [e.target.name]: e.target.value })
   }
 
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
@@ -119,7 +126,7 @@ const chnageImage = async(e) => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -163,7 +170,13 @@ const chnageImage = async(e) => {
           </div>
         </div>
 
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state} />
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={handleClose}>
 

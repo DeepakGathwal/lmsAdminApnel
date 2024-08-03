@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import { allTermsConditions,  createTermsConditions,  deleteTermsConditions,  editTermsConditions, faqsPages, handleClose } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 const TermsConditions = () => {
   const [show, setShow] = useState(false);
@@ -13,22 +13,25 @@ const TermsConditions = () => {
   });
   const [cource, setCource] = useState([])
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
 
 
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allTermsConditions(path, givenLimit, currentPage)
+  const allData = async () => {
+       
+    const {data} = await allTermsConditions(path)
     courcesList()
+    data && setTotal(data.length)
     return data && setState(data)
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
@@ -46,7 +49,10 @@ const TermsConditions = () => {
     setEditShow({ ...editshow, [e.target.name]: e.target.value })
   }
 
-    
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
   const courcesList = async() =>{
     const {data} = await faqsPages("/t_n_c")
     setCource(data)
@@ -101,7 +107,7 @@ const TermsConditions = () => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -130,7 +136,13 @@ const TermsConditions = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={() => handleClose(setShow, setEditShow)}>
 

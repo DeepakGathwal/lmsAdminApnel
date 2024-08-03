@@ -1,6 +1,6 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
-const { pagination } = require("../../utils/pagination");
+
 const { categorySchema, topicSchema } = require("../../utils/validation");
 
 exports.addTutorial = catchAsyncError(async(req,res) =>{
@@ -52,7 +52,8 @@ exports.getHeadings = catchAsyncError(async(req,res) =>{
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Create New Tutorial",success: false });
     const already = `Select courses.name as course,courseType.category as courceType,chapter.category_name as chapter, tutorial.id,tutorial.heading  from jtc_tutorials_topics as tutorial Inner JOIN jtc_tutorial_chapter as chapter On chapter.id = tutorial.category_id and chapter.deleted_by = '0' Inner JOIN jtc_tutorial_cources as courses On courses.id = tutorial.cource_id && courses.deleted_by = '0' Inner JOIN jtc_tutorial_type as courseType On courseType.id = courses.category WHERE tutorial.deleted_by = '0' ORDER By tutorial.id DESC`
     const data = await executeQuery(already)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     return res.status(206).json({message :"Error! Tutorial Fetched", success : false})
 })
 
@@ -190,7 +191,8 @@ exports.getCategory =  catchAsyncError(async(req,res) => {
            data[index]["cources"] = String(values);
             }
         }
-        return pagination(req, res, data)
+        return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     }
     else return res.status(206).json({message : "Error! During Category Fetching", success : false})
 })

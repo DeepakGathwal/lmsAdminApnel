@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 
 
 exports.form_abouts = catchAsyncError(async(req,res) => {
@@ -8,7 +8,8 @@ exports.form_abouts = catchAsyncError(async(req,res) => {
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch form_abouts", status: false });
     const alreadyExists =  `Select * from jtc_form_list ORDER By id DESC`
     const data =  await executeQuery(alreadyExists)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch form_abouts", success: false})
 })
 
@@ -46,7 +47,8 @@ exports.form_status = catchAsyncError(async(req,res) => {
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch form status", status: false });
     const alreadyExists =  `Select * from jtc_form_status ORDER By id DESC`
     const data =  await executeQuery(alreadyExists)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch form status", success: false})
 })
 
@@ -72,11 +74,12 @@ exports.enquiryformData = catchAsyncError(async(req,res) => {
     let filterByMonth = ``  
     if(month) filterByMonth = ` && Date_Format(enquiry.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
    
-    if(startDate && endDate ) filterByDate = `&& Date_Format(enquiry.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%Y') as enquiryDate, TIME_FORMAT(enquiry.created_at, "%H:%i:%s") as enquiryTime,fromType.form_about as formtype, course.name as course, enquiry.company, enquiry.desigination, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0'  WHERE  enquiry.form_id  = '1' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
+    if(startDate && endDate ) filterByDate = `&& enquiry.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%y %h:%i:%s %p') as enquiryDate,fromType.form_about as formtype, course.name as course, enquiry.company, enquiry.desigination, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0'  WHERE  enquiry.form_id  = '1' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
     const data =  await executeQuery(query)
 
-    if(data.length > 0) return pagination(req,res,data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetching Data", success: false})
 })
 
@@ -86,10 +89,11 @@ exports.downloadCurriculumData = catchAsyncError(async(req,res) => {
     let filterByMonth = ``  
     if(month) filterByMonth = ` && Date_Format(enquiry.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
    
-    if(startDate && endDate ) filterByDate = `&& Date_Format(enquiry.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%Y') as enquiryDate, TIME_FORMAT(enquiry.created_at, "%H:%i:%s") as enquiryTime,fromType.form_about as formtype, course.name as course, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0' WHERE  enquiry.form_id  = '5' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
+    if(startDate && endDate ) filterByDate = ` && enquiry.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%y %h:%i:%s %p') as enquiryDate, fromType.form_about as formtype, course.name as course, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0' WHERE  enquiry.form_id  = '5' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
     const data =  await executeQuery(query)
-    if(data.length > 0) return pagination(req,res,data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetching Data", success: false})
 })
 
@@ -99,10 +103,11 @@ exports.projectData = catchAsyncError(async(req,res) => {
     let filterByMonth = ``  
     if(month) filterByMonth = ` && Date_Format(enquiry.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
    
-    if(startDate && endDate ) filterByDate = `&& Date_Format(enquiry.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%Y') as enquiryDate, TIME_FORMAT(enquiry.created_at, "%H:%i:%s") as enquiryTime,fromType.form_about as formtype, course.name as course, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtcindia_projects.project_lists as course On course.id = enquiry.course and course.deleted_by = '0' WHERE  enquiry.form_id  = '6' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
+    if(startDate && endDate ) filterByDate = ` && enquiry.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%y %h:%i:%s %p') as enquiryDate,fromType.form_about as formtype, course.name as course, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtcindia_projects.project_lists as course On course.id = enquiry.course and course.deleted_by = '0' WHERE  enquiry.form_id  = '6' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
     const data =  await executeQuery(query)
-    if(data.length > 0) return pagination(req,res,data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetching Data", success: false})
 })
 
@@ -112,11 +117,12 @@ exports.hireUsformData = catchAsyncError(async(req,res) => {
     let filterByMonth = ``  
     if(month) filterByMonth = ` && Date_Format(enquiry.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
    
-    if(startDate && endDate ) filterByDate = `&& Date_Format(enquiry.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%Y') as enquiryDate, TIME_FORMAT(enquiry.created_at, "%H:%i:%s") as enquiryTime,fromType.form_about as formtype,course.name as course, enquiry.company, enquiry.desigination, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0'  WHERE enquiry.form_id = '2' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
+    if(startDate && endDate ) filterByDate = ` && enquiry.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%y %h:%i:%s %p') as enquiryDate,fromType.form_about as formtype,course.name as course, enquiry.company, enquiry.desigination, enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0'  WHERE enquiry.form_id = '2' ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
      const data =  await executeQuery(query)
 
-    if(data.length > 0) return pagination(req,res,data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetching Data", success: false})
 })
 
@@ -127,22 +133,24 @@ exports.enrollFormData = catchAsyncError(async(req,res) => {
     let filterByCourse = ``  
     if(month) filterByMonth = ` && Date_Format(enquiry.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
     if(course) filterByCourse = ` &&  enquiry.course = '${course}'`
-    if(startDate && endDate ) filterByDate = `&& Date_Format(enquiry.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%Y') as enquiryDate, TIME_FORMAT(enquiry.created_at, "%H:%i:%s") as enquiryTime,fromType.form_about as formtype,course.name as course, enquiry.company, enquiry.desigination, enquiry.feedback, batches.date as batchDate, batches.time_from as batchtimestart, batches.time_to as batchtimeend,  batches.week_days as week_days from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0'  Left Join jtc_batches as batches On batches.id = enquiry.batch AND enquiry.batch  > 0 WHERE enquiry.form_id = '4' ${filterByCourse} ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
+    if(startDate && endDate ) filterByDate = ` && enquiry.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%y %h:%i:%s %p') as enquiryDate,fromType.form_about as formtype,course.name as course, enquiry.company, enquiry.desigination, enquiry.feedback, batches.date as batchDate, batches.time_from as batchtimestart, batches.time_to as batchtimeend,  batches.week_days as week_days from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0'  Left Join jtc_batches as batches On batches.id = enquiry.batch AND enquiry.batch  > 0 WHERE enquiry.form_id = '4' ${filterByCourse} ${filterByDate} ${filterByMonth} ORDER By enquiry.id DESC`
     const data =  await executeQuery(query)
 
-    if(data.length > 0) return pagination(req,res,data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetching Data", success: false})
 })
 
 exports.joinFormData = catchAsyncError(async(req,res) => {
     const {startDate,endDate} =  await req.query 
     let filterByDate = ``  
-    if(startDate && endDate ) filterByDate = `&& Date_Format(enquiry.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-    const query = `Select fromType.form_about as formtype,enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%Y') as enquiryDate, TIME_FORMAT(enquiry.created_at, "%H:%i:%s") as enquiryTime,role.role as desigination,  enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_roles as role On role.id = enquiry.course and role.deleted_by = '0' WHERE  enquiry.form_id  = '3' ${filterByDate}  ORDER By enquiry.id DESC`
+    if(startDate && endDate ) filterByDate = ` && enquiry.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+    const query = `Select fromType.form_about as formtype,enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%y %h:%i:%s %p') as enquiryDate,role.role as desigination,  enquiry.feedback from jtc_enquiry_form as enquiry Inner Join  jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_roles as role On role.id = enquiry.course and role.deleted_by = '0' WHERE  enquiry.form_id  = '3' ${filterByDate}  ORDER By enquiry.id DESC`
    
     const data =  await executeQuery(query)
-    if(data.length > 0) return pagination(req,res,data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetching Data", success: false})
 })
 
@@ -153,12 +161,13 @@ exports.allForms = catchAsyncError(async(req,res) => {
     let filterByMonth = ``  
     if(month) filterByMonth = ` && Date_Format(enquiry.created_at, '%y-%m') = Date_Format('${month}-1', '%y-%m')`
 
-if(startDate && endDate ) filterByDate = `&& Date_Format(enquiry.created_at, '%d-%m-%Y') Between Date_Format('${startDate}', '%d-%m-%Y') AND Date_Format('${endDate}', '%d-%m-%Y')`
-    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at, '%d-%m-%Y') as enquiryDate, TIME_FORMAT(enquiry.created_at, "%H:%i:%s") as enquiryTime,fromType.form_about as formtype,course.name course, enquiry.company, enquiry.desigination, enquiry.feedback, batches.date as batchDate, batches.time_from as batchtimestart, batches.time_to as batchtimeend,  batches.week_days as week_days from jtc_enquiry_form as enquiry Inner Join jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0' Left Join jtc_batches as batches On batches.id = enquiry.batch AND enquiry.batch  > 0 WHERE enquiry.name is not null &&  enquiry.form_id  != '3'  ${filterByMonth}  ${filterByDate} ORDER By enquiry.id DESC`
+if(startDate && endDate ) filterByDate = ` && enquiry.created_at Between '${startDate} 00:00:00' AND '${endDate} 23:59:59'`
+    const query = `Select enquiry.name, enquiry.id, enquiry.phone_number, fromStatus.enquiry_status,enquiry.email,Date_Format(enquiry.created_at,'%d-%m-%y %h:%i:%s %p') as enquiryDate, fromType.form_about as formtype,course.name course, enquiry.company, enquiry.desigination, enquiry.feedback, batches.date as batchDate, batches.time_from as batchtimestart, batches.time_to as batchtimeend,  batches.week_days as week_days from jtc_enquiry_form as enquiry Inner Join jtc_form_list as fromType On enquiry.form_id = fromType.id Left Join jtc_form_status as fromStatus On enquiry.status = fromStatus.id Inner Join jtc_courses as course On course.id = enquiry.course and course.deleted_by = '0' Left Join jtc_batches as batches On batches.id = enquiry.batch AND enquiry.batch  > 0 WHERE enquiry.name is not null &&  enquiry.form_id  != '3'  ${filterByMonth}  ${filterByDate} ORDER By enquiry.id DESC`
   
     const data =  await executeQuery(query)
   
-    if(data.length > 0) return pagination(req,res,data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetching Data", success: false})
 })
 

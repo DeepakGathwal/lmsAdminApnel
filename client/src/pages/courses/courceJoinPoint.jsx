@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import { allCourceJoinPoint, createCourceJoinPoint, deleteCourceJoinPoint, editCourceJoinPoint, allCourseForSearch } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 const CourceJoinPoint = () => {
   const [selected, setSelected] = useState(null);
@@ -20,7 +20,9 @@ const CourceJoinPoint = () => {
   const [state, setState] = useState([])
   const [icon, setIcon] = useState([])
   const [courses, setCourses] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
@@ -33,16 +35,17 @@ const CourceJoinPoint = () => {
   setIcon([])
   };
 
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allCourceJoinPoint(path, givenLimit, currentPage)
+  const allData = async () => {
+       
+    const {data} = await allCourceJoinPoint(path)
     allCourceList()
+    data && setTotal(data.length)
    return  data && setState(data)
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
@@ -62,7 +65,7 @@ const CourceJoinPoint = () => {
   let optionArray = []
 
   const allCourceList = async() => {
-    const {data} = await allCourseForSearch('/bcourses', 'All')
+    const {data} = await allCourseForSearch('/bcourses')
     if(data){
         data.map((el) => {
         optionArray.push({label : el.name, value : el.id })
@@ -71,6 +74,11 @@ const CourceJoinPoint = () => {
      
       }
   }
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   let defaultCorces = []
   const handleEdit = async(el) => {
@@ -141,7 +149,7 @@ const CourceJoinPoint = () => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -170,7 +178,13 @@ const CourceJoinPoint = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={handleClose}>
 

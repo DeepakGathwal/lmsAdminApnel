@@ -2,7 +2,7 @@ const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { getDataUri } = require("../../utils/imageHandeler");
 const { executeQuery } = require("../../conn/db");
 const { coursereLabel } = require("../../utils/validation");
-const { pagination } = require("../../utils/pagination");
+
 
 
 
@@ -63,7 +63,8 @@ exports.courseType = catchAsyncError(async(req,res) => {
     if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Category", status: false });
     const query = `Select id, category, icon, description ,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_types Order by id desc`
     const data =  await executeQuery(query)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch Category", success: false})
 })
 
@@ -129,7 +130,8 @@ exports.courceLabel = catchAsyncError(async(req,res) => {
     if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Label", status: false });
     const query = `Select id, label,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_label `
     const data =  await executeQuery(query)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch Category", success: false})
 })
 

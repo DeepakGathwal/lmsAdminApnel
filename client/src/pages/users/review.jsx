@@ -2,28 +2,30 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import {  reviewDelete, usersReview } from '../../Components/CommonUrl/apis';
 import { MdDelete } from "react-icons/md";
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import Header from '../../Components/pageComponents/header';
 
 const Reviews = () => {
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
   
 
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
+  const allData = async () => {
+       
 
-    const data = await usersReview(path, givenLimit, currentPage)
-
+    const {data} = await usersReview(path)
+    data && setTotal(data.length)
      return data && setState(data)
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
 
    // delete a point by id
@@ -38,6 +40,11 @@ const Reviews = () => {
 
     } else return false
   }
+
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
 
 
   return (
@@ -67,7 +74,7 @@ const Reviews = () => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -100,7 +107,13 @@ const Reviews = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
     
   )

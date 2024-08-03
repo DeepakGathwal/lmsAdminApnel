@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import { allPoints,  createPoints,  deletePoints,  editPoints, handleClose } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 const ChoosingPoint = () => {
   const [show, setShow] = useState(false);
@@ -12,21 +12,24 @@ const ChoosingPoint = () => {
     point : "",id : ''
   });
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
 
 // list of all points
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allPoints(path, givenLimit, currentPage)
+  const allData = async () => {
+       
+    const {data} = await allPoints(path)
+    data && setTotal(data.length)
     return  data && setState(data)
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   // delete a point by id
   const ConfirmBox = async (id) => {
@@ -45,6 +48,10 @@ const ChoosingPoint = () => {
   const handelChange = (e) => {
     setEditShow({ ...editshow, [e.target.name]: e.target.value })
   }
+
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
 
   // open edit model
   const handleEdit = (el) => {
@@ -93,7 +100,7 @@ const ChoosingPoint = () => {
               </thead>
               <tbody>
 
-                {state.data ? state.data.filter((obj) => {
+                {currentPosts ? currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -122,7 +129,13 @@ const ChoosingPoint = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={() => handleClose(setShow, setEditShow)}>
 

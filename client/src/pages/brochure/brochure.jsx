@@ -3,14 +3,16 @@ import { allCourseForSearch, allbrochure, createbrochure, deletebrochure, downlo
 import { useLocation } from 'react-router-dom'
 import { MdDelete, MdRemoveRedEye, MdDownloading } from "react-icons/md";
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import Modal from 'react-bootstrap/Modal';
 
 const Brochure = () => {
   const [show, setShow] = useState(false);
   const [course, setcourse] = useState([])
   const [select, setSelect] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [image, setImage] = useState([])
   const [state, setSate] = useState([])
   const [query, setQuery] = useState("");
@@ -21,7 +23,7 @@ const Brochure = () => {
    * list of all courses
    */
   const coursesList = async () => {
-    const { data } = await allCourseForSearch('/bcourses', 'All')
+    const { data } = await allCourseForSearch('/bcourses')
 
     setcourse(data)
   }
@@ -49,9 +51,11 @@ const Brochure = () => {
 
   // list of all brochure
   const allData = async () => {
-    const data = await allbrochure(path)
-    setSate(data)
-  return  coursesList()
+    const {data} = await allbrochure(path)
+    data && setTotal(data.length)
+    coursesList()
+    
+  return data && setSate(data)
   }
 
   // create a new brochure
@@ -73,10 +77,14 @@ const Brochure = () => {
    return await downloadbrochure(path, id, name)
   }
 
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   return (
     <>
@@ -97,7 +105,7 @@ const Brochure = () => {
             </thead>
             <tbody>
 
-              {state.data ? state.data.filter((obj) => {
+              {currentPosts ? currentPosts.filter((obj) => {
                 if (query == "") return obj;
                  else if (
                   obj.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -126,8 +134,13 @@ const Brochure = () => {
         </div>
         </div>
 
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state} />
-
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={handleClose}>
 

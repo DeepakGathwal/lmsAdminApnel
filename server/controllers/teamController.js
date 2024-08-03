@@ -2,7 +2,7 @@ const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
 const bycrypt =  require('bcryptjs');
 const { teamSchema, editTeamSchema } = require("../utils/validation");
-const { pagination } = require("../utils/pagination");
+
 
 exports.createTeamMember = catchAsyncError(async(req,res) =>{
   const {email, password, phone, role, name, linkedin, instagram, facebook } = await  req.body
@@ -36,7 +36,8 @@ exports.getTeamMemberLsit = catchAsyncError(async(req,res) =>{
     if(permissions[0].can_view == 0) return res.status(206).json({message : "Permission Denied to View Team Members", status : false});
     const viewAllMember = `SELECT team.*, role.role as roleName from jtc_team as team Left Join jtc_roles as role On role.id = team.role and role.deleted_by = '0' WHERE team.deleted_by = '0' ${searchByRole} && team.id != ${user} ORDER By team.id DESC`
     const data = await executeQuery(viewAllMember)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! While adding team Member", success : false })
 })
 

@@ -31,7 +31,7 @@ function EditTutorial() {
     }
 
     const allCourcesList = async () => {
-        const { data } = await allTutorialCourceForSearch('/btutorialCource', 'All')
+        const { data } = await allTutorialCourceForSearch('/btutorialCource')
         if(data)
         setAllCources(data)
     
@@ -39,7 +39,7 @@ function EditTutorial() {
     }
 
     const courceCategory = async (couceCate) => {
-        const { data } = await allTutorialCategory('/ctutorial_chapter', couceCate, 'All')
+        const { data } = await allTutorialCategory('/ctutorial_chapter', couceCate)
        
         if(data){
         field.cources = couceCate;

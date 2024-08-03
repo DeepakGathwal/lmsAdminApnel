@@ -210,7 +210,7 @@ exports.logOut = catchAsyncError(async(req,res) =>{
 
 exports.getProfile = catchAsyncError(async(req,res) =>{
     const {user} = req;
-    const profile = `Select team.address, team.name,Date_Format(team.date_created, "%d-%m-%Y") as joinDate , team.email, team.image, team.phoneNumber,  team.linkedin, team.instagram,role.role as role, team.facebook from jtc_team as team Left Join jtc_roles as role On role.id = team.role AND role.deleted_by = '0'  WHERE team.id = ${user} && team.deleted_by = '0'`
+    const profile = `Select team.address, team.name,Date_Format(team.date_created, '%d-%m-%y %h:%i:%s %p') as joinDate , team.email, team.image, team.phoneNumber,  team.linkedin, team.instagram,role.role as role, team.facebook from jtc_team as team Left Join jtc_roles as role On role.id = team.role AND role.deleted_by = '0'  WHERE team.id = ${user} && team.deleted_by = '0'`
     const data = await executeQuery(profile)
     if(data.length > 0) return res.status(200).json({ success : true, data })
     else return res.status(206).json({message : "Error! During Fething User Details", success : false})

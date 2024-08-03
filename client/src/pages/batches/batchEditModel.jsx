@@ -16,7 +16,7 @@ function BatchesEdit({editshow, seteditShow, path, editId, allData}) {
 
   // lis of all course
     const allCourcesData = async() =>{
-      const {data} = await allCourseForSearch('/bcourses', 'All');
+      const {data} = await allCourseForSearch('/bcourses');
      return setCourse(data)
     }
 

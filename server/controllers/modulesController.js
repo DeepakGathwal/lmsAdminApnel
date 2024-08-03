@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 const { moduleSchema } = require("../utils/validation");
 const { getDataUri } = require("../utils/imageHandeler");
 
@@ -48,7 +48,8 @@ exports.allModules = catchAsyncError(async (req, res) => {
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied View modules List", success: false });
     const alredyQuery = `Select modules, id, name, icon from jtc_modules WHERE deleted_by = '0' ORDER By id DESC`
     const data = await executeQuery(alredyQuery)
-    if (data.length > 0) return pagination(req, res, data)
+    if (data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({ message: "Error! While Getting List Of Roles", success: false })
 })
 

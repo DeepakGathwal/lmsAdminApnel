@@ -3,22 +3,24 @@ import Header from '../../Components/pageComponents/header'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { deleteTutorial, getHeadingsOfTutorial } from '../../Components/CommonUrl/apis';
 import { TiDeleteOutline } from "react-icons/ti";
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 
 
 function Tutorials() {
   const navigate = useNavigate()
   const [show, setShow] = useState(false);
   const [query, setQuery] = useState("");
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [state, setState] = useState([]);
   const location = useLocation();
   const path = location.pathname
 
-  const allData = async (limit) => {
-    const givenLimit = limit == 0 ? state && state.data && parseInt(state.limit) : limit
-    const data = await getHeadingsOfTutorial(path, givenLimit, currentPage)
-  
+  const allData = async () => {
+    
+    const {data} = await getHeadingsOfTutorial(path)
+    data && setTotal(data.length)
    return  data && setState(data)
   }
   const handleEdit = (id) => {
@@ -26,7 +28,7 @@ function Tutorials() {
   };
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   const ConfirmBox = async (id) => {
     const value = window.confirm("Are you Sure want to delete");
@@ -41,6 +43,11 @@ function Tutorials() {
   }
 
 
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
+
   if (show) {
     navigate('/tutorialsAdd')
   }
@@ -52,7 +59,7 @@ function Tutorials() {
         <Header setShow={setShow} allData={allData} state={state} setQuery={setQuery} />
         <div className="d-flex tutorial_card m-1">
 
-          {state.data ? state.data.filter((obj) => {
+          {currentPosts ? currentPosts.filter((obj) => {
             if (query == "")
               return obj;
             else if (
@@ -90,7 +97,13 @@ function Tutorials() {
 
           )) : <h1>No Data</h1>}
         </div>
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state} />
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
 
         <div>
         </div>

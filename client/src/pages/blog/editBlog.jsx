@@ -71,7 +71,7 @@ const EditBlog = ({ editshow, seteditShow, path, editId, allData }) => {
 
   // list of all categories
   const category = async () => {
-    const { data } = await allBlogCategory('/blog_category', 'All')
+    const { data } = await allBlogCategory('/blog_category')
     return setCategory(data)
   }
 

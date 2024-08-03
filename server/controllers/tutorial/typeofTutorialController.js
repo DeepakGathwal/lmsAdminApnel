@@ -1,6 +1,6 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
-const { pagination } = require("../../utils/pagination");
+
 
 exports.addCategory = catchAsyncError(async(req,res) => {
     const {category} = req.body
@@ -36,7 +36,8 @@ exports.Category = catchAsyncError(async(req,res) => {
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Category", status: false });
     const alreadyExists =  `Select * from jtc_tutorial_type ORDER By id DESC`
     const data =  await executeQuery(alreadyExists)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch Category", success: false})
 })
 

@@ -2,7 +2,7 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { getDataUri } = require("../../utils/imageHandeler");
-const { pagination } = require("../../utils/pagination");
+
 const {  chooseSectionSchema, faqsSchema } = require("../../utils/validation");
 
 /** create a new why choose us Section 
@@ -82,7 +82,8 @@ exports.Sections = catchAsyncError(async(req,res) => {
     const query = `Select section, heading, details, component_name, id,images,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_sections WHERE deleted_by = '0' order by id desc`
 
     const data =  await executeQuery(query)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch Sections", success: false})
 })
 
@@ -178,7 +179,8 @@ exports.faqs = catchAsyncError(async (req, res) => {
           data[index]["faqs_about"] = String(values);
         }
       }
-      return pagination(req, res, data)
+      return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     } else return res.status(206).json({ message: "Error! During Fetch Points", success: false })
   
 })

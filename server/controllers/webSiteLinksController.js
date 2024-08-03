@@ -1,6 +1,6 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
-const { pagination } = require("../utils/pagination");
+
 
 
 exports.addLinks = catchAsyncError(async(req,res) => {
@@ -26,7 +26,7 @@ exports.editLinks = catchAsyncError(async(req,res) => {
     const {id} = req.params 
     if(!id)  return res.status(200).json({message : "Point Not Found for Edit", success : false})
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Point", status: false });
-    const alreadyExists =  `Select id, backgroundimage, image from jtc_website_links WHERE name = ${name} && nav_link = ${nav_link}`
+    const alreadyExists =  `Select id from jtc_website_links WHERE name = ${name} && nav_link = ${nav_link}`
     const executeAlready =  await executeQuery(alreadyExists)
     if(executeAlready.length > 1) return res.status(206).json({message : "Point Already Exists"})
     const editNewPoint =  `Update jtc_website_links SET explore=${explore},name = ${name}, nav_link = ${nav_link},page_css = ${css},page_html = ${html}, updated_by = ${user}, updated_at =  current_timestamp() WHERE id = ${id}`
@@ -46,7 +46,8 @@ exports.links = catchAsyncError(async(req,res) => {
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Points", status: false });
     const alreadyExists =  `Select * from jtc_website_links WHERE deleted_by = '0' ${getById} ORDER By id DESC`
     const data =  await executeQuery(alreadyExists)
-    if(data.length > 0) return pagination(req, res, data)
+    if(data.length > 0) return res.status(200).json({data, success: true,
+    message: "data fetch successfully",})
     else return res.status(206).json({message : "Error! During Fetch Points", success: false})
 })
 

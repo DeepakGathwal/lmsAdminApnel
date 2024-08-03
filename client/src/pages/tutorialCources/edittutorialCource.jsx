@@ -51,7 +51,7 @@ function CoursesEdit({ editshow, setEditShow, path, allData, editId ,requiredDim
 
     let optionArray = []
     const allCategory = async () => {
-        const { data } = await allTutorialType("/atutorial_types", 'All');
+        const { data } = await allTutorialType("/atutorial_types");
         if (data) {
             data.map((el) => {
                 optionArray.push({ label: el.category, value: el.id })

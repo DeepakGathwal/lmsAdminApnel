@@ -15,14 +15,14 @@ const Home = () => {
 
 
     const allStudent = async() => {
-        const {total} = await allStudentList('/students','All')
+        const {total} = await allStudentList('/students')
         if(total > 0)
         setStudent(total);
       else  setStudent(0);
         allTutorialLength()
     }
     const allTutorialLength = async() => {
-        const {total} = await getHeadingsOfTutorial('/tutorials','All')
+        const {total} = await getHeadingsOfTutorial('/tutorials')
         if(total > 0)
         
         setTuto(total);
@@ -30,7 +30,7 @@ const Home = () => {
         allBatchesLength()
     }
     const allBatchesLength = async() => {
-        const {total} = await listOfBatches('/batches','All'  )
+        const {total} = await listOfBatches('/batches'  )
         if(total > 0)
         setbateches(total);
     else    setbateches(0);
@@ -38,7 +38,7 @@ const Home = () => {
         allBlogNamesLength()
     }
     const allBlogNamesLength = async() => {
-        const {total} = await allBlogNames('/blog', 'All')
+        const {total} = await allBlogNames('/blog')
         if(total > 0)
         setblogs(total);
     else setblogs(0)

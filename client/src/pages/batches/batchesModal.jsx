@@ -17,7 +17,7 @@ function BatchesModal({show, setShow, path, allData}) {
 
   // all couse list
   const allCourcesData = async() =>{
-    const {data} = await allCourseForSearch('/bcourses', 'All');
+    const {data} = await allCourseForSearch('/bcourses');
     setCourse(data)
   }
     

@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
 import { allECourse, allCourselabel, createECourse,allECourseType, deleteECourse,  editECourse } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
-import Pagination from '../../Components/pageComponents/pagination';
+import Pagination from '../../Components/Pagination/Pajination';
 import UploadImageComponent from '../../Components/pageComponents/uploadImage';
 
 const Cources = () => {
@@ -16,7 +16,9 @@ const Cources = () => {
     name : "",category : '', description : "", label : "", image : "", total_price : "", discount : '', video_link : "",certificates : ''
   });
   const [state, setState] = useState([])
-  const [currentPage, setcurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1);
+  const [postPerpage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const location = useLocation()
   const path = location.pathname
@@ -40,17 +42,18 @@ const Cources = () => {
 
 
   /** list of all couse types */
-  const allData = async (limit) => {
-    const givenLimit =  limit == 0 ? state && state.data &&  parseInt(state.limit)  :  limit   
-    const data = await allECourse(path, givenLimit, currentPage)
+  const allData = async () => {
+       
+    const {data} = await allECourse(path)
    
     allLabelData()
-   return data && setState(data)
+    data && setTotal(data.length)
+    return data && setState(data)
   }
 
   useEffect(() => {
     allData()
-  }, [currentPage])
+  }, [])
 
   /** delete a course type  */
   const ConfirmBox = async (id) => {
@@ -108,6 +111,11 @@ const Cources = () => {
     }else alert(value.message)
   }
 
+  const indexOfLastPage = page * postPerpage;
+  const indexOfFirstPage = indexOfLastPage - postPerpage;
+  const currentPosts = state && state.slice(indexOfFirstPage, indexOfLastPage);
+
+
   return (
     <div className="containers">
       <div className="page">
@@ -137,7 +145,7 @@ const Cources = () => {
               </thead>
               <tbody>
      
-                 {state.data && state.data.filter((obj) => {
+                 {currentPosts && currentPosts.filter((obj) => {
                   if (query == "") 
                     return obj;
                    else if (
@@ -174,7 +182,13 @@ const Cources = () => {
           </div>
         </div>
       
-        <Pagination setcurrentPage={setcurrentPage} currentPage={currentPage} state={state}/>
+        <Pagination
+          setPostPerPage={setPostPerPage}
+          postPerpage={postPerpage}
+          page={page}
+          setPage={setPage}
+          total={total}
+        />
       </div>
       <Modal show={show} onHide={handleClose}>
 

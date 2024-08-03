@@ -206,8 +206,8 @@ router.route('/status/:id').put(verifyUser, verifyModulePermission,escapeRequest
 */
 
 router.route('/Get').get(verifyUser, verifyModulePermission,enquiryformData)
-router.route('/Enroll').get(verifyUser, verifyModulePermission,enrollFormData)
-router.route('/Curriculum').get(verifyUser, verifyModulePermission,downloadCurriculumData)
+router.route('/Batch').get(verifyUser, verifyModulePermission,enrollFormData)
+router.route('/Download').get(verifyUser, verifyModulePermission,downloadCurriculumData)
 router.route('/Project').get(verifyUser, verifyModulePermission,projectData)
 router.route('/Hire').get(verifyUser, verifyModulePermission,hireUsformData)
 router.route('/Join').get(verifyUser, verifyModulePermission,joinFormData)
