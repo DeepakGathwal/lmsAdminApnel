@@ -2282,51 +2282,7 @@ export const allEFaqs = async (path) => {
   }
 }
 
-export const createEbrochure = async (path, form) => {
-  try {
-    const { data } = await instance.post(`ecommersSection/resourse?module=${path}`, form)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
 
-/** List of all brochure
- */
-export const allEbrochure = async (path) => {
-  try {
-    const { data } = await instance.patch(`ecommersSection/resourse?module=${path}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
 
-/** Delete a brochure by id
- */
-export const deleteEbrochure = async (path, id) => {
-  try {
-    const { data } = await instance.delete(`ecommersSection/resourse/${id}?module=${path}`)
-    return data
-  } catch (err) {
-    return err.message
-  }
-}
 
-/** Download a brochure
- */
-export const downloadEbrochure = async (path, id, name) => {
-  try {
-    const response = await instance.get(`ecommersSection/resourse/download/${name}?module=${path}`, {
-      responseType: 'blob',
-    })
-    const blob = new Blob([response.data], { type: response.headers['content-type'] });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = name;
-    return link.click();
-  } catch (err) {
-    return err.message
-  }
-}
 

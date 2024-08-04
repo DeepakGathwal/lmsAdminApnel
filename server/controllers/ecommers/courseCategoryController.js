@@ -11,7 +11,7 @@ const { coursereLabel } = require("../../utils/validation");
 exports.addCourseType = catchAsyncError(async(req,res) => {    
     const {category, description} = await req.body
     const { permissions, user } = await req
-    if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  category", status: false });
+    if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  category", status: false });
     const icon = req.file
     const fileImage = icon && await getDataUri(icon)
     const findquery =  `Select id from jtc_ecommers_course_types WHERE category = ${category} && description =${description}`
@@ -32,7 +32,7 @@ exports.editCourseType = catchAsyncError(async(req,res) => {
     const { permissions, user } = await req
     const {id} = req.params 
     if(!id)  return res.status(206).json({message : "category Not Found for Edit", success : false})
-    if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit category", status: false });
+    if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit category", status: false });
     const findquery =  `Select id from jtc_ecommers_course_types WHERE category = ${category} && description = ${description}`
     const executeAlready =  await executeQuery(findquery)
 
@@ -60,7 +60,7 @@ exports.editCourseType = catchAsyncError(async(req,res) => {
 // list of all course types
 exports.courseType = catchAsyncError(async(req,res) => {
     const { permissions, user } = await req
-    if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Category", status: false });
+    if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Category", status: false });
     const query = `Select id, category, icon, description ,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_types Order by id desc`
     const data =  await executeQuery(query)
     if(data.length > 0) return res.status(200).json({data, success: true,
@@ -71,7 +71,7 @@ exports.courseType = catchAsyncError(async(req,res) => {
 // remove a course type
 exports.removeCourseType = catchAsyncError(async(req,res) => {
     const { permissions, user } = await req
-    if (permissions.can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Category", status: false });
+    if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Category", status: false });
     const {id} = req.params 
     if(!id)  return res.status(206).json({message : "Category Not Found for Remove", success : false})
 
@@ -91,7 +91,7 @@ exports.addCourseLabel = catchAsyncError(async(req,res) => {
         .status(206)
         .json({ status: false, message: error.details[0].message })
     const { permissions, user } = req
-    if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  Label", status: false });
+    if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  Label", status: false });
     const query =  `Select id from jtc_ecommers_course_label where label=${label}`
     const executeAlready =  await executeQuery(query)
     if(executeAlready.length > 0) return res.status(206).json({message : "Course Label Already Exists", success : false})
@@ -112,7 +112,7 @@ exports.editCourseLabel = catchAsyncError(async(req,res) => {
         .json({ status: false, message: error.details[0].message })
     const {id} = req.params
     const { permissions, user } = req
-    if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Create  Label", status: false });
+    if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Create  Label", status: false });
 
     const query =  `Select id from jtc_ecommers_course_label where label=${label}`
     const executeAlready =  await executeQuery(query)
@@ -127,8 +127,8 @@ exports.editCourseLabel = catchAsyncError(async(req,res) => {
 // list of all course label
 exports.courceLabel = catchAsyncError(async(req,res) => {
     const { permissions, user } = await req
-    if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Label", status: false });
-    const query = `Select id, label,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_label `
+    if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to Fetch Label", status: false });
+    const query = `Select id, label,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_label order by id desc`
     const data =  await executeQuery(query)
     if(data.length > 0) return res.status(200).json({data, success: true,
     message: "data fetch successfully",})
@@ -139,9 +139,11 @@ exports.courceLabel = catchAsyncError(async(req,res) => {
 exports.deletecourceLabel = catchAsyncError(async(req,res) => {
     const { permissions, user } = await req
     const {id} = await req.params
-    if (permissions.can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Label", status: false });
+    
+    if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Label", status: false });
     const query = `Delete from jtc_ecommers_course_label WHERE id = ${id}`
+    
     const data =  await executeQuery(query)
-    if(data.affectedRows > 0) return res.status(200).json({message : "Course Label Deleted Successfully", success: false})
+    if(data.affectedRows > 0) return res.status(200).json({message : "Course Label Deleted Successfully", success: true})
     else return res.status(206).json({message : "Error! During Fetch Category", success: false})
 })

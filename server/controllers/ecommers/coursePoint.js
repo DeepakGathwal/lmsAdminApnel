@@ -6,7 +6,7 @@ const { courserequirement, courceLearn } = require("../../utils/validation");
 
 exports.addLearn = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
-      if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Learn Point", status: false });
+      if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Learn Point", status: false });
   
     const { point, about } =await req.body
     const { error } = courceLearn.validate(req.body);
@@ -30,7 +30,7 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   
   exports.editLearn = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
-      if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Learn Point", status: false });
+      if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Learn Point", status: false });
   
     const { id } = await req.params
     if (!id) return res.status(200).json({ message: "Point Not Found for Edit", success: false })
@@ -68,9 +68,9 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   
   exports.learn = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
-      if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Learn Points", status: false });
+      if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Learn Points", status: false });
   
-      const query =  `Select id,course_id,point,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_learn WHERE deleted_by = '0' `
+      const query =  `Select id,course_id,point,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_learn WHERE deleted_by = '0' order by id desc `
 
       const data = await executeQuery(query)
     
@@ -98,7 +98,7 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   exports.removeLearn = catchAsyncError(async (req, res) => {
     const { id } = await req.params
     const { permissions, user } = await req
-    if (permissions.can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Blog", status: false });
+    if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Blog", status: false });
   
     if (!id) return res.status(200).json({ message: "Learn Point Not Found for Edit", success: false })
       const query =  `Update jtc_ecommers_course_learn SET  deleted_by = ${user}, deleted_at = current_timestamp() WHERE id = ${id}`
@@ -110,7 +110,7 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   
   exports.addPrerequisite = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
-    if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Requriments", status: false });
+    if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Requriments", status: false });
     const { requirement, about } = await req.body
     const { error } = courserequirement.validate(req.body);
     if (error)
@@ -132,7 +132,7 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   
   exports.editPrerequisite = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
-      if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Requirements", status: false });
+      if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Requirements", status: false });
   
     const { id } = await req.params
     if (!id) return res.status(200).json({ message: "Point Not Found for Edit", success: false })
@@ -169,8 +169,8 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   
   exports.prerequisite = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
-      if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Requirements", status: false });
-    const query =  `Select id,course_id,requirement,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_requirements WHERE deleted_by = '0' `
+      if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Requirements", status: false });
+    const query =  `Select id,course_id,requirement,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_course_requirements WHERE deleted_by = '0' ORDER BY id DESC`
 
     const data = await executeQuery(query)
   
@@ -196,7 +196,7 @@ exports.addLearn = catchAsyncError(async (req, res) => {
   
   exports.removePrerequisite = catchAsyncError(async (req, res) => {
     const { permissions, user } = await req
-      if (permissions.can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Requirements", status: false });
+      if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Requirements", status: false });
   
     const { id } = await req.params
     if (!id) return res.status(200).json({ message: "Point Not Found for Edit", success: false })

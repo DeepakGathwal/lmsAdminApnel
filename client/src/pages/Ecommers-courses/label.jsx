@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal';
 import { MdDelete, MdEditSquare } from "react-icons/md";
-import { allCourselabel, createCourselabel, deleteCourseType, deleteCourselabel,  editCourselabel } from '../../Components/CommonUrl/apis';
+import { allCourselabel, createCourselabel, deleteCourselabel,  editCourselabel } from '../../Components/CommonUrl/apis';
 import Header from '../../Components/pageComponents/header';
 import Pagination from '../../Components/Pagination/Pajination';
 
@@ -76,9 +76,9 @@ const Courcelabel = () => {
         /** create course type */
       value = await createCourselabel(path, editshow.label)
     }
-    e.preventDefault()
+    
     if (value.success == true) {
-      e.preventDefault()
+   
       setShow(!show)
       setEditShow('')
       allData()
@@ -117,9 +117,10 @@ const Courcelabel = () => {
                     <td>{index + 1}</td>
                      <td>{el.label}</td>
                      <td>{el.created_at}</td>
-                    <td style={{ cursor: "pointer" }}>
+                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
-                    
+                      / <MdDelete onClick={(e) => ConfirmBox(el.id)}
+                      />
                     </td>
 
                   </tr>

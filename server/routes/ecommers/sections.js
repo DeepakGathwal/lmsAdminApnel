@@ -3,7 +3,7 @@ const router = express.Router();
 const upload = require('../../middelwares/imageUpload');
 const { verifyUser, verifyModulePermission } = require('../../middelwares/token');
 const { escapeRequestBody } = require('../../conn/db');
-const { addSections, Sections, editSections, removeSections, addFaqs, faqs, editFaqs, removeFaqs, addPdf, viewPdf, deletePdf, downloadPdf } = require('../../controllers/ecommers/sections');
+const { addSections, Sections, editSections, removeSections, addFaqs, faqs, editFaqs, removeFaqs } = require('../../controllers/ecommers/sections');
 
 
 
@@ -131,10 +131,7 @@ router.route('/faqs/').post(verifyUser,verifyModulePermission,escapeRequestBody 
 router.route('/faqs/').get(verifyUser, verifyModulePermission ,faqs)
 router.route('/faqs/:id').patch(verifyUser,verifyModulePermission,escapeRequestBody ,editFaqs)
 router.route('/faqs/:id').delete(verifyUser,verifyModulePermission ,removeFaqs)
-router.route('/resourse/').post(verifyUser, verifyModulePermission,upload.single('file'),addPdf)
-router.route('/resourse/:name').get(verifyUser, verifyModulePermission,viewPdf)
-router.route('/resourse/:id').delete(verifyUser, verifyModulePermission,deletePdf)
-router.route('/resourse/download/:id').get(verifyUser, verifyModulePermission,downloadPdf)
+
 
 
 /**

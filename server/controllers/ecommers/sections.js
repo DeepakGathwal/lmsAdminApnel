@@ -10,7 +10,7 @@ const {  chooseSectionSchema, faqsSchema } = require("../../utils/validation");
 */
 exports.addSections = catchAsyncError(async(req,res) => {
   const { permissions, user } = await req
-  if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Section", status: false });
+  if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Section", status: false });
     const {section, heading, details, component_name} = await req.body 
    
     const { error } =  chooseSectionSchema.validate(req.body);
@@ -46,7 +46,7 @@ exports.editSections = catchAsyncError(async(req,res) => {
   if(!id)  return res.status(200).json({message : "Section Not Found for Edit", success : false})
 
   const { permissions, user } = await req
-  if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Section", status: false });
+  if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Section", status: false });
     const {section, heading, details, component_name} = await req.body
     const { error } =  chooseSectionSchema.validate(req.body);
     if (error)
@@ -77,7 +77,7 @@ exports.editSections = catchAsyncError(async(req,res) => {
 /** all Sections list function */
 exports.Sections = catchAsyncError(async(req,res) => {
   const { permissions, user } = await req
-  if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Section", status: false });
+  if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Section", status: false });
 
     const query = `Select section, heading, details, component_name, id,images,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_sections WHERE deleted_by = '0' order by id desc`
 
@@ -92,7 +92,7 @@ exports.Sections = catchAsyncError(async(req,res) => {
 exports.removeSections = catchAsyncError(async(req,res) => {
      const {id} = await req.params 
      const { permissions, user } = await req
-     if (permissions.can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Section", status: false });
+     if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Section", status: false });
    
     if(!id)  return res.status(200).json({message : "Section Not Found for Edit", success : false})
         const deleteQuery =  `Update  jtc_ecommers_sections SET deleted_at = current_timestamp(), deleted_by = ${user} WHERE id = ${id} && deleted_by = '0'`
@@ -105,7 +105,7 @@ exports.removeSections = catchAsyncError(async(req,res) => {
 
 exports.addFaqs = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
-    if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Faqs", status: false });
+    if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Faqs", status: false });
   const { point, description, about } = await req.body
 
   const { error } = faqsSchema.validate(req.body);
@@ -127,7 +127,7 @@ exports.addFaqs = catchAsyncError(async (req, res) => {
 
 exports.editFaqs = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
-  if (permissions.can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Blog", status: false });
+  if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Blog", status: false });
 
   const { id } =await req.params
   if (!id) return res.status(200).json({ message: "Point Not Found for Edit", success: false })
@@ -164,8 +164,8 @@ exports.editFaqs = catchAsyncError(async (req, res) => {
 
 exports.faqs = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
-    if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Blog", status: false });
-    const findSection =  `Select point, description, faqs_about, id,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_faqs  WHERE  deleted_by = '0'`
+    if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Blog", status: false });
+    const findSection =  `Select point, description, faqs_about, id,Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at from jtc_ecommers_faqs  WHERE  deleted_by = '0' order by id desc`
     const data =  await executeQuery(findSection)
     if (data.length > 0) {
 
@@ -189,7 +189,7 @@ exports.faqs = catchAsyncError(async (req, res) => {
 exports.removeFaqs = catchAsyncError(async (req, res) => {
   const { id } = await req.params
   const { permissions, user } = await req
-  if (permissions.can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Faqs", status: false });
+  if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Faqs", status: false });
 
   if (!id) return res.status(200).json({ message: "Point Not Found for Edit", success: false })
     const query =  `Update jtc_ecommers_faqs Set deleted_at = current_timestamp(), deleted_by = ${user} WHERE id = ${id} && deleted_by = '0'`
@@ -198,89 +198,3 @@ exports.removeFaqs = catchAsyncError(async (req, res) => {
   else return res.status(206).json({ message: "Error! During Delete Point", success: false })
 })
 
-
-// jtc_ecommers_resourses
-
-exports.addPdf = catchAsyncError(async (req, res) => {
-  const { permissions, user } = await req
-    if (permissions.can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Resourses", status: false });
-
-  if (!req.file) return res.status(206).json({ message: "File not found", status: false });
-  const {video} = await req.body 
-  const { originalname, buffer } = await req.file;
-  const find =  `Select id from jtc_ecommers_resourses WHERE  deleted_by = '0' && name = '${originalname}'`
-  const executeAlready = await executeQuery(find)
-  if (executeAlready.length > 0) return res.status(206).json({ message: "File Already Exists", status: false });
-
-  const base64Data = await buffer.toString('base64');
-  const addPdf = `Insert into jtc_ecommers_resourses SET name = '${originalname}', file = '${base64Data}', video = ${video}, created_by = ${user}`
-  const addFile = await executeQuery(addPdf)
-  if ( addFile.affectedRows > 0) return res.status(200).json({ message: "PDF Added Successfuly", success: true })
-  else return res.status(206).json({ message: "Error! During PDF Added", success: false });
-
-})
-
-// view a exists brochure -> course name must be different avery time
-exports.viewPdf = catchAsyncError(async (req, res) => {
-  const { permissions, user } = await req
-  if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Resourses", status: false });
-
-   const { name } = await req.params
-  if (!name) return res.status(206).json({ message: "Id Missing", success: false })
-    const select = `Select file from jtc_ecommers_resourses WHERE deleted_by = '0' && name = '${name}'`
-  const result =  await executeQuery(select)
-
-  if (result.length > 0) {
-    const pdfData = result[0].file;
-
-    // Serve the PDF data as response
-    res.setHeader('Content-Type', 'application/pdf');
-    const decodedPdfData = Buffer.from(pdfData, 'base64');
-    res.send(decodedPdfData);
-  } else {
-    res.status(404).send('PDF not found');
-  }
-
-})
-
-//  download a exists brochure
-exports.downloadPdf = catchAsyncError(async (req, res) => {
-  const { permissions, user } = await req
-    if (permissions.can_view == 0) return res.status(206).json({ message: "Permission Denied to View Resourses", status: false });
-
-  const { id } = await req.params 
-
-  if (!id) return res.status(206).json({ message: "Id Missing", success: false })
-
- 
-    const select = `Select  file, name, id from jtc_ecommers_resourses WHERE deleted_by = '0' && name = '${id}'`
-    const result =  await executeQuery(select)
-   
-  if (result.length > 0) {
-    const pdfData = result[0].file;
-    const name = result[0].name;
-    // Serve the PDF data as response
-    const decodedPdfData = Buffer.from(pdfData, 'base64');
-    res.setHeader('Content-Disposition', `attachment; filename="${name}"`);
-    res.setHeader('Content-Type', 'application/pdf');
-    return res.send(decodedPdfData);
-  } else {
-    return res.status(404).send('PDF not found');
-  }
-
-})
-
-
-//  delete a brochure by id
-exports.deletePdf = catchAsyncError(async (req, res) => {
-  const { permissions, user } = await req
-  if (permissions.can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Resourses", status: false });
-  const { id } =await req.params
-  if (!id) return res.status(206).json({ message: "Id Missing", success: false })
-    const query =  `Update jtc_ecommers_resourses Set deleted_at = current_timestamp(), deleted_by = ${user} WHERE deleted_by = '0' && name = '${id}'`
-  const data = await executeQuery(query)
-  if (data.affectedRows > 0) return res.status(200).json({ message: "Brouchure Deleted Successfully", success: true })
-
-  else return res.status(206).json({ message: "Error! Fetching All Brochures", success: false });
-
-})

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Select from 'react-select';
 import Modal from 'react-bootstrap/Modal';
-import { MdDelete, MdEditSquare, MdRemoveRedEye, MdDownloading} from "react-icons/md";
+import { MdDelete, MdEditSquare} from "react-icons/md";
 
 import { addVideos, allCourseChapter, allVideos, deleteVideos, editVideos, createEbrochure, deleteEbrochure, downloadEbrochure  } from '../../Components/CommonUrl/apis'
 import Header from '../../Components/pageComponents/header';
@@ -54,38 +54,6 @@ const ETopics = () => {
 
   // Function to download brochure
  
-
-   // Function to delete a resource
-   const deleteResourse = async (id) => {
-    const value = window.confirm("Are you Sure want to delete");
-    if (value) {
-      const deleteMember = await deleteEbrochure(path, id);
-      if (deleteMember.success == true) {
-        alert(deleteMember.message);
-         allData();
-      } else return alert(deleteMember.message);
-    } else return false;
-  };
-
-    // Function to download brochure
-    const downloadBox = async (id, name) => {
-    
-      return await downloadEbrochure(path, id, name)
-    }
-
-    const saveData = async (e, file, video) => {
-      const form = new FormData()
-  
-      form.append('file', file)
-      form.append('video', video)
-      const data = await createEbrochure(path, form)
-      if (data.success == true) {
-        allData()
-        return alert(data.message)
-      } else
-        return alert(data.message)
-    }
-
 
   const handleClose = () => {
     setShow(false);
@@ -168,7 +136,7 @@ const ETopics = () => {
                   <th>Topic</th>
                   <th>Video Link</th>
                   <th>Timing</th>
-                  <th>Resource</th>
+               
                   <th>Created At</th>
                   <th>Action</th>
                 </tr>
@@ -196,19 +164,7 @@ const ETopics = () => {
                      
                     </td>
                     <td>{el.timing}</td>
-                    <td>
-                      {el.brochurer ?
-                        <>
-                          <a href={`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_DOMAIN}ecommersSection/resourse/${el.brochurer}?module=${path}`} target='_blank'>
-                            <MdRemoveRedEye />
-                          </a>
-                          /<MdDelete onClick={(e) => deleteResourse(el.brochurer)} />
-                          /<MdDownloading onClick={(e, i) => downloadBox(el.id, el.brochurer)} />
-                        </>
-                        :
-                        <input type="file" name="" id="" placeholder='Add brochure here' className="form-control" onChange={(e) => saveData(e, e.target.files[0], el.id)} />
-                      }
-                    </td>
+                    
                     <td>{el.created_at}</td>
                     <td style={{ cursor: "pointer" }}>
                       <MdEditSquare onClick={(e) => handleEdit(el)} />
