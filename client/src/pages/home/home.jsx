@@ -216,7 +216,7 @@ allStudent()
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small> <MdArrowUpward /> </small></sup>35487</h2>
+                                        <h2 class="font-light "><sup><small> <MdArrowUpward /> </small></sup>35487</h2>
                                     </div>
                                 </div>
                             </div>
@@ -229,7 +229,7 @@ allStudent()
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small> <MdArrowUpward /> </small></sup>35487</h2>
+                                        <h2 class="font-light "><sup><small> <MdArrowUpward /> </small></sup>35487</h2>
                                     </div>
                                 </div>
                             </div>
@@ -243,7 +243,7 @@ allStudent()
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small><MdArrowUpward /></small></sup>35487</h2>
+                                        <h2 class="font-light "><sup><small><MdArrowUpward /></small></sup>35487</h2>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +257,7 @@ allStudent()
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small><MdArrowUpward /></small></sup>35487</h2>
+                                        <h2 class="font-light "><sup><small><MdArrowUpward /></small></sup>35487</h2>
                                     </div>
                                 </div>
                             </div>

@@ -215,10 +215,6 @@
     position: fixed;
     z-index: 4;
   }
-  a:hover{
-    color: #fff;
-
-  }
   
   
   /* .logo {
@@ -338,4 +334,16 @@
   
   .menu_container .link {
     padding-left: 20px;
+  }
+
+  .dropdownItem{
+    max-height: 70vh;
+  }
+
+  .dropdownItem ul{
+    max-height: 70vh;
+    overflow: scroll;
+  }
+  table{
+    width: 100%;
   }

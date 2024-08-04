@@ -188,7 +188,8 @@ const SideBar = () => {
                       {data && data.map((el, i) => (
                         <li key={i}>
                           <a href="/form_enquiry">
-                            <div className="m-5 p-5" dangerouslySetInnerHTML={{ __html: el }} />
+                            <div dangerouslySetInnerHTML={{ __html: el }} />
+
                           </a>
                         </li>
                       ))}
