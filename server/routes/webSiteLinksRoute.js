@@ -2,7 +2,7 @@ const express= require('express');
 const router = express.Router();
 const upload = require('../middelwares/imageUpload');
 const { verifyUser, verifyModulePermission } = require('../middelwares/token');
-const { addLinks, links, editLinks, removeLinks } = require('../controllers/webSiteLinksController');
+const { addLinks, links, editLinks, removeLinks, chartApi } = require('../controllers/webSiteLinksController');
 const { escapeRequestBody } = require('../conn/db');
 
 
@@ -164,6 +164,7 @@ router.route('/').post(verifyUser, verifyModulePermission,escapeRequestBody,addL
 router.route('/').get(verifyUser, verifyModulePermission, links)  // check
 router.route('/:id').patch(verifyUser, verifyModulePermission,escapeRequestBody,editLinks) // check
 router.route('/:id').delete(verifyUser, verifyModulePermission,removeLinks) // check
+router.route('/chart/').get(chartApi) // check
 
 
 module.exports = router;

@@ -2282,7 +2282,12 @@ export const allEFaqs = async (path) => {
   }
 }
 
-
-
-
+export const chartData = async () => {
+  try {
+    const { data } = await instance.get(`navLinks/chart`)
+    return data
+  } catch (err) {
+    return err.message
+  }
+}
 

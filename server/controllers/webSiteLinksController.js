@@ -1,5 +1,7 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
+const {initializeRedisClient}  = require('../middelwares/redisFile');
+
 
 
 
@@ -60,4 +62,75 @@ exports.removeLinks = catchAsyncError(async(req,res) => {
     const data =  await executeQuery(deletexists)
     if(data.affectedRows > 0) return res.status(200).json({message : "Point Delete Successfully", success: true})
     else return res.status(206).json({message : "Error! During Delete Point", success: false})
+})
+
+
+exports.chartApi = catchAsyncError(async(req,res) => {
+    const client = await initializeRedisClient()
+    const redisdata = await client.get("chart");
+    if(!redisdata){
+    const api = `
+    SELECT 
+        months.month,
+        COALESCE(course_counts.courses, 0) AS ecommers_course, 
+        COALESCE(user_counts.users, 0) AS users, 
+        COALESCE(testimonial_counts.testimonials, 0) AS website_course, 
+        COALESCE(video_counts.videos, 0) AS videos
+    FROM 
+        (
+            SELECT '2024-01' AS month UNION ALL
+            SELECT '2024-02' UNION ALL
+            SELECT '2024-03' UNION ALL
+            SELECT '2024-04' UNION ALL
+            SELECT '2024-05' UNION ALL
+            SELECT '2024-06' UNION ALL
+            SELECT '2024-07' UNION ALL
+            SELECT '2024-08' UNION ALL
+            SELECT '2024-09' UNION ALL
+            SELECT '2024-10' UNION ALL
+            SELECT '2024-11' UNION ALL
+            SELECT '2024-12'
+        ) AS months
+    LEFT JOIN 
+        (
+            SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, COUNT(id) AS courses
+            FROM jtc_ecommers_courses
+            GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+        ) AS course_counts ON months.month = course_counts.month
+    LEFT JOIN 
+        (
+            SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, COUNT(id) AS users
+            FROM jtc_ecommers_users
+            GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+        ) AS user_counts ON months.month = user_counts.month
+    LEFT JOIN 
+        (
+            SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, COUNT(id) AS testimonials
+            FROM jtc_courses
+            GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+        ) AS testimonial_counts ON months.month = testimonial_counts.month
+    LEFT JOIN 
+        (
+            SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, COUNT(id) AS videos
+            FROM jtc_ecommers_videos
+            GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+        ) AS video_counts ON months.month = video_counts.month
+    ORDER BY months.month`
+
+    const data =  await executeQuery(api)
+    if(data.length > 0){
+        const value = await JSON.stringify(data)
+        await client.set("chart", value,{
+            EX: process.env.REDIS_EXP,   
+            NX: true
+          });
+        return res.status(200).json({data})
+        
+        }
+    else return res.status(206).json({message : "Error! During Fetch Points", success: false})
+}else{ 
+    const value = await JSON.parse(redisdata)
+  
+    return res.status(200).json({data : value})
+}
 })
