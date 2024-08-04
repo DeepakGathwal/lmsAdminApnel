@@ -10,10 +10,11 @@ import UploadImageComponent from '../../Components/pageComponents/uploadImage';
 const Cources = () => {
   const [show, setShow] = useState(false);
   const [image, setImage] = useState([])
+  const [banner, setBanner] = useState([])
   const [labelList, setLabelList] = useState([])
   const [courceCategoryList, setcourceCategoryList] = useState([])
   const [editshow, setEditShow] = useState({
-    name : "",category : '', description : "", label : "", image : "", total_price : "", discount : '', video_link : "",certificates : ''
+    name : "",category : '', description : "", label : "", image : "",banner : "", total_price : "", discount : '', video_link : "",certificates : ''
   });
   const [state, setState] = useState([])
   const [total, setTotal] = useState(0)
@@ -94,6 +95,7 @@ const Cources = () => {
     formData.append('video_link', editshow.video_link)
     formData.append('certificates', editshow.certificates)
     formData.append('image', image[0])
+    formData.append('banner', banner[0])
     if (editshow.id > 0) {
       /** edit course type */
       value = await editECourse(path, editshow.id, formData)
@@ -106,6 +108,7 @@ const Cources = () => {
       e.preventDefault()
       setShow(!show)
       setImage([])
+      setBanner([])
       setEditShow('')
       allData()
     }else alert(value.message)
@@ -135,6 +138,7 @@ const Cources = () => {
                   <th>Description</th>
                   <th>Label</th>
                   <th>Image</th>
+                  <th>Banner</th>
                   <th>Price</th>
                   <th>Discount</th>
                   <th>Video Link</th>
@@ -162,6 +166,9 @@ const Cources = () => {
                     <td>{el.label}</td>
                      <td>
                       <img src={el.image} width={50} height={50} alt="" srcset="" />
+                     </td>
+                     <td>
+                      <img src={el.banner} width={50} height={50} alt="" srcset="" />
                      </td>
                      <td>{el.total_price}</td>
                      <td>{el.discount + " %"}</td>
@@ -252,6 +259,12 @@ const Cources = () => {
         <div className="form-group">
             <label htmlFor="icon"> Upload Image
             <UploadImageComponent image={image} setImage={setImage} existsImage={editshow.image} requiredDimensions={{ width: 75, height: 75 }}/>
+            <span>*please upload icons with at least<strong>width: 75 and height: 75</strong><br />*size will be less than <strong>1mb</strong></span>
+          </label>
+          </div>
+        <div className="form-group">
+            <label htmlFor="icon"> Upload Banner
+            <UploadImageComponent image={banner} setImage={setBanner} existsImage={editshow.banner} requiredDimensions={{ width: 75, height: 75 }}/>
             <span>*please upload icons with at least<strong>width: 75 and height: 75</strong><br />*size will be less than <strong>1mb</strong></span>
           </label>
           </div>

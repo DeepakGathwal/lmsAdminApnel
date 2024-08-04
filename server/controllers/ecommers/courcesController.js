@@ -18,10 +18,16 @@ exports.addCource = catchAsyncError(async (req, res) => {
   const runQuery = await executeQuery(findquery)
   if (runQuery.length > 0) return res.status(206).json({ message: "Cource Already Exists", status: false })
   const link = await name.replaceAll(" ", "_").toLowerCase()
-  if (!req.file) return res.status(206).json({ message: "Atleast one image needed", success: false })
-  const icon = await req.file
-  const fileImage = icon && await getDataUri(icon)
-  const query = `Insert into jtc_ecommers_courses SET name = ${name}, course_link = ${link}, description = ${description},category = (Select id  from jtc_ecommers_course_types WHERE category = ${category}), label = (Select id from jtc_ecommers_course_label WHERE label = ${label}),image =  '${fileImage}', created_by = ${user}, total_price =  ${price}, discount =  ${discount}, video_link = ${video_link},certificates =  ${certificates == "1" ? 1 : 0} `
+let iconWIthBanner = ''
+  if(req.files){
+    
+    const {image, banner} = req.files
+  
+    const fileImage = image && await getDataUri(image[0])
+    const fileBanner =banner && await getDataUri(banner[0])
+    iconWIthBanner = `, image = '${fileImage}', banner = '${fileBanner}'`
+}
+  const query = `Insert into jtc_ecommers_courses SET name = ${name}, course_link = ${link}, description = ${description},category = (Select id  from jtc_ecommers_course_types WHERE category = ${category}), label = (Select id from jtc_ecommers_course_label WHERE label = ${label}) ${iconWIthBanner}, created_by = ${user}, total_price =  ${price}, discount =  ${discount}, video_link = ${video_link},certificates =  ${certificates == "1" ? 1 : 0} `
   const executeAddPoint = await executeQuery(query)
   if (executeAddPoint.affectedRows > 0) return res.status(200).json({ message: " Cource Added Successfully", success: true })
   else return res.status(206).json({ message: "Error! During category Added ", success: false })
@@ -41,18 +47,22 @@ exports.editCource = catchAsyncError(async (req, res) => {
   const runQuery = await executeQuery(findQuery)
 
   if (runQuery.length > 1) return res.status(206).json({ message: "Cource Already Exists", status: false })
+    let BannerImg = ''
+  let iconImag = ''
+  if(req.files){
+      const { image , banner} =  req.files
+      if(image){
+          const fileImage = await getDataUri(image[0])
+          iconImag = `, image = '${fileImage}'`}
+          if(banner){
+              
+         const fileBanner = banner && await getDataUri(banner[0])
+      BannerImg = `, banner = '${fileBanner}'`}
+  }
   const link = await name.replaceAll(" ", "_").toLowerCase()
 
-  let image = ''
-  if (req.file) {
-    const icon = await req.file
-    const fileImage = icon && await getDataUri(icon)
 
-    image = `,image =  '${fileImage}'`
-
-  }
-
-  const query = `update  jtc_ecommers_courses SET name = ${name},category = (Select id  from jtc_ecommers_course_types WHERE category = ${category}), label = (Select id from jtc_ecommers_course_label WHERE label = ${label}), course_link = ${link}, description = ${description},updated_by = ${user},updated_at =  current_timestamp(), total_price =  ${price}, discount = ${discount}, video_link = ${video_link}, certificates =  ${certificates == "1" ? 1 : 0} ${image} WHERE id = ${id} `
+  const query = `update  jtc_ecommers_courses SET name = ${name},category = (Select id  from jtc_ecommers_course_types WHERE category = ${category}), label = (Select id from jtc_ecommers_course_label WHERE label = ${label}), course_link = ${link}, description = ${description},updated_by = ${user},updated_at =  current_timestamp(), total_price =  ${price}, discount = ${discount}, video_link = ${video_link}, certificates =  ${certificates == "1" ? 1 : 0} ${iconImag} ${BannerImg} WHERE id = ${id} && deleted_by = '0'`
   const executeAddPoint = await executeQuery(query)
   if (executeAddPoint.affectedRows > 0) return res.status(200).json({ message: " Cource Added Successfully", success: true })
   else return res.status(206).json({ message: "Error! During category Added ", success: false })
@@ -63,7 +73,7 @@ exports.allCources = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
   if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Course", status: false });
 
-  const query = `Select label.label,category.category,course.id, course.name, Date_Format(course.created_at, '%d-%m-%y %h:%i:%s %p') as created_at ,course.video_link, course.certificates, course.image, course.total_price, course.discount, course.description from jtc_ecommers_courses as course Left Join jtc_ecommers_course_types as category On category.id = course.category Left Join jtc_ecommers_course_label as label On label.id = course.label WHERE course.deleted_by = '0' Order by course.id desc`
+  const query = `Select label.label,category.category,course.id, course.name, Date_Format(course.created_at, '%d-%m-%y %h:%i:%s %p') as created_at ,course.video_link, course.certificates, course.image, course.total_price, course.discount, course.banner, course.description from jtc_ecommers_courses as course Left Join jtc_ecommers_course_types as category On category.id = course.category Left Join jtc_ecommers_course_label as label On label.id = course.label WHERE course.deleted_by = '0' Order by course.id desc`
 
   const data = await executeQuery(query)
   if (data.length > 0) return res.status(200).json({data, success: true,

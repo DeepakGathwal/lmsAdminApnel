@@ -118,9 +118,9 @@ const { escapeRequestBody } = require('../../conn/db');
 
 
 
-router.route('/').post(verifyUser, verifyModulePermission,upload.single('image'), escapeRequestBody,addCource)
+router.route('/').post(verifyUser, verifyModulePermission,upload.fields([{ name: 'image', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), escapeRequestBody,addCource)
 router.route('/').get(verifyUser, verifyModulePermission,allCources)
-router.route('/:id').patch(verifyUser, verifyModulePermission,upload.single('image'), escapeRequestBody,editCource)
+router.route('/:id').patch(verifyUser, verifyModulePermission,upload.fields([{ name: 'image', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), escapeRequestBody,editCource)
 router.route('/:id').delete(verifyUser, verifyModulePermission,deleteCource)
 router.route('/chapter/').post(verifyUser, verifyModulePermission,escapeRequestBody,addChapter)
 router.route('/chapter/').get(verifyUser, verifyModulePermission,Chapters)

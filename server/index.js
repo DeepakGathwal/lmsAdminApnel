@@ -9,7 +9,6 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const body = require('body-parser')
 const cors = require('cors')
-const ErrorHandler = require('./middelwares/error')
 const { createDocs } = require('./utils/swagger');
 const app = express();
 app.use(cors({exposedHeaders: 'Set-Cookie',Headers: true,credentials:true, origin:`${process.env.REACT}`, methods: "GET,POST,PUT,DELETE,PATCH", optionsSuccessStatus: 200}))

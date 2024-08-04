@@ -139,9 +139,9 @@ const { escapeRequestBody } = require('../../conn/db');
 
 
 
-router.route('/').post(verifyUser, verifyModulePermission,upload.fields([{ name: 'icon', maxCount: 1 }, { name: 'banner', maxCount: 1 },]),escapeRequestBody,addCourse) // pending
+router.route('/').post(verifyUser, verifyModulePermission,upload.fields([{ name: 'icon', maxCount: 1 }, { name: 'banner', maxCount: 1 }]),escapeRequestBody,addCourse) // pending
 router.route('/').get(verifyUser, verifyModulePermission, courseList)  // check
-router.route('/').patch(verifyUser, verifyModulePermission,upload.fields([{ name: 'icon', maxCount: 1 }, { name: 'banner', maxCount: 1 },]),escapeRequestBody,editCourse) // check
+router.route('/').patch(verifyUser, verifyModulePermission,upload.fields([{ name: 'icon', maxCount: 1 }, { name: 'banner', maxCount: 1 }]),escapeRequestBody,editCourse) // check
 router.route('/:id').delete(verifyUser, verifyModulePermission,deleteCourse) // check
 
 
