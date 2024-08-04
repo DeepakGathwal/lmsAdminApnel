@@ -4,7 +4,7 @@ import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from 'rec
 import { GoDotFill  } from "react-icons/go";
 import { MdArrowUpward } from "react-icons/md";
 import { FaYoutube, FaFacebook, FaInstagramSquare, FaTelegram, FaTwitterSquare, FaLinkedin, FaEllipsisH } from "react-icons/fa";
-import { allBlogNames, allStudentList ,getHeadingsOfTutorial, listOfBatches} from "../../Components/CommonUrl/apis";
+import { allBlogNames ,getHeadingsOfTutorial, listOfBatches, chartData, allTestamonials, permissions, allModules, teamMembers, allCompanies} from "../../Components/CommonUrl/apis";
 
 
 const Home = () => {
@@ -12,46 +12,61 @@ const Home = () => {
     const [tuto, setTuto] = useState(0)
     const [bateches, setbateches] = useState(0)
     const [blogs, setblogs] = useState(0)
+    const [module, setmodule] = useState(0)
+    const [members, setmembers] = useState(0)
+    const [allpermissions, setpermissions] = useState(0)
+    const [comapnies,setcomapnies] = useState([])
+    const [chartdata,setChartData] = useState([])
 
 
     const allStudent = async() => {
-        const {total} = await allStudentList('/students')
-        if(total > 0)
-        setStudent(total);
-      else  setStudent(0);
-        allTutorialLength()
+        const {data} = await allTestamonials('/testimonials')    
+       
+            allTutorialLength()
+       return data && setStudent(data.length)
     }
     const allTutorialLength = async() => {
-        const {total} = await getHeadingsOfTutorial('/tutorials')
-        if(total > 0)
-        
-        setTuto(total);
-      else  setTuto(0);
-        allBatchesLength()
+        const {data} = await getHeadingsOfTutorial('/tutorials')
+            allBatchesLength()
+        return  data &&  setTuto(data.length);
     }
     const allBatchesLength = async() => {
-        const {total} = await listOfBatches('/batches'  )
-        if(total > 0)
-        setbateches(total);
-    else    setbateches(0);
-
-        allBlogNamesLength()
+        const {data} = await listOfBatches('/batches')
+    
+            allBlogNamesLength()
+   return   data &&      setbateches(data.length);
     }
     const allBlogNamesLength = async() => {
-        const {total} = await allBlogNames('/blog')
-        if(total > 0)
-        setblogs(total);
-    else setblogs(0)
+        const {data} = await allBlogNames('/blog')
+        chartDetails()
+    return data && setblogs(data.length);
+    }
+    const permissionDetails = async() => {
+        const {data} = await permissions('/permissions','')
+        modulesDetails()
+    return data && setpermissions(data.length);
+    }
+    const modulesDetails = async() => {
+        const {data} = await allModules('/modules')
+        teamDetails()
+    return data && setmodule(data.length);
+    }
+    const teamDetails = async() => {
+        const {data} = await teamMembers('/team')
+        companyDetails()
+    return data && setmembers(data.length);
+    }
+    const companyDetails = async() => {
+        const {data} = await allCompanies('/companies')
+    return data && setcomapnies(data.length);
+    }
+    const chartDetails = async() => {
+        const {data} = await chartData()
+        permissionDetails()
+    return data && setChartData(data);
     }
 
-    const data = [
-        {name : 2017, react : 32, anguler : 37, vue : 78, node : 56},
-        {name : 2018, react : 42, anguler : 23, vue : 21, node : 51},
-        {name : 2019, react : 51, anguler : 31, vue : 14, node : 54},
-        {name : 2020, react : 89, anguler : 87, vue : 56, node : 34},
-        {name : 2021, react : 12, anguler : 27, vue : 12, node : 67},
-        {name : 2022, react : 34, anguler : 12, vue : 98, node : 12},
-    ]
+  
     const social = [
         {icon : <FaLinkedin/>, suscriber :36588, class:"card-linkedin"},
         {icon : <FaTwitterSquare />, suscriber :36588, class:"card-twitter"},
@@ -93,7 +108,7 @@ allStudent()
                             <div className="row">
                                 <div className="col-12">
                                     {/* <h2 className="m-b-0"><i className="mdi mdi-alert-circle text-success"></i></h2> */}
-                                    <h6 className="card-subtitle">Total Students</h6></div>
+                                    <h6 className="card-subtitle">Total Testimonials</h6></div>
                                     <h3 className="txtpanel">{student}</h3>
                                 <div className="col-12">
                                     <div className="progress">
@@ -170,29 +185,29 @@ allStudent()
                                     <div class="col-12">
                                         <div class="d-flex flex-wrap">
                                             <div>
-                                                <h4 class="card-title">Total Courses</h4>
+                                                <h4 class="card-title">Chart</h4>
                                             </div>
                                             <div class="ml-auto">
                                                 <ul class="list-inline">
                                                     <li>
-                                                        <h6 class="text-react"><GoDotFill />React</h6> </li>
+                                                        <h6 class="text-react"><GoDotFill />Ecommers-Courses</h6> </li>
                                                     <li>
-                                                        <h6 class="text-angular"><GoDotFill />Angular</h6> </li>
+                                                        <h6 class="text-angular"><GoDotFill />Website-Courses</h6> </li>
                                                     <li>
-                                                        <h6 class="text-vue"><GoDotFill />Vue</h6> </li>
+                                                        <h6 class="text-vue"><GoDotFill />Users</h6> </li>
                                                     <li>
-                                                        <h6 class="text-node"><GoDotFill />Node</h6> </li>
+                                                        <h6 class="text-node"><GoDotFill />Videos</h6> </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="d-flex flex-wrap">
-                                       <LineChart width={900} height={600} data={data}>
-                                        <Line type="monotone" dataKey="react" stroke="#2196F3" strokeWidth={3} />
-                                        <Line type="monotone" dataKey="anguler" stroke="#F44236" strokeWidth={3} />
-                                        <Line type="monotone" dataKey="vue" stroke="#FFCA29" strokeWidth={3} />
-                                        <Line type="monotone" dataKey="node" stroke="#21f35d" strokeWidth={3} />
+                                       <LineChart width={900} height={600} data={chartdata}>
+                                        <Line type="monotone" dataKey="ecommers_course" stroke="#2196F3" strokeWidth={3} />
+                                        <Line type="monotone" dataKey="website_course" stroke="#F44236" strokeWidth={3} />
+                                        <Line type="monotone" dataKey="users" stroke="#FFCA29" strokeWidth={3} />
+                                        <Line type="monotone" dataKey="videos" stroke="#21f35d" strokeWidth={3} />
                                         <CartesianGrid stroke="#ccc"/>
                                         <XAxis dataKey='name'/>
                                         <YAxis />
@@ -212,11 +227,11 @@ allStudent()
                             <div class="card-body align-center">
                                 <div class="d-flex">
                                     <div>
-                                        <h3 class="card-title">Course Type</h3> </div>
+                                        <h3 class="card-title text-black">Total Modules</h3> </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small> <MdArrowUpward /> </small></sup>35487</h2>
+                                        <h2 class="font-light text-black"><sup><small> <MdArrowUpward /> </small></sup>{module}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -225,11 +240,11 @@ allStudent()
                             <div class="card-body align-center">
                                 <div class="d-flex">
                                     <div>
-                                        <h3 class="card-title">Course Topic</h3> </div>
+                                        <h3 class="card-title text-black">Total Team Members</h3> </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small> <MdArrowUpward /> </small></sup>35487</h2>
+                                        <h2 class="font-light text-black"><sup><small> <MdArrowUpward /> </small></sup>{members}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -239,11 +254,11 @@ allStudent()
                                 <div class="d-flex">
                                     <div class="m-r-20 align-self-center"></div>
                                     <div>
-                                        <h3 class="card-title">Course Sub-Category</h3></div>
+                                        <h3 class="card-title text-black">Total Permissions</h3></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small><MdArrowUpward /></small></sup>35487</h2>
+                                        <h2 class="font-light text-black"><sup><small><MdArrowUpward /></small></sup>{allpermissions}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -253,11 +268,11 @@ allStudent()
                                 <div class="d-flex">
                                     <div class="m-r-20 align-self-center"></div>
                                     <div>
-                                        <h3 class="card-title">Total Banners</h3></div>
+                                        <h3 class="card-title text-black">Total Compaines</h3></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-white"><sup><small><MdArrowUpward /></small></sup>35487</h2>
+                                        <h2 class="font-light text-black"><sup><small><MdArrowUpward /></small></sup>{comapnies}</h2>
                                     </div>
                                 </div>
                             </div>

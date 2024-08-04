@@ -24,7 +24,8 @@ const Header = ({setShow, state, setQuery}) => {
    <>
     
          <div className="d-md-block d-lg-flex justify-content-between">
-          <button className='btn-create' onClick={handleShow}>Add New</button>
+          <div className="m-3">          <button className='btn-create' onClick={handleShow}>Add New</button></div>
+
               <div className="search-input m-3">
               <div className="search-box">
                 <input type="search"  placeholder="Search..." onChange={event => setQuery(event.target.value)} />
