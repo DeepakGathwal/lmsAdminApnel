@@ -123,9 +123,9 @@ const { addSections, Sections, editSections, removeSections, addFaqs, faqs, edit
  */
 
 
-router.route('/').post(verifyUser,verifyModulePermission,upload.array('images', 3),escapeRequestBody ,addSections)
+router.route('/').post(verifyUser,verifyModulePermission,upload.array('images', 5),escapeRequestBody ,addSections)
 router.route('/').get(verifyUser, verifyModulePermission ,Sections)
-router.route('/:id').patch(verifyUser,verifyModulePermission,upload.array('images', 3),escapeRequestBody ,editSections)
+router.route('/:id').patch(verifyUser,verifyModulePermission,upload.array('images', 5),escapeRequestBody ,editSections)
 router.route('/:id').delete(verifyUser,verifyModulePermission ,removeSections)
 router.route('/faqs/').post(verifyUser,verifyModulePermission,escapeRequestBody ,addFaqs)
 router.route('/faqs/').get(verifyUser, verifyModulePermission ,faqs)

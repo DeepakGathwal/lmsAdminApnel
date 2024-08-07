@@ -206,7 +206,10 @@ exports.addTopic = catchAsyncError(async (req, res) => {
   if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Add Video ", status: false });
 
   const { topic, timing, videoLink, chapter_id } = await req.body
-
+  let setVideo = ``
+	if(videoLink){
+    setVideo = `, videoLink = ${videoLink}`
+    }
   const query = `Select id from jtc_ecommers_videos where topic = ${topic}`
 
 
@@ -214,7 +217,7 @@ exports.addTopic = catchAsyncError(async (req, res) => {
   if (runfind.length > 0) return res.status(206).json({ message: "Video already exists" })
 
 
-  const addQuery = `Insert into jtc_ecommers_videos SET topic = ${topic}, timing = ${timing}, videoLink = ${videoLink}, chapter_id = '${chapter_id}', created_by = ${user}`
+  const addQuery = `Insert into jtc_ecommers_videos SET topic = ${topic} ${setVideo}, timing = ${timing}, chapter_id = '${chapter_id}', created_by = ${user}`
 
   const runqueryPromise = await executeQuery(addQuery)
  
@@ -263,7 +266,7 @@ exports.editTopic = catchAsyncError(async (req, res) => {
 exports.topics = catchAsyncError(async (req, res) => {
   const { permissions, user } = await req
   if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Course Chapter", status: false });
-  const query = `Select resours.name as brochurer, videos.id,videos.topic, videos.timing , Date_Format(videos.created_at, '%d-%m-%y %h:%i:%s %p') as created_at,videos.videoLink, videos.chapter_id from jtc_ecommers_videos as videos Left join jtc_ecommers_resourses as resours On resours.video  = videos.id where videos.deleted_by = '0' order by videos.id desc`
+  const query = `Select  id,topic, timing , Date_Format(created_at, '%d-%m-%y %h:%i:%s %p') as created_at,videoLink, chapter_id from jtc_ecommers_videos  where deleted_by = '0' order by id desc`
   const data = await executeQuery(query)
   
   if (data.length > 0) {
