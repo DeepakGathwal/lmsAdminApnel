@@ -2175,9 +2175,9 @@ export const allVideos = async (path) => {
 }
 
 
-export const deleteVideos = async (path) => {
+export const deleteVideos = async (path, id) => {
   try {
-    const { data } = await instance.get(`ecommersCourse/topic?module=${path}`)
+    const { data } = await instance.delete(`ecommersCourse/topic/${id}?module=${path}`)
     return data
   } catch (err) {
     return err.message

@@ -42,11 +42,11 @@ const CourceSubCategories = () => {
     }
   }
 
-  const allData = async (limit, category) => {   
+  const allData = async (category) => {   
        
     const {data} = await allCourceSubCategory(path, category)
     data && setTotal(data.length)
-    return data && setState(data)
+    return data ? setState(data) : setState([])
   }
 
   useEffect(() => {
