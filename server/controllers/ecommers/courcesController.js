@@ -2,7 +2,7 @@ const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { getDataUri } = require("../../utils/imageHandeler");
 
-const { EcourseSchema, EcourceChapter } = require("../../utils/validation");
+const { EcourseSchema, EcourceChapter, EcourseTopic } = require("../../utils/validation");
 
 
 
@@ -196,21 +196,22 @@ exports.removeChapter = catchAsyncError(async (req, res) => {
 })
 
 
-
-
-
-
 exports.addTopic = catchAsyncError(async (req, res) => {
   
   const { permissions, user } = await req
   if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Add Video ", status: false });
 
   const { topic, timing, videoLink, chapter_id } = await req.body
+  const { error } = EcourseTopic.validate(req.body);
+  if (error)
+    return res
+      .status(206)
+      .json({ status: false, message: error.details[0].message });
   let setVideo = ``
 	if(videoLink){
     setVideo = `, videoLink = ${videoLink}`
     }
-  const query = `Select id from jtc_ecommers_videos where topic = ${topic}`
+  const query = `Select id from jtc_ecommers_videos where topic = ${topic}  && deleted_by = '0'`
 
 
   const runfind = await executeQuery(query)
@@ -235,8 +236,12 @@ exports.editTopic = catchAsyncError(async (req, res) => {
   if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Video ", status: false });
 
   const { topic, timing, videoLink, chapter_id } = await req.body
-
-  const query = `Select id from jtc_ecommers_videos where topic = ${topic}`
+  const { error } = EcourseTopic.validate(req.body);
+  if (error)
+    return res
+      .status(206)
+      .json({ status: false, message: error.details[0].message });
+  const query = `Select id from jtc_ecommers_videos where topic = ${topic} && deleted_by = '0'`
 
 
   const runfind = await executeQuery(query)

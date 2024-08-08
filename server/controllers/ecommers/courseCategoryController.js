@@ -1,7 +1,7 @@
 const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { getDataUri } = require("../../utils/imageHandeler");
 const { executeQuery } = require("../../conn/db");
-const { coursereLabel } = require("../../utils/validation");
+const { coursereLabel, ECourseType } = require("../../utils/validation");
 
 
 
@@ -10,6 +10,11 @@ const { coursereLabel } = require("../../utils/validation");
 // add a new couse type -> type must be different every time
 exports.addCourseType = catchAsyncError(async(req,res) => {    
     const {category, description} = await req.body
+    const { error } = ECourseType.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     const { permissions, user } = await req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  category", status: false });
     const icon = req.file
@@ -29,6 +34,11 @@ exports.addCourseType = catchAsyncError(async(req,res) => {
 // edit a course type by id
 exports.editCourseType = catchAsyncError(async(req,res) => {
     const {category, description} = await req.body
+    const { error } = ECourseType.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     const { permissions, user } = await req
     const {id} = req.params 
     if(!id)  return res.status(206).json({message : "category Not Found for Edit", success : false})

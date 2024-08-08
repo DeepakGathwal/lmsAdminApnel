@@ -2,10 +2,16 @@ const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
 const mysql = require('mysql')
 
-const {getDataUri} = require('../utils/imageHandeler')
+const {getDataUri} = require('../utils/imageHandeler');
+const { testimonials } = require("../utils/validation");
 
 exports.createTestominal = catchAsyncError(async(req,res) =>{
-    const {name, description, link } =  req.body
+    const {name, description, link } = await req.body
+    const { error } = testimonials.validate(req.body);
+    if (error)
+        return res
+            .status(206)
+            .json({ status: false, message: error.details[0].message })
     const {permissions, user} = req 
     if(permissions[0].can_create == 0) return res.status(206).json({message : "Permission Denied to Create New Testominals ", status : false});
     const alreadyExists = `Select * from jtc_testimonials WHERE name = ${name}  && deleted_by = '0'`
@@ -38,6 +44,11 @@ exports.getTestominalLsit = catchAsyncError(async(req,res) =>{
 
 exports.updateTestominal = catchAsyncError(async(req,res) =>{
     const {name, description, link } =  req.body
+    const { error } = testimonials.validate(req.body);
+    if (error)
+        return res
+            .status(206)
+            .json({ status: false, message: error.details[0].message })
     const {permissions, user} = req 
     const {id} = req.params
     if(!id)  return res.status(200).json({message : "Testominal Not Found for Edit", success : false})

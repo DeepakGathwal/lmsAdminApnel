@@ -1,7 +1,7 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
 
-const { aboutUs } = require("../utils/validation");
+const { aboutUs, pdfSchema } = require("../utils/validation");
 
 // add a new brochure -> course name must be different avery time
 exports.addPdf = catchAsyncError(async (req, res) => {
@@ -9,6 +9,11 @@ exports.addPdf = catchAsyncError(async (req, res) => {
   if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Add File", status: false });
   if (!req.file) return res.status(206).json({ message: "File not found", status: false });
   const { course } = await req.body
+  const { error } = pdfSchema.validate(req.body);
+  if (error)
+      return res
+          .status(206)
+          .json({ status: false, message: error.details[0].message })
   const { originalname, buffer } = req.file;
   const already = `Select id from jtc_brochures WHERE  course_id = '${course}'`
   const executeAlready = await executeQuery(already)

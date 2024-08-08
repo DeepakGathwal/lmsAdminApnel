@@ -1,11 +1,17 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
+const { courseCategory } = require("../../utils/validation");
 
 
 exports.addCategory = catchAsyncError(async(req,res) => {
     const {category} = req.body
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  category", status: false });
+    const { error } = await courseCategory.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     const alreadyExists =  `Select id from jtc_tutorial_type WHERE category = ${category}`
     const executeAlready =  await executeQuery(alreadyExists)
     if(executeAlready.length > 0) return res.status(206).json({message : "category Already Exists"})
@@ -16,7 +22,12 @@ exports.addCategory = catchAsyncError(async(req,res) => {
 })
 
 exports.editCategory = catchAsyncError(async(req,res) => {
-    const {category} = req.body
+    const {category} = await req.body
+    const { error } = await courseCategory.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     const { permissions, user } = req
     const {id} = req.params 
     if(!id)  return res.status(206).json({message : "category Not Found for Edit", success : false})

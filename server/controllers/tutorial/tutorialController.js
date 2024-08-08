@@ -34,6 +34,11 @@ exports.editTutorial = catchAsyncError(async(req,res) =>{
     const {permissions, user} = req 
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Create New Tutorial",success: false });
     const {html,css,category, cource, heading, meta_tags, meta_keywords, meta_description, meta_title} = req.body 
+    const { error } = await topicSchema.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     const {id} = req.params
     if(!id) return res.status(206).json({message : "Data Not Found", success : false})
 

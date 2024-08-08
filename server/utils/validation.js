@@ -6,15 +6,15 @@ exports.courceLearn = Joi.object({
 })
 
 exports.EcourseSchema = Joi.object({
-    video_link  :  Joi.string().required(),
-    certificates : Joi.string().required(),
-    name : Joi.string().required(),
-    category : Joi.string().required(), 
-    description : Joi.string().required(),
-    label : Joi.string().required(),
-    price : Joi.string().required(),
-    discount : Joi.string().required(),
-    image : Joi.string().optional()
+    video_link: Joi.string().required(),
+    certificates: Joi.string().required(),
+    name: Joi.string().required(),
+    category: Joi.string().required(),
+    description: Joi.string().required(),
+    label: Joi.string().required(),
+    price: Joi.string().required(),
+    discount: Joi.string().required(),
+    image: Joi.string().optional()
 })
 
 
@@ -43,7 +43,7 @@ exports.courseSchema = Joi.object({
     description: Joi.string().required(),
     type: Joi.string().required(),
     videoLink: Joi.string().required(),
-    jobs: Joi.string().optional(), 
+    jobs: Joi.string().optional(),
     duration: Joi.string().optional(),
     job_pay: Joi.string().optional(),
     meta_tags: Joi.string().optional(),
@@ -171,6 +171,11 @@ exports.choosePointSchema = Joi.object({
 })
 
 
+exports.pdfSchema = Joi.object({
+    course: Joi.string().required()
+})
+
+
 exports.companySchema = Joi.object({
     name: Joi.string().required(),
     img: Joi.string().min(0).max(250),
@@ -180,7 +185,53 @@ exports.companySchema = Joi.object({
 
 exports.faqsSchema = Joi.object({
     point: Joi.string().required(),
-    description: Joi.string().required(), 
+    description: Joi.string().required(),
     about: Joi.string().min(0).max(5000),
+})
+
+
+exports.ECourseType = Joi.object({
+    cource: Joi.string().required(),
+    description: Joi.string().required()
+})
+
+exports.joinCourse = Joi.object({
+    category: Joi.string().required(),
+    description: Joi.string().required(),
+    icon: Joi.string().optional()
+})
+
+exports.courseCategory = Joi.object({
+    category: Joi.string().required()
+})
+
+exports.EcourseTopic = Joi.object({
+    topic: Joi.string().required(),
+    timing: Joi.string().required(),
+    videoLink: Joi.string().optional(),
+    chapter_id: Joi.string().required()
+})
+
+exports.batchValidation = Joi.object({
+    date: Joi.string().required(), 
+    time_from: Joi.string().required(), 
+    course_id: Joi.string().required(), 
+    time_to: Joi.string().required(), 
+    week_days: Joi.string().required()
+})
+
+
+exports.testimonials = Joi.object({
+    name : Joi.string().required(), 
+    description : Joi.string().required(), 
+    link : Joi.string().required()
+})
+
+exports.testimonialsSchema = Joi.object({
+    name: Joi.string().required(), 
+    nav_link: Joi.string().required(), 
+    html: Joi.string().optional(), 
+    css: Joi.string().optional(),
+    explore: Joi.string().optional()
 })
 

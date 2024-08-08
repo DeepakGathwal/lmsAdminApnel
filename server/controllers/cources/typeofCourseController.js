@@ -1,12 +1,18 @@
 const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
+const { courseCategory } = require("../../utils/validation");
 
 
 
 // add a new couse type -> type must be different every time
 exports.addCourseType = catchAsyncError(async(req,res) => {
-    const {category} = req.body
-    const { permissions, user } = req
+    const {category} = await req.body
+    const { error } = courseCategory.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
+    const { permissions, user } = await req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  category", status: false });
     const alreadyExists =  `Select id from jtc_courses_type WHERE category = ${category}`
     const executeAlready =  await executeQuery(alreadyExists)
@@ -20,6 +26,11 @@ exports.addCourseType = catchAsyncError(async(req,res) => {
 // edit a course type by id
 exports.editCourseType = catchAsyncError(async(req,res) => {
     const {category} = req.body
+    const { error } = courseCategory.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     const { permissions, user } = req
     const {id} = req.params 
     if(!id)  return res.status(206).json({message : "category Not Found for Edit", success : false})
@@ -51,7 +62,6 @@ exports.removeCourseType = catchAsyncError(async(req,res) => {
     if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Category", status: false });
     const {id} = req.params 
     if(!id)  return res.status(206).json({message : "category Not Found for Edit", success : false})
-
     const alreadyExists =  `Delete from jtc_courses_type WHERE id = ${id}`
     const data =  await executeQuery(alreadyExists)
     if(data.affectedRows > 0) return res.status(200).json({message : "category Delete Successfully", success: true})

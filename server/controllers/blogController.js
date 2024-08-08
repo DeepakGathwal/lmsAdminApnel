@@ -37,7 +37,11 @@ exports.addBlog = catchAsyncError(async (req, res) => {
 // edit a already exists  blog 
 exports.editBlog = catchAsyncError(async (req, res) => {
     const { name, heading, video_link, meta_tags, meta_title, meta_keywords, meta_description, category, blog_html, blog_css } = await req.body
-
+    const { error } = blogSchema.validate(req.body);
+    if (error)
+        return res
+            .status(206)
+            .json({ status: false, message: error.details[0].message })
     const { permissions, user } = req
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit New Blog", status: false });
     const { id } = req.params

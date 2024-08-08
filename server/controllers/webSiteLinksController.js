@@ -1,6 +1,7 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
 const {initializeRedisClient}  = require('../middelwares/redisFile');
+const { testimonialsSchema } = require("../utils/validation");
 
 
 
@@ -8,6 +9,11 @@ const {initializeRedisClient}  = require('../middelwares/redisFile');
 exports.addLinks = catchAsyncError(async(req,res) => {
   
     const {name, nav_link, html, css,explore } = req.body 
+    const { error } = testimonialsSchema.validate(req.body);
+    if (error)
+        return res
+            .status(206)
+            .json({ status: false, message: error.details[0].message })
       const { permissions, user } = req
    
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create Nav Link", status: false });
@@ -25,6 +31,11 @@ exports.addLinks = catchAsyncError(async(req,res) => {
 exports.editLinks = catchAsyncError(async(req,res) => {
     const {name, nav_link,html,css, explore} = req.body
     const { permissions, user } = req
+    const { error } = testimonialsSchema.validate(req.body);
+    if (error)
+        return res
+            .status(206)
+            .json({ status: false, message: error.details[0].message })
     const {id} = req.params 
     if(!id)  return res.status(200).json({message : "Point Not Found for Edit", success : false})
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Point", status: false });

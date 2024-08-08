@@ -1,15 +1,20 @@
 const { executeQuery } = require("../conn/db");
 const catchAsyncError = require("../middelwares/catchAsyncError");
+const { batchValidation } = require("../utils/validation");
 
 
 // Add a batch api function
 exports.addBatches = catchAsyncError(async (req, res) => {
   const { date, time_from, course_id, time_to, week_days } = await req.body
+  const { error } = await batchValidation.validate(req.body);
+  if (error)
+    return res
+      .status(206)
+      .json({ status: false, message: error.details[0].message });
   const { permissions, user } = req
   if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create  Point", status: false });
   const alreadyExists = `Select id from jtc_batches WHERE course_id = ${course_id} && date = ${date} && time_from  = ${time_from} && time_to = ${time_to}  && week_days = ${week_days}`
   const executeAlready = await executeQuery(alreadyExists)
-
   if (executeAlready.length > 0) return res.status(206).json({ message: "Batch  Already Exists With Same Date , Time and same course" })
   const addNewBatch = `Insert into jtc_batches SET course_id = ${course_id}, date = ${date}, time_from = ${time_from}, time_to = ${time_to}, week_days = ${week_days}, created_by = ${user} `
   const executeAddBatch = await executeQuery(addNewBatch);
@@ -21,6 +26,11 @@ exports.addBatches = catchAsyncError(async (req, res) => {
 exports.editBatches = catchAsyncError(async (req, res) => {
   const { permissions, user } = req
   const { id } = await req.query 
+  const { error } = await batchValidation.validate(req.body);
+  if (error)
+    return res
+      .status(206)
+      .json({ status: false, message: error.details[0].message });
   if (!id) return res.status(206).json({ message: "Id Missing", success: false })
   if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Create  Point", status: false });
   const { date, time_from, course_id, time_to, week_days } = await req.body 

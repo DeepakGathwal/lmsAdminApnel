@@ -2,14 +2,17 @@ const { executeQuery } = require("../../conn/db");
 const catchAsyncError = require("../../middelwares/catchAsyncError");
 const { getDataUri } = require("../../utils/imageHandeler");
 
-const { categorySchema, subCategorySchema } = require("../../utils/validation");
+const { joinCourse } = require("../../utils/validation");
 
 exports.addPoint =  catchAsyncError(async(req,res) => {
-
     const { permissions, user } = req
     if (permissions[0].can_create == 0) return res.status(206).json({ message: "Permission Denied to Create New Point",status: false });
     const {course, description} =  req.body
-  if (!course) return res.status(206).json({ message: "Course Missing", success: false })
+    const { error } = joinCourse.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     if(!req.file) return res.status(206).json({message : "Icon Needed", success : false})
     const icon = req.file
    const fileImage = icon && await getDataUri(icon)
@@ -25,12 +28,17 @@ else return res.status(206).json({message : "Error! During Point Added", success
 
 
 exports.editPoint =  catchAsyncError(async(req,res) => {
-    const { permissions, user } = req
+    const { permissions, user } = await req
     if (permissions[0].can_edit == 0) return res.status(206).json({ message: "Permission Denied to Edit Category",status: false });
     const { id} =  req.params
     if(!id)  return res.status(200).json({message : "Id Not Found", success : false})
 
-    const {course, description}  =  req.body 
+    const {course, description}  = await req.body 
+    const { error } = joinCourse.validate(req.body);
+    if (error)
+      return res
+        .status(206)
+        .json({ status: false, message: error.details[0].message });
     const alreadyCategory =  `SELECT id from jtc_course_join_point WHERE description = ${description}`
    
     const executeAreadyCategory = await executeQuery(alreadyCategory);
@@ -65,7 +73,7 @@ exports.editPoint =  catchAsyncError(async(req,res) => {
 })
 
 exports.deletePoint =  catchAsyncError(async(req,res) => {
-    const { permissions, user } = req
+    const { permissions, user } = await req
     if (permissions[0].can_delete == 0) return res.status(206).json({ message: "Permission Denied to Delete Category",status: false });
     const {id} =  req.params
     if(!id)  return res.status(200).json({message : "Id Not Found", success : false})
@@ -79,7 +87,7 @@ else return res.status(206).json({message : "Error! During Category Delete", suc
 
 exports.getPoint =  catchAsyncError(async(req,res) => {
 
-    const { permissions, user } = req
+    const { permissions, user } = await req
     if (permissions[0].can_view == 0) return res.status(206).json({ message: "Permission Denied to View Cources Chapter",status: false });
   
     const alreadyCategory = `SELECT * from jtc_course_join_point ORDER By id DESC `
