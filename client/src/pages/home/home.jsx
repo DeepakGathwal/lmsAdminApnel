@@ -86,17 +86,17 @@ allStudent()
      <div className="containers">
       <div className="page">
         <h4 className="heading_panel">Welcome To JTC Dashboard  {/*@Username Required*/}</h4> 
-        <div class="card-group dashcards m-3">
-                    <div class="card card-one">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    {/* <h2 class="m-b-0"><i class="mdi mdi-briefcase-check text-info"></i></h2> */}
-                                    <h6 class="card-subtitle">Total Tutorials</h6></div>
-                                    <h3 class="txtpanel">{tuto}</h3>
-                                <div class="col-12">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-info" role="progressbar" style={{width:`${tuto}%`,height:"6px"}}  aria-valuenow='25' aria-valuemin="0" aria-valuemax="100"></div>
+        <div className="card-group dashcards m-3">
+                    <div className="card card-one">
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-12">
+                                    {/* <h2 className="m-b-0"><i className="mdi mdi-briefcase-check text-info"></i></h2> */}
+                                    <h6 className="card-subtitle">Total Tutorials</h6></div>
+                                    <h3 className="txtpanel">{tuto}</h3>
+                                <div className="col-12">
+                                    <div className="progress">
+                                        <div className="progress-bar bg-info" role="progressbar" style={{width:`${tuto}%`,height:"6px"}}  aria-valuenow='25' aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -178,31 +178,31 @@ allStudent()
                 </div>
 
                 <div className="row g-0">
-                <div class="col-lg-8 col-xlg-9">
-                        <div class="card bot-card m-3">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="d-flex flex-wrap">
+                <div className="col-lg-8 col-xlg-9">
+                        <div className="card bot-card m-3">
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-12">
+                                        <div className="d-flex flex-wrap">
                                             <div>
-                                                <h4 class="card-title">Chart</h4>
+                                                <h4 className="card-title">Chart</h4>
                                             </div>
-                                            <div class="ml-auto">
-                                                <ul class="list-inline">
+                                            <div className="ml-auto">
+                                                <ul className="list-inline">
                                                     <li>
-                                                        <h6 class="text-react"><GoDotFill />Ecommers-Courses</h6> </li>
+                                                        <h6 className="text-react"><GoDotFill />Ecommers-Courses</h6> </li>
                                                     <li>
-                                                        <h6 class="text-angular"><GoDotFill />Website-Courses</h6> </li>
+                                                        <h6 className="text-angular"><GoDotFill />Website-Courses</h6> </li>
                                                     <li>
-                                                        <h6 class="text-vue"><GoDotFill />Users</h6> </li>
+                                                        <h6 className="text-vue"><GoDotFill />Users</h6> </li>
                                                     <li>
-                                                        <h6 class="text-node"><GoDotFill />Videos</h6> </li>
+                                                        <h6 className="text-node"><GoDotFill />Videos</h6> </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
-                                        <div class="d-flex flex-wrap">
+                                    <div className="col-12">
+                                        <div className="d-flex flex-wrap">
                                        <LineChart width={900} height={600} data={chartdata}>
                                         <Line type="monotone" dataKey="ecommers_course" stroke="#2196F3" strokeWidth={3} />
                                         <Line type="monotone" dataKey="website_course" stroke="#F44236" strokeWidth={3} />
@@ -222,57 +222,57 @@ allStudent()
                         </div>
                     </div>
                     
-                    <div class="col-lg-4 col-xlg-3">
-                        <div class="card bot-card card-inverse card-info m-3">
-                            <div class="card-body align-center">
-                                <div class="d-flex">
+                    <div className="col-lg-4 col-xlg-3">
+                        <div className="card bot-card card-inverse card-info m-3">
+                            <div className="card-body align-center">
+                                <div className="d-flex">
                                     <div>
-                                        <h3 class="card-title text-black">Total Modules</h3> </div>
+                                        <h3 className="card-title text-black">Total Modules</h3> </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-black"><sup><small> <MdArrowUpward /> </small></sup>{module}</h2>
+                                <div className="row">
+                                    <div className="col-6 align-self-center">
+                                        <h2 className="font-light text-black"><sup><small> <MdArrowUpward /> </small></sup>{module}</h2>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card card-inverse card-success m-3">
-                            <div class="card-body align-center">
-                                <div class="d-flex">
+                        <div className="card card-inverse card-success m-3">
+                            <div className="card-body align-center">
+                                <div className="d-flex">
                                     <div>
-                                        <h3 class="card-title text-black">Total Team Members</h3> </div>
+                                        <h3 className="card-title text-black">Total Team Members</h3> </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-black"><sup><small> <MdArrowUpward /> </small></sup>{members}</h2>
+                                <div className="row">
+                                    <div className="col-6 align-self-center">
+                                        <h2 className="font-light text-black"><sup><small> <MdArrowUpward /> </small></sup>{members}</h2>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card card-inverse card-info m-3">
-                            <div class="card-body align-center">
-                                <div class="d-flex">
-                                    <div class="m-r-20 align-self-center"></div>
+                        <div className="card card-inverse card-info m-3">
+                            <div className="card-body align-center">
+                                <div className="d-flex">
+                                    <div className="m-r-20 align-self-center"></div>
                                     <div>
-                                        <h3 class="card-title text-black">Total Permissions</h3></div>
+                                        <h3 className="card-title text-black">Total Permissions</h3></div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-black"><sup><small><MdArrowUpward /></small></sup>{allpermissions}</h2>
+                                <div className="row">
+                                    <div className="col-6 align-self-center">
+                                        <h2 className="font-light text-black"><sup><small><MdArrowUpward /></small></sup>{allpermissions}</h2>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card card-inverse card-success m-3">
-                            <div class="card-body align-center">
-                                <div class="d-flex">
-                                    <div class="m-r-20 align-self-center"></div>
+                        <div className="card card-inverse card-success m-3">
+                            <div className="card-body align-center">
+                                <div className="d-flex">
+                                    <div className="m-r-20 align-self-center"></div>
                                     <div>
-                                        <h3 class="card-title text-black">Total Compaines</h3></div>
+                                        <h3 className="card-title text-black">Total Compaines</h3></div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6 align-self-center">
-                                        <h2 class="font-light text-black"><sup><small><MdArrowUpward /></small></sup>{comapnies}</h2>
+                                <div className="row">
+                                    <div className="col-6 align-self-center">
+                                        <h2 className="font-light text-black"><sup><small><MdArrowUpward /></small></sup>{comapnies}</h2>
                                     </div>
                                 </div>
                             </div>

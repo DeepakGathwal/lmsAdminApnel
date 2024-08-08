@@ -24,9 +24,8 @@ const TutorialType = () => {
   };
 
 
-  const allData = async () => {
-       
-    const data = await allTutorialType(path)
+  const allData = async () => {   
+    const {data} = await allTutorialType(path)
     data && setTotal(data.length)
     return data && setState(data)
   }

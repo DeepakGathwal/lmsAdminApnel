@@ -49,7 +49,7 @@ const GrapeJsEditor = ({editorRef, page_html, page_css}) => {
       <title>GrapesJS Project</title>
     </head>
     <body>
-      <div class="container">
+      <div className="container">
        ${page_html}
       </div>
     </body>

@@ -47,6 +47,7 @@ let optionArray = []
   const allData = async () => {
        
     const {data} = await allEFaqs(path)
+    data && setTotal(data)
     return data && setState(data)
   }
 
